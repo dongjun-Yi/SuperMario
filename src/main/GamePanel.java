@@ -153,7 +153,7 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 
 	public void drawStartScreen(Graphics g) {
-		g.drawImage(startScreenImage, 0, 0, null); // 시작화면을 가운데로 맞추기 위해 x좌표 -80만큼
+		g.drawImage(startScreenImage, 0, 0, null);
 		g.drawImage(selectIconImage, 192, 48 * row - 20, null);
 		g.drawImage(marioStartImage, 96, 48 * 11 + 15, null);
 		g.drawImage(luigiStartImage, 144, 48 * 11 + 15, null);
