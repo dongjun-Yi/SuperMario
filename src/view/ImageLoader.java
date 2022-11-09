@@ -15,7 +15,7 @@ public class ImageLoader {
 	private BufferedImage[][] luigiImg;
 	private BufferedImage background;
 	
-	private ImageLoader() {
+	public ImageLoader() {
 		readImages();
 		loadPlayerImage();
 	}
