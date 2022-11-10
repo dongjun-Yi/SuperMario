@@ -8,6 +8,15 @@ public class PlayerController implements Controller {
 	private boolean isControllerOn = true;
 	
 	@Override
+	public void initKey() {
+		this.upPressed = false;
+		this.downPressed = false;
+		this.leftPressed = false;
+		this.rightPressed = false;
+		this.spacePressed = false;
+	}
+	
+	@Override
 	public void setControllerOn(boolean isControllerOn) {
 		this.isControllerOn = isControllerOn;
 	}

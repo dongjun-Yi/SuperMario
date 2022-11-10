@@ -9,6 +9,15 @@ public class OthersController implements Controller {
 	private boolean isControllerOn = true;
 	
 	@Override
+	public void initKey() {
+		this.upPressed = false;
+		this.downPressed = false;
+		this.leftPressed = false;
+		this.rightPressed = false;
+		this.spacePressed = false;
+	}
+	
+	@Override
 	public void setControllerOn(boolean isControllerOn) {
 		this.isControllerOn = isControllerOn;
 	}
@@ -44,5 +53,4 @@ public class OthersController implements Controller {
 
 	@Override
 	public boolean getSpacePressed() { return spacePressed; }
-
 }
