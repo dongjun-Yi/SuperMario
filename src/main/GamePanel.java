@@ -21,21 +21,22 @@ public class GamePanel extends JPanel implements Runnable {
 	private static final long serialVersionUID = 1L;
 	private Thread gameThread;
 
-	private Controller controller = new PlayerController(); // myclient's input data
-	private Controller othersController = new OthersController(); // another client's input data
+	private Controller controller = new PlayerController(); 	  // 플레이어의 input값
+	private Controller othersController = new OthersController(); // 다른 플레이어의 input data값
 
 	private List<Player> players = new ArrayList<Player>();
-	private int playerNumber = 0; // server will send this
+	private int playerNumber = 0; // 서버한테 받은 클라이언트 번호
 
 	private BufferedImage startScreenImage;
 	private BufferedImage selectIconImage;
 	private BufferedImage marioStartImage;
 	private BufferedImage luigiStartImage;
 
-	private int CURSOR_GAMESTART_LOCATION = 9; // play 글씨 위치
-	private int CURSOR_QUIT_LOCATION = 10; //
-	private int row = CURSOR_GAMESTART_LOCATION; // 시작화면 선택창 표시하기 위한 행변
+	private int CURSOR_GAMESTART_LOCATION = 9;	// play 글씨 위치
+	private int CURSOR_QUIT_LOCATION = 10; 		// quit
+	private int row = CURSOR_GAMESTART_LOCATION;// 시작화면 선택창 표시하기 위한 행변
 
+	// >>GameStatus 클래스로 캡슐화 예정<<
 	private String gameStatus;
 	private final String START_SCREEN = "startScreen";
 	private final String GAME_START = "gameStart";
@@ -135,13 +136,12 @@ public class GamePanel extends JPanel implements Runnable {
 
 		Graphics2D g2 = (Graphics2D) g;
 		if (gameStatus == START_SCREEN) {
-			drawStartScreen(g);
+			drawStartScreen(g2);
 		}
 		if (gameStatus == GAME_START) {
 			map.draw(g2);
-			g2.dispose();
 		}
-
+		g2.dispose();
 	}
 
 	public void drawStartScreen(Graphics g) {
