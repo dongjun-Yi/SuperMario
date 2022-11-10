@@ -31,6 +31,7 @@ public class Player extends GameObject {
 	}
 	
 	public void setDefaultValues() {
+		direction = jumpDir = 0;
 		x = (isPlayer1) ? 100.0 : 200.0;
 		y = 300.0;
 		xRightVel = 0.0;
