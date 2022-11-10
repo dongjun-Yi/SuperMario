@@ -1,0 +1,8 @@
+/bin/
+
+.classpath
+*.project
+.settings
+.idea
+/out/
+src/META-INF/MANIFEST.MF
