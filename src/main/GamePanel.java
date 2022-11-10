@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +14,9 @@ import controller.OthersController;
 import controller.PlayerController;
 import model.GameMap;
 import model.Player;
-import view.ImageLoader;
+import view.GameRunningView;
+import view.GameStatusView;
+import view.StartScreenView;
 
 public class GamePanel extends JPanel implements Runnable {
 	private static final long serialVersionUID = 1L;
@@ -27,22 +28,8 @@ public class GamePanel extends JPanel implements Runnable {
 	private List<Player> players = new ArrayList<Player>();
 	private int playerNumber = 0; // 서버한테 받은 클라이언트 번호
 
-	private BufferedImage startScreenImage;
-	private BufferedImage selectIconImage;
-	private BufferedImage marioStartImage;
-	private BufferedImage luigiStartImage;
-
-	private int CURSOR_GAMESTART_LOCATION = 9;	// play 글씨 위치
-	private int CURSOR_QUIT_LOCATION = 10; 		// quit
-	private int row = CURSOR_GAMESTART_LOCATION;// 시작화면 선택창 표시하기 위한 행변
-
-	// >>GameStatus 클래스로 캡슐화 예정<<
-	private String gameStatus;
-	private final String START_SCREEN = "startScreen";
-	private final String GAME_START = "gameStart";
-
-	private GameMap map = new GameMap();
-	private ImageLoader imageLoader = ImageLoader.getImageLoader();
+	private GameStatusView gameStatusView;	// 시작화면, 인게임 화면 --> GameStatusView로 캡슐화
+	private GameMap map;
 
 	public GamePanel() {
 		this.setPreferredSize(new Dimension(GameSettings.screenWidth, GameSettings.screenHeight));
@@ -50,15 +37,22 @@ public class GamePanel extends JPanel implements Runnable {
 		this.setDoubleBuffered(true);
 		this.addKeyListener(controller);
 		this.setFocusable(true);
-		this.gameStatus = START_SCREEN;
-
-		this.startScreenImage = imageLoader.getStartScreenImage();
-		this.selectIconImage = imageLoader.getMushroomImage();
-		this.marioStartImage = imageLoader.getPlayerStartImage(true);
-		this.luigiStartImage = imageLoader.getPlayerStartImage(false);
+		// gameStatus == 시작 화면
+		setGameStatusView(new StartScreenView(this, controller));
 	}
 
+	public void setGameStatusView(GameStatusView gameStatusView) {
+		this.gameStatusView = gameStatusView;
+	}
+	
 	public void gameStart() {
+		gameThread = new Thread(this);
+		gameThread.start();
+	}
+
+	public void gameRunning() {
+		// 게임 첫 시작 -> 맵생성, 플레이어 설정
+		map = new GameMap();
 		players = map.getPlayers();
 
 		// players settings (controller and 1p 2p)
@@ -72,32 +66,12 @@ public class GamePanel extends JPanel implements Runnable {
 				p.setIsPlayer1(false);
 			}
 		}
-
-		gameThread = new Thread(this);
-		gameThread.start();
+		// gameStatus == 게임 중
+		setGameStatusView(new GameRunningView(map));
 	}
-
-	public void playersInputUpdate() {
-		for (Player p : players) {
-			p.inputUpdate();
-		}
-	}
-
+	
 	public void update() {
-		if (gameStatus == START_SCREEN) {
-			if (controller.getSpacePressed() && row == CURSOR_GAMESTART_LOCATION) {
-				gameStatus = GAME_START;
-			}
-			if (controller.getDownPressed() == true && row == CURSOR_GAMESTART_LOCATION) {
-				row = CURSOR_QUIT_LOCATION;
-			}
-			if (controller.getUpPressed() == true && row == CURSOR_QUIT_LOCATION) {
-				row = CURSOR_GAMESTART_LOCATION;
-			}
-		}
-		if (gameStatus == GAME_START) {
-			playersInputUpdate();
-		}
+		gameStatusView.updates();
 		repaint();
 	}
 
@@ -135,19 +109,8 @@ public class GamePanel extends JPanel implements Runnable {
 		super.paintComponent(g);
 
 		Graphics2D g2 = (Graphics2D) g;
-		if (gameStatus == START_SCREEN) {
-			drawStartScreen(g2);
-		}
-		if (gameStatus == GAME_START) {
-			map.draw(g2);
-		}
-		g2.dispose();
-	}
+		gameStatusView.draw(g2);
 
-	public void drawStartScreen(Graphics g) {
-		g.drawImage(startScreenImage, 0, 0, null); // 시작화면을 가운데로 맞추기 위해 x좌표 -80만큼
-		g.drawImage(selectIconImage, 215, 48 * row + 15, GameSettings.tileSize, GameSettings.tileSize, null);
-		g.drawImage(marioStartImage, 92, 48 * 12 , GameSettings.tileSize, GameSettings.tileSize, null);
-		g.drawImage(luigiStartImage, 150, 48 * 12, GameSettings.tileSize, GameSettings.tileSize, null);
+		g2.dispose();
 	}
 }
