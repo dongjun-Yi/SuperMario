@@ -38,7 +38,7 @@ public class ImageLoader {
 	private void loadPlayerImage() {
 		marioImg = new BufferedImage[2][6];
 		luigiImg = new BufferedImage[2][6];
-		int width = GameSettings.originalTileSize, height = GameSettings.originalTileSize;
+		int width = GameSettings.imageSize, height = GameSettings.imageSize;
 		
 		// 18 34 50 66
 		//  16 16 16
@@ -68,7 +68,7 @@ public class ImageLoader {
 	}
 	
 	public BufferedImage getPlayerDie(boolean isPlayer1) {
-		int width = GameSettings.originalTileSize, height = GameSettings.originalTileSize;
+		int width = GameSettings.imageSize, height = GameSettings.imageSize;
 		if(isPlayer1)
 			return playerAllImg.getSubimage(114, 42, width, height);
 		else
@@ -83,7 +83,7 @@ public class ImageLoader {
 	}
 	
 	public BufferedImage getMushroomImage() {
-		BufferedImage mushroom = items.getSubimage(184, 34, GameSettings.originalTileSize, GameSettings.originalTileSize);
+		BufferedImage mushroom = items.getSubimage(184, 34, GameSettings.imageSize, GameSettings.imageSize);
 		return mushroom;
 	}
 	
