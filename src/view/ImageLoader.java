@@ -11,9 +11,11 @@ public class ImageLoader {
 	// singleton pattern
 	private static ImageLoader imageLoader = new ImageLoader();
 	private BufferedImage playerAllImg;
+	private BufferedImage items;
 	private BufferedImage[][] marioImg;	// first index = 0 : right, 1 : left
 	private BufferedImage[][] luigiImg;
 	private BufferedImage background;
+	private BufferedImage startScreen;
 	
 	private ImageLoader() {
 		readImages();
@@ -24,8 +26,10 @@ public class ImageLoader {
 	
 	private void readImages() {
 		try {
+			startScreen = ImageIO.read(getClass().getResource("../images/startscreen.png"));
 			playerAllImg = ImageIO.read(getClass().getResourceAsStream("/images/mario.png"));
 			background = ImageIO.read(getClass().getResourceAsStream("/images/background.png"));
+			items = ImageIO.read(getClass().getResourceAsStream("/images/items.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -79,23 +83,11 @@ public class ImageLoader {
 	}
 	
 	public BufferedImage getMushroomImage() {
-		BufferedImage items = null;
-		try {
-			items = ImageIO.read(getClass().getResourceAsStream("/images/items.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		BufferedImage mushroom = items.getSubimage(184, 34, GameSettings.originalTileSize, GameSettings.originalTileSize);
 		return mushroom;
 	}
 	
 	public BufferedImage getStartScreenImage() {
-		BufferedImage screen = null;
-		try {
-			screen = ImageIO.read(getClass().getResource("../images/startscreen.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return screen;
+		return startScreen;
 	}
 }
