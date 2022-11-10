@@ -25,22 +25,21 @@ public class GamePanel extends JPanel implements Runnable {
 	private Controller controller = new PlayerController(); 	  // 플레이어의 input값
 	private Controller othersController = new OthersController(); // 다른 플레이어의 input data값
 
-	private List<Player> players = new ArrayList<Player>();
-	private int playerNumber = 0; // 서버한테 받은 클라이언트 번호
-
+	private long timer = 0;
+	private int playerNumber = 0; 			// 서버한테 받은 클라이언트 번호
 	private GameStatusView gameStatusView;	// 시작화면, 인게임 화면 --> GameStatusView로 캡슐화
-	private GameMap map;
-
+	
 	public GamePanel() {
 		this.setPreferredSize(new Dimension(GameSettings.screenWidth, GameSettings.screenHeight));
-		this.setBackground(Color.black);
 		this.setDoubleBuffered(true);
 		this.addKeyListener(controller);
 		this.setFocusable(true);
 		// gameStatus == 시작 화면
 		setGameStatusView(new StartScreenView(this, controller));
 	}
-
+	
+	public long getTime() { return timer; }
+	
 	public void setGameStatusView(GameStatusView gameStatusView) {
 		this.gameStatusView = gameStatusView;
 	}
@@ -51,23 +50,8 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 
 	public void gameRunning() {
-		// 게임 첫 시작 -> 맵생성, 플레이어 설정
-		map = new GameMap();
-		players = map.getPlayers();
-
-		// players settings (controller and 1p 2p)
-		for (int i = 0; i < GameSettings.maxPlayerCount; i++) {
-			Player p = players.get(i);
-			if (i == playerNumber) {
-				p.setController(controller);
-				p.setIsPlayer1(true);
-			} else {
-				p.setController(othersController);
-				p.setIsPlayer1(false);
-			}
-		}
 		// gameStatus == 게임 중
-		setGameStatusView(new GameRunningView(map));
+		setGameStatusView(new GameRunningView(controller, othersController, playerNumber));
 	}
 	
 	public void update() {
@@ -83,7 +67,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 		long lastTime = System.nanoTime();
 		long currentTime;
-		long timer = 0;
+		
 
 		while (gameThread != null) {
 			currentTime = System.nanoTime();

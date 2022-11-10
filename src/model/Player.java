@@ -17,7 +17,7 @@ public class Player extends GameObject {
 	private boolean controlBlocked = false;
 	
 	public Player() {
-		width = height = GameSettings.tileSize;
+		width = height = GameSettings.scaledSize;
 		setDefaultValues();
 	}
 	

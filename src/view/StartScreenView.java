@@ -47,8 +47,8 @@ public class StartScreenView implements GameStatusView {
 	@Override
 	public void draw(Graphics2D g) {
 		g.drawImage(startScreenImage, 0, 0, null); // 시작화면을 가운데로 맞추기 위해 x좌표 -80만큼
-		g.drawImage(selectIconImage, 215, 48 * row + 15, GameSettings.tileSize, GameSettings.tileSize, null);
-		g.drawImage(marioStartImage, 92, 48 * 12 , GameSettings.tileSize, GameSettings.tileSize, null);
-		g.drawImage(luigiStartImage, 150, 48 * 12, GameSettings.tileSize, GameSettings.tileSize, null);
+		g.drawImage(selectIconImage, 215, 48 * row + 15, GameSettings.scaledSize, GameSettings.scaledSize, null);
+		g.drawImage(marioStartImage, 92, 48 * 12 , GameSettings.scaledSize, GameSettings.scaledSize, null);
+		g.drawImage(luigiStartImage, 150, 48 * 12, GameSettings.scaledSize, GameSettings.scaledSize, null);
 	}
 }
