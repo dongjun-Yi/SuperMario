@@ -4,13 +4,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import controller.Controller;
@@ -54,15 +51,10 @@ public class GamePanel extends JPanel implements Runnable {
 		this.setFocusable(true);
 		this.gameStatus = START_SCREEN;
 
-		try {
-			this.startScreenImage = ImageIO.read(getClass().getResource("../images/startscreen.png"));
-			this.selectIconImage = ImageIO.read(getClass().getResource("../images/select-icon.png"));
-			this.marioStartImage = ImageIO.read(getClass().getResource("../images/startscreen-mario.png"));
-			this.luigiStartImage = ImageIO.read(getClass().getResource("../images/luigi.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.startScreenImage = imageLoader.getStartScreenImage();
+		this.selectIconImage = imageLoader.getMushroomImage();
+		this.marioStartImage = imageLoader.getPlayerStartImage(true);
+		this.luigiStartImage = imageLoader.getPlayerStartImage(false);
 	}
 
 	public void gameStart() {
@@ -75,7 +67,7 @@ public class GamePanel extends JPanel implements Runnable {
 				p.setController(controller);
 				p.setIsPlayer1(true);
 			} else {
-				p.setController(controller);
+				p.setController(othersController);
 				p.setIsPlayer1(false);
 			}
 		}
@@ -105,6 +97,7 @@ public class GamePanel extends JPanel implements Runnable {
 		if (gameStatus == GAME_START) {
 			playersInputUpdate();
 		}
+		repaint();
 	}
 
 	@Override
@@ -128,7 +121,6 @@ public class GamePanel extends JPanel implements Runnable {
 				update();
 				delta--;
 			}
-			repaint();
 
 			if (timer >= 1000000000) {
 				// 1 second
@@ -153,9 +145,9 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 
 	public void drawStartScreen(Graphics g) {
-		g.drawImage(startScreenImage, 0, 0, null);
-		g.drawImage(selectIconImage, 192, 48 * row - 20, null);
-		g.drawImage(marioStartImage, 96, 48 * 11 + 15, null);
-		g.drawImage(luigiStartImage, 144, 48 * 11 + 15, null);
+		g.drawImage(startScreenImage, 0, 0, null); // 시작화면을 가운데로 맞추기 위해 x좌표 -80만큼
+		g.drawImage(selectIconImage, 215, 48 * row + 15, GameSettings.tileSize, GameSettings.tileSize, null);
+		g.drawImage(marioStartImage, 92, 48 * 12 , GameSettings.tileSize, GameSettings.tileSize, null);
+		g.drawImage(luigiStartImage, 150, 48 * 12, GameSettings.tileSize, GameSettings.tileSize, null);
 	}
 }
