@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import controller.Controller;
+import controller.PlayerController;
 import main.GameSettings;
 import view.ImageLoader;
 
@@ -14,7 +15,10 @@ public class Player extends GameObject {
 	private int animationIdx = 0;
 	private int frameCount = 0;
 	private boolean isDie = false;
+	private boolean isAttacked = false;
 	private boolean controlBlocked = false;
+	
+	private double dx, dy;	// attacked animation용 변수
 	
 	public Player() {
 		width = height = GameSettings.scaledSize;
@@ -41,27 +45,32 @@ public class Player extends GameObject {
 		isDie = false;
 		hasCollision = true;
 		controlBlocked = false;
+		isAttacked = false;
 	}
 	
-	public void jump(int power) {
+	private void initVelocity() {
+		xRightVel = 0.0;
+		xLeftVel = 0.0;
+		yVel = 0.0;
+	}
+	
+	private void jump(int power) {
 		jumpDir = direction;
 		isJump = true;
 		yVel = -power;
 	}
 
-	public void die() {
+	private void die() {
 		isDie = true;
 		hasCollision = false;
 		hasGravity = false;
 		controlBlocked = true;
-		xRightVel = 0.0;
-		xLeftVel = 0.0;
-		yVel = 0.0;
+		initVelocity();
 		
 		frameCount = 0;
 	}
 	
-	public void dyingAnimation() {
+	private void dyingAnimation() {
 		frameCount++;
 		if(y >= 800) {
 			frameCount = 0;
@@ -73,12 +82,43 @@ public class Player extends GameObject {
 		}
 	}
 	
-	public void attackedAnimation() {
-		
+	private void attacked() {
+		isAttacked = true;
+		controlBlocked = true;
+		frameCount = 0;
+		dx = dy = 0;
+	}
+	
+	private void attackedAnimation() {
+		frameCount++;
+		if(frameCount >= 18) {
+			controlBlocked = false;
+			isAttacked = false;
+			width = height = GameSettings.scaledSize;
+		}
+		else if(frameCount > 9) {
+			dx++;
+			dy++;
+			width -= 2 * dx;
+			height += dy;
+			x += dx;
+			y -= dy;
+		}
+		else if(frameCount == 9) {
+			dx = dy = 0;
+		}
+		else { 
+			dx++;
+			dy++;
+			width += 2 * dx;
+			height -= dy;
+			x -= dx;
+			y += dy;
+		}
 	}
 	
 	public void inputUpdate() {
-		if (!controlBlocked) {		
+		if (!controlBlocked) {
 			if(controller.getRightPressed()) {
 				direction = 0;
 				
@@ -108,7 +148,7 @@ public class Player extends GameObject {
 			}
 			
 			if(controller.getSpacePressed()) {
-				die();
+				attacked();
 			}
 		}
 		
@@ -119,7 +159,7 @@ public class Player extends GameObject {
 		//System.out.println("xLeftVel: " + xLeftVel);
 	}
 	
-	public BufferedImage getWalkAnimation(BufferedImage[][] marioImg, int direction, int speed) {
+	private BufferedImage getWalkAnimation(BufferedImage[][] marioImg, int direction, int speed) {
 		BufferedImage img = marioImg[direction][animationIdx + 1];
 		
 		if(frameCount >= speed) {
@@ -134,13 +174,22 @@ public class Player extends GameObject {
 		return img;
 	}
 	
-	public BufferedImage getCurrentImage() {
+	private BufferedImage getCurrentImage() {
 		ImageLoader imageLoader = ImageLoader.getImageLoader();;
 		BufferedImage[][] marioImg = imageLoader.getPlayerImage(isPlayer1);
 		BufferedImage img = marioImg[direction][0];
 		
+		// dying animation
+		if(isDie) {
+			img = imageLoader.getPlayerDie(isPlayer1);
+			dyingAnimation();
+		}
+		// attacked animation
+		else if(isAttacked) {
+			attackedAnimation();
+		}
 		// jumping image
-		if(isJump) {
+		else if(isJump) {
 			img = marioImg[jumpDir][5];
 		}
 		else if ((xRightVel + xLeftVel) == 0)
@@ -156,10 +205,6 @@ public class Player extends GameObject {
 			img = getWalkAnimation(marioImg, direction, 10 - speed);
 		}
 		
-		if(isDie) {
-			img = imageLoader.getPlayerDie(isPlayer1);
-			dyingAnimation();
-		}
 		return img;
 	}
 	

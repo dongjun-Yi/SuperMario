@@ -24,9 +24,9 @@ public abstract class GameObject {
 		if(hasGravity)
 			yVel += 0.65;	
 		// grounded
-		if(hasCollision && y >= 577.0) {
+		if(hasCollision && y + height >= 625.0) {
 			isJump = false;
-			y = 577.0;
+			y = 625.0 - height;
 			yVel = 0.0;
 		}
 	}
