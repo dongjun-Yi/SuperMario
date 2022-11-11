@@ -4,7 +4,6 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import controller.Controller;
-import controller.PlayerController;
 import main.GameSettings;
 import view.ImageLoader;
 
@@ -14,16 +13,20 @@ public class Player extends GameObject {
 	private Controller controller = null;
 	private int animationIdx = 0;
 	private int frameCount = 0;
+	
 	private boolean isDie = false;
 	private boolean isAttacked = false;
 	private boolean controlBlocked = false;
 	
-	private double dx, dy;	// attacked animation용 변수
+	private double dx = 0, dy = 0;	// attacked animation용 변수
 	
-	public Player() {
+	public Player(int mapWidthBoundary) {
+		super(mapWidthBoundary);
 		width = height = GameSettings.scaledSize;
 		setDefaultValues();
 	}
+	
+	public boolean isPlayer1() { return isPlayer1; }
 	
 	public void setIsPlayer1(boolean isPlayer1) {
 		this.isPlayer1 = isPlayer1;
@@ -91,29 +94,19 @@ public class Player extends GameObject {
 	
 	private void attackedAnimation() {
 		frameCount++;
-		if(frameCount >= 18) {
+
+		if(frameCount >= 20) {
 			controlBlocked = false;
 			isAttacked = false;
-			width = height = GameSettings.scaledSize;
-		}
-		else if(frameCount > 9) {
-			dx++;
-			dy++;
-			width -= 2 * dx;
-			height += dy;
-			x += dx;
-			y -= dy;
-		}
-		else if(frameCount == 9) {
 			dx = dy = 0;
 		}
+		else if(frameCount > 10) {
+			dx+=2;
+			dy-=2;
+		}
 		else { 
-			dx++;
-			dy++;
-			width += 2 * dx;
-			height -= dy;
-			x -= dx;
-			y += dy;
+			dx-=2;
+			dy+=2;
 		}
 	}
 	
@@ -186,6 +179,7 @@ public class Player extends GameObject {
 		}
 		// attacked animation
 		else if(isAttacked) {
+			if(isJump) img = marioImg[jumpDir][5];	// 점프 중 밟힘
 			attackedAnimation();
 		}
 		// jumping image
@@ -209,6 +203,11 @@ public class Player extends GameObject {
 	}
 	
 	public void draw(Graphics2D g2) {
-		g2.drawImage(getCurrentImage(), (int)x, (int)y, width, height, null);
+		// 애니메이션이 이루어질 때의 좌표 계산 고려
+		int drawX = (int)(x + dx);
+		int drawY = (int)(y + dy);
+		int drawWidth = width + (int)(-2 * dx);
+		int drawHeight = height - (int)dy;
+		g2.drawImage(getCurrentImage(), drawX, drawY, drawWidth, drawHeight,  null);
 	}
 }
