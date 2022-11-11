@@ -5,7 +5,6 @@ public class PlayerController implements Controller {
 
 	private boolean upPressed, downPressed, leftPressed, rightPressed;
 	private boolean spacePressed;
-	private boolean isControllerOn = true;
 	
 	@Override
 	public void initKey() {
@@ -14,11 +13,6 @@ public class PlayerController implements Controller {
 		this.leftPressed = false;
 		this.rightPressed = false;
 		this.spacePressed = false;
-	}
-	
-	@Override
-	public void setControllerOn(boolean isControllerOn) {
-		this.isControllerOn = isControllerOn;
 	}
 	
 	@Override

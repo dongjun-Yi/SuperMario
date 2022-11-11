@@ -6,7 +6,6 @@ public class OthersController implements Controller {
 
 	private boolean upPressed, downPressed, leftPressed, rightPressed;
 	private boolean spacePressed;
-	private boolean isControllerOn = true;
 	
 	@Override
 	public void initKey() {
@@ -17,12 +16,7 @@ public class OthersController implements Controller {
 		this.spacePressed = false;
 	}
 	
-	@Override
-	public void setControllerOn(boolean isControllerOn) {
-		this.isControllerOn = isControllerOn;
-	}
-	
-	public void setKeyPressed(boolean upPressed, boolean downPressed, boolean leftPressed, boolean rightPressed) {
+	public void setKeyPressed(boolean upPressed, boolean downPressed, boolean leftPressed, boolean rightPressed, boolean spacePressed) {
 		this.upPressed = upPressed;
 		this.downPressed = downPressed;
 		this.leftPressed = leftPressed;
