@@ -1,8 +1,7 @@
 package model;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-
-import main.GameSettings;
 
 public abstract class GameObject {
 	protected int width, height;
@@ -49,4 +48,7 @@ public abstract class GameObject {
 		if(x >= this.mapWidthBoundary - width)
 			this.x = mapWidthBoundary - width;
 	}
+	
+	public abstract void move();
+	public abstract void draw(Graphics2D g2);
 }
