@@ -17,7 +17,7 @@ public class GameMap {
 		ImageLoader imageLoader = ImageLoader.getImageLoader();
 		background = imageLoader.getBackgroundImage();
 		for(int i = 0; i < GameSettings.maxPlayerCount; i++) {
-			players.add(new Player(background.getWidth()));
+			players.add(new Player(0, 0, background.getWidth()));
 		}
 		camera = new GameCamera(background.getWidth());
 	}

@@ -1,7 +1,6 @@
 package model;
 
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 
 public abstract class GameObject {
 	protected int width, height;
@@ -13,20 +12,33 @@ public abstract class GameObject {
 	protected double yVel = 0;
 	protected int maxSpeed;
 	
-	protected BufferedImage image;
-	
 	protected int direction = 0;	// 0 : right 1 : left
 	protected int jumpDir = 0;
-	protected boolean isJump = false;
 	
+	protected boolean isJump = false;
 	protected boolean hasCollision = true;
 	protected boolean hasGravity = true;
 	
+	public GameObject(double x, double y, int mapWidthBoundary) {
+		this.x = x;
+		this.y = y;
+		this.mapWidthBoundary = mapWidthBoundary;
+	}
+	
 	public double getX() { return x; }
 	public double getY() { return y; }
+	public boolean hasCollision() { return hasCollision; }
 	
-	public GameObject(int mapWidthBoundary) {
-		this.mapWidthBoundary = mapWidthBoundary;
+	public void setMaxSpeed(int maxSpeed) {
+		this.maxSpeed = maxSpeed;
+	}
+	
+	public void setWidth(int width) { 
+		this.width = width;
+	}
+	
+	public void setHeight(int height) { 
+		this.height = height;
 	}
 	
 	public void updatesCoordinate() {

@@ -12,6 +12,7 @@ public class ImageLoader {
 	private static ImageLoader imageLoader = new ImageLoader();
 	private BufferedImage playerAllImg;
 	private BufferedImage items;
+	private BufferedImage enemies;
 	private BufferedImage[][] marioImg;	// first index = 0 : right, 1 : left
 	private BufferedImage[][] luigiImg;
 	private BufferedImage background;
@@ -30,6 +31,7 @@ public class ImageLoader {
 			playerAllImg = ImageIO.read(getClass().getResourceAsStream("/images/mario.png"));
 			background = ImageIO.read(getClass().getResourceAsStream("/images/background.png"));
 			items = ImageIO.read(getClass().getResourceAsStream("/images/items.png"));
+			enemies = ImageIO.read(getClass().getResourceAsStream("/images/enemies.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -90,4 +92,11 @@ public class ImageLoader {
 	public BufferedImage getStartScreenImage() {
 		return startScreen;
 	}
+	
+	public BufferedImage getGoombaCurrentImage(int frameCount) {	// frameCount == 2이면 die image (x=60, y=0)
+		int y = (frameCount == 2) ? 0 : 4;
+		BufferedImage goomba = enemies.getSubimage(0 + 30 * frameCount, y, GameSettings.imageSize, GameSettings.imageSize);
+		return goomba;
+	}
+	
 }
