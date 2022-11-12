@@ -1,6 +1,7 @@
 package model;
 
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 public abstract class GameObject {
 	protected int width, height;
@@ -18,6 +19,9 @@ public abstract class GameObject {
 	protected boolean isJump = false;
 	protected boolean hasCollision = true;
 	protected boolean hasGravity = true;
+	
+	protected int animationIdx = 0;
+	protected int frameCount = 0;
 	
 	public GameObject(double x, double y, int mapWidthBoundary) {
 		this.x = x;
@@ -41,6 +45,12 @@ public abstract class GameObject {
 		this.height = height;
 	}
 	
+	public void initVelocity() {
+		xRightVel = 0.0;
+		xLeftVel = 0.0;
+		yVel = 0.0;
+	}
+	
 	public void updatesCoordinate() {
 		x += (xRightVel + xLeftVel);
 		y += yVel;
@@ -48,7 +58,7 @@ public abstract class GameObject {
 		// gravity
 		if(hasGravity)
 			yVel += 0.65;	
-		// grounded
+		// grounded	충돌 구현하면 수정될 부분
 		if(hasCollision && y + height >= 625.0) {
 			isJump = false;
 			y = 625.0 - height;
@@ -62,5 +72,6 @@ public abstract class GameObject {
 	}
 	
 	public abstract void move();
+	public abstract BufferedImage getCurrentImage();
 	public abstract void draw(Graphics2D g2);
 }

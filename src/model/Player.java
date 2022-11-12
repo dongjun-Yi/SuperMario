@@ -11,8 +11,6 @@ public class Player extends GameObject {
 	private boolean isPlayer1 = false;
 	
 	private Controller controller = null;
-	private int animationIdx = 0;
-	private int frameCount = 0;
 	
 	private boolean isDie = false;
 	private boolean isAttacked = false;
@@ -49,12 +47,6 @@ public class Player extends GameObject {
 		hasCollision = true;
 		controlBlocked = false;
 		isAttacked = false;
-	}
-	
-	private void initVelocity() {
-		xRightVel = 0.0;
-		xLeftVel = 0.0;
-		yVel = 0.0;
 	}
 	
 	private void jump(int power) {
@@ -153,8 +145,6 @@ public class Player extends GameObject {
 		//System.out.println("xLeftVel: " + xLeftVel);
 	}
 	
-	
-	
 	private BufferedImage getWalkAnimation(BufferedImage[][] marioImg, int direction, int speed) {
 		BufferedImage img = marioImg[direction][animationIdx + 1];
 		
@@ -170,7 +160,8 @@ public class Player extends GameObject {
 		return img;
 	}
 	
-	private BufferedImage getCurrentImage() {
+	@Override
+	public BufferedImage getCurrentImage() {
 		ImageLoader imageLoader = ImageLoader.getImageLoader();;
 		BufferedImage[][] marioImg = imageLoader.getPlayerImage(isPlayer1);
 		BufferedImage img = marioImg[direction][0];
