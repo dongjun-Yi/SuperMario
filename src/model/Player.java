@@ -20,8 +20,8 @@ public class Player extends GameObject {
 	
 	private double dx = 0, dy = 0;	// attacked animation용 변수
 	
-	public Player(int mapWidthBoundary) {
-		super(mapWidthBoundary);
+	public Player(double x, double y, int mapWidthBoundary) {
+		super(x, y, mapWidthBoundary);
 		width = height = GameSettings.scaledSize;
 		setDefaultValues();
 	}
