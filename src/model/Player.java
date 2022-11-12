@@ -110,7 +110,8 @@ public class Player extends GameObject {
 		}
 	}
 	
-	public void inputUpdate() {
+	@Override
+	public void move() {
 		if (!controlBlocked) {
 			if(controller.getRightPressed()) {
 				direction = 0;
@@ -141,7 +142,7 @@ public class Player extends GameObject {
 			}
 			
 			if(controller.getSpacePressed()) {
-				attacked();
+				die();
 			}
 		}
 		
@@ -151,6 +152,8 @@ public class Player extends GameObject {
 		//System.out.println("xRightVel: " + xRightVel);
 		//System.out.println("xLeftVel: " + xLeftVel);
 	}
+	
+	
 	
 	private BufferedImage getWalkAnimation(BufferedImage[][] marioImg, int direction, int speed) {
 		BufferedImage img = marioImg[direction][animationIdx + 1];
@@ -202,6 +205,7 @@ public class Player extends GameObject {
 		return img;
 	}
 	
+	@Override
 	public void draw(Graphics2D g2) {
 		// 애니메이션이 이루어질 때의 좌표 계산 고려
 		int drawX = (int)(x + dx);

@@ -38,7 +38,7 @@ public class GameRunningView implements GameStatusView {
 	
 	public void playersInputUpdate() {
 		for (Player p : players) {
-			p.inputUpdate();
+			p.move();
 		}
 	}
 	
