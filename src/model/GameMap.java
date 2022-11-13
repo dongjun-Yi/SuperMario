@@ -27,6 +27,9 @@ public class GameMap {
 		gameObjects.add(new GroundBlock(200, 100, background.getWidth()));
 		gameObjects.add(new ItemBlock(300, 100, background.getWidth()));
 		gameObjects.add(new Pipe(400, 100, background.getWidth()));
+
+		gameObjects.add(new MushroomItem(500, 100, background.getWidth()));
+		gameObjects.add(new CoinItem(550,100,background.getWidth()));
 	}
 
 	public GameCamera getCamera() {
