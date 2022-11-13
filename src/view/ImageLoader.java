@@ -135,4 +135,10 @@ public class ImageLoader {
 		BufferedImage pipe = blocksImg.getSubimage(96, 1, 48 * 2, 48 * 2);
 		return pipe;
 	}
+	
+	public BufferedImage getCoinItemImage() {
+		BufferedImage coin = items.getSubimage(3,95, GameSettings.imageSize, GameSettings.imageSize);
+		return coin;
+		
+	}
 }
