@@ -99,4 +99,15 @@ public class ImageLoader {
 		return goomba;
 	}
 	
+	public BufferedImage getKoopaCurrentImage(int frameCount, int direction, int w, int h) {
+		int xStart = (direction == 0) ? 210 : 180;
+		int idxJump = (direction == 0) ? 30 : -30;
+		BufferedImage koopa = enemies.getSubimage(xStart + idxJump * frameCount, 0, w, h);
+		return koopa;
+	}
+	
+	public BufferedImage getKoopaCarapaceImage() {
+		BufferedImage carapace = enemies.getSubimage(360, 3, GameSettings.imageSize, GameSettings.imageSize);
+		return carapace;
+	}
 }

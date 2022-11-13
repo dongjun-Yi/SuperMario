@@ -134,7 +134,7 @@ public class Player extends GameObject {
 			}
 			
 			if(controller.getSpacePressed()) {
-				die();
+				attacked();
 			}
 		}
 		
@@ -162,7 +162,7 @@ public class Player extends GameObject {
 	
 	@Override
 	public BufferedImage getCurrentImage() {
-		ImageLoader imageLoader = ImageLoader.getImageLoader();;
+		ImageLoader imageLoader = ImageLoader.getImageLoader();
 		BufferedImage[][] marioImg = imageLoader.getPlayerImage(isPlayer1);
 		BufferedImage img = marioImg[direction][0];
 		
@@ -180,6 +180,7 @@ public class Player extends GameObject {
 		else if(isJump) {
 			img = marioImg[jumpDir][5];
 		}
+		// standing image
 		else if ((xRightVel + xLeftVel) == 0)
 			img = marioImg[direction][0];
 		// turn direction image
