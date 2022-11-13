@@ -30,7 +30,7 @@ public class ImageLoader {
 
 	private void readImages() {
 		try {
-			startScreen = ImageIO.read(getClass().getResource("../images/startscreen.png"));
+			startScreen = ImageIO.read(getClass().getResourceAsStream("/images/startscreen.png"));
 			playerAllImg = ImageIO.read(getClass().getResourceAsStream("/images/mario.png"));
 			background = ImageIO.read(getClass().getResourceAsStream("/images/background.png"));
 			items = ImageIO.read(getClass().getResourceAsStream("/images/items.png"));
@@ -117,27 +117,31 @@ public class ImageLoader {
 	}
 
 	public BufferedImage getBlockImage() {
-		BufferedImage block = blocksImg.getSubimage(1, 1, 48, 48);
+		BufferedImage block = blocksImg.getSubimage(0, 0, GameSettings.scaledSize, GameSettings.scaledSize);
 		return block;
 	}
 
 	public BufferedImage getGroundBlockImage() {
-		BufferedImage groundBlock = blocksImg.getSubimage(48, 48, 48, 48);
+		BufferedImage groundBlock = blocksImg.getSubimage(GameSettings.scaledSize, GameSettings.scaledSize,
+				GameSettings.scaledSize, GameSettings.scaledSize);
 		return groundBlock;
 	}
 
-	public BufferedImage getItemBlockImage() {
-		BufferedImage itemBlock = blocksImg.getSubimage(48, 1, 48, 48);
+	public BufferedImage getItemBlockImage(int frameCount) {
+		BufferedImage itemBlock = items.getSubimage(4 + 30 * frameCount, 4,
+				GameSettings.imageSize, GameSettings.imageSize);
 		return itemBlock;
 	}
 
 	public BufferedImage getPipeImage() {
-		BufferedImage pipe = blocksImg.getSubimage(96, 1, 48 * 2, 48 * 2);
+		BufferedImage pipe = blocksImg.getSubimage(96, 0, 
+				GameSettings.scaledSize * 2, GameSettings.scaledSize * 2);
 		return pipe;
 	}
 	
-	public BufferedImage getCoinItemImage() {
-		BufferedImage coin = items.getSubimage(3,95, GameSettings.imageSize, GameSettings.imageSize);
+	public BufferedImage getCoinItemImage(int frameCount) {
+		BufferedImage coin = items.getSubimage(124 + frameCount * 30, 94, 
+				GameSettings.imageSize, GameSettings.imageSize);
 		return coin;
 		
 	}

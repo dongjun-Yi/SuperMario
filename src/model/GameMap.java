@@ -21,15 +21,15 @@ public class GameMap {
 			players.add(new Player(0, 0, background.getWidth()));
 		}
 		camera = new GameCamera(background.getWidth());
-		gameObjects.add(new Goomba(100, 100, background.getWidth()));
-		gameObjects.add(new Koopa(300, 100, background.getWidth()));
-		gameObjects.add(new Block(100, 100, background.getWidth()));
-		gameObjects.add(new GroundBlock(200, 100, background.getWidth()));
-		gameObjects.add(new ItemBlock(300, 100, background.getWidth()));
-		gameObjects.add(new Pipe(400, 100, background.getWidth()));
+		gameObjects.add(new Goomba(100, 300, background.getWidth()));
+		gameObjects.add(new Koopa(300, 300, background.getWidth()));
+		gameObjects.add(new Block(100, 300, background.getWidth()));
+		gameObjects.add(new GroundBlock(200, 300, background.getWidth()));
+		gameObjects.add(new ItemBlock(300, 300, background.getWidth()));
+		gameObjects.add(new Pipe(400, 300, background.getWidth()));
 
-		gameObjects.add(new MushroomItem(500, 100, background.getWidth()));
-		gameObjects.add(new CoinItem(550,100,background.getWidth()));
+		gameObjects.add(new MushroomItem(500, 300, background.getWidth()));
+		gameObjects.add(new CoinItem(550, 300,background.getWidth()));
 	}
 
 	public GameCamera getCamera() {

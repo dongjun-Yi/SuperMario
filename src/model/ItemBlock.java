@@ -8,22 +8,41 @@ import view.ImageLoader;
 
 public class ItemBlock extends GameObject {
 
-	ImageLoader imgLoader = ImageLoader.getImageLoader();
+	private ImageLoader imgLoader = ImageLoader.getImageLoader();
 
 	public ItemBlock(double x, double y, int mapWidthBoundary) {
 		super(x, y, mapWidthBoundary);
 		width = height = GameSettings.scaledSize;
+		
+		hasGravity = false;
+		
 	}
-
+	
 	@Override
 	public void move() {
-		// TODO Auto-generated method stub
-
 	}
 
+	public BufferedImage animation(int speed) {
+		frameCount++;
+		
+		if(frameCount >= speed) {
+			if(animationIdx == 0 && frameCount <= speed * 2)
+				;
+			else {
+				animationIdx++;
+				frameCount = 0;
+			}
+		}
+		
+		if(animationIdx >= 3)
+			animationIdx = 0;
+		
+		return imgLoader.getItemBlockImage(animationIdx);
+	}
+	
 	@Override
 	public BufferedImage getCurrentImage() {
-		BufferedImage img = imgLoader.getItemBlockImage();
+		BufferedImage img = animation(15);
 		return img;
 	}
 

@@ -8,17 +8,47 @@ import view.ImageLoader;
 
 public class MushroomItem extends GameObject{
 	
-	ImageLoader imgLoader = ImageLoader.getImageLoader();
+	private double startY;
+	private boolean isMoving = false;
+	private boolean destroy = false; 
+	private ImageLoader imgLoader = ImageLoader.getImageLoader();
 
 	public MushroomItem(double x, double y, int mapWidthBoundary) {
 		super(x, y, mapWidthBoundary);
-		width = height = GameSettings.scaledSize-16;
+		width = height = GameSettings.scaledSize;
+		
+		// 생성될 때 애니메이션
+		startY = y;
+		hasGravity = false;
+		yVel = -3;
 	}
 
+	public void apearAnimation() {
+		if(startY - y >= GameSettings.scaledSize) {
+			initVelocity();
+			frameCount++;
+			
+			if(frameCount >= 13) {
+				hasGravity = true;
+				isMoving = true;
+				xRightVel = 3;
+			}
+		}	
+	}
+	
 	@Override
 	public void move() {
-		// TODO Auto-generated method stub
-		
+		if(!isMoving) {
+			apearAnimation();
+		}
+		else {
+			// 충돌 구현하면 수정될 부분
+			if(x + xRightVel >= this.mapWidthBoundary - width || 
+					x + xRightVel >= 600 || // 임시
+					x + xRightVel <= 0)
+				xRightVel *= -1;	// 방향 전환
+		}
+		updatesCoordinate();	
 	}
 
 	@Override
