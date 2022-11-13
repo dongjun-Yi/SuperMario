@@ -8,16 +8,16 @@ import view.ImageLoader;
 
 public class GroundBlock extends GameObject {
 
-	ImageLoader imgLoader = ImageLoader.getImageLoader();
+	private ImageLoader imgLoader = ImageLoader.getImageLoader();
 
 	public GroundBlock(double x, double y, int mapWidthBoundary) {
 		super(x, y, mapWidthBoundary);
 		width = height = GameSettings.scaledSize;
+		hasGravity = false;
 	}
 
 	@Override
 	public void move() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -29,7 +29,7 @@ public class GroundBlock extends GameObject {
 
 	@Override
 	public void draw(Graphics2D g2) {
-		g2.drawImage(getCurrentImage(), (int)x, (int)y, width, height, null);
+		g2.drawImage(getCurrentImage(), (int)x, (int)y, null);
 	}
 
 }

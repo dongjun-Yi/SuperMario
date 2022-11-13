@@ -8,22 +8,46 @@ import view.ImageLoader;
 
 public class CoinItem extends GameObject{
 	
-	ImageLoader imgLoader = ImageLoader.getImageLoader();
+	private int destroyCnt = 0;
+	private boolean destroy = false; 
+	private ImageLoader imgLoader = ImageLoader.getImageLoader();
 
 	public CoinItem(double x, double y, int mapWidthBoundary) {
 		super(x, y, mapWidthBoundary);
-		width = height = GameSettings.scaledSize-16;
+		width = height = GameSettings.scaledSize;
+		frameCount = 0;
+		
+		yVel = -16;	// first do jump animation
 	}
 
 	@Override
 	public void move() {
-		// TODO Auto-generated method stub
-		
+		if(!destroy)
+			updatesCoordinate();
 	}
 
+	public BufferedImage coinAnimation(int speed) {
+		
+		if(destroyCnt > 40)	// 애니메이션이 끝나면 제거
+			destroy = true;
+		
+		if(frameCount >= speed) {
+			animationIdx++;
+			frameCount = 0;
+		}
+		
+		frameCount++;
+		destroyCnt++;
+		
+		if(animationIdx >= 3)
+			animationIdx = 0;
+		
+		return imgLoader.getCoinItemImage(animationIdx);
+	}
+	
 	@Override
 	public BufferedImage getCurrentImage() {
-		BufferedImage img = imgLoader.getCoinItemImage();
+		BufferedImage img = coinAnimation(3);
 		return img;
 	}
 
