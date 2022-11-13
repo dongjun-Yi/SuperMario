@@ -7,11 +7,13 @@ import controller.Controller;
 import main.GameSettings;
 import model.GameCamera;
 import model.GameMap;
+import model.GameObject;
 import model.Player;
 
 public class GameRunningView implements GameStatusView {
 
 	private List<Player> players;
+	private List<GameObject> gameObjects;
 	private Player player1;
 	private GameMap map;
 	private GameCamera camera;
@@ -21,6 +23,7 @@ public class GameRunningView implements GameStatusView {
 		map = new GameMap();
 		players = map.getPlayers();
 		camera = map.getCamera();
+		gameObjects = map.getGameObjects();
 		
 		// players settings (controller and 1p 2p)
 		for (int i = 0; i < GameSettings.maxPlayerCount; i++) {
@@ -42,6 +45,12 @@ public class GameRunningView implements GameStatusView {
 		}
 	}
 	
+	public void gameObjectsUpdate() {
+		for(GameObject go : gameObjects) {
+			go.move();
+		}
+	}
+	
 	public void cameraPositionUpdate() {
 		camera.moveX(player1.getX() - GameSettings.scaledSize * 5);	// 플레이어가 화면 왼쪽에서 6칸 이상을 넘어갈 때, 카메라를 이동시킴
 	}
@@ -50,6 +59,7 @@ public class GameRunningView implements GameStatusView {
 	public void updates() {
 		playersInputUpdate();
 		cameraPositionUpdate();
+		gameObjectsUpdate();
 	}
 
 	@Override

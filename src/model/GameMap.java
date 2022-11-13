@@ -10,6 +10,7 @@ import view.ImageLoader;
 
 public class GameMap {
 	private BufferedImage background;
+	private List<GameObject> gameObjects = new ArrayList<GameObject>();
 	private List<Player> players = new ArrayList<Player>();
 	private GameCamera camera;
 	
@@ -20,18 +21,29 @@ public class GameMap {
 			players.add(new Player(0, 0, background.getWidth()));
 		}
 		camera = new GameCamera(background.getWidth());
+		gameObjects.add(new Goomba(100, 100, background.getWidth()));
+		gameObjects.add(new Koopa(300, 100, background.getWidth()));
 	}
 	
 	public GameCamera getCamera() { return camera; }
 	public List<Player> getPlayers() { return players; }
+	public List<GameObject> getGameObjects() { return gameObjects; }
 	
 	public void drawPlayers(Graphics2D g2) {
-		for(Player player : players) 
+		for(Player player : players) {
 			player.draw(g2);
+		}
+	}
+	
+	public void drawGameObjects(Graphics2D g2) {
+		for(GameObject go : gameObjects) {
+			go.draw(g2);
+		}
 	}
 	
 	public void draw(Graphics2D g2) {
 		g2.drawImage(background, 0, 0, null);
+		drawGameObjects(g2);
 		drawPlayers(g2);
 	}
 }
