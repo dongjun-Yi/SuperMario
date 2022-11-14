@@ -128,21 +128,24 @@ public class ImageLoader {
 	}
 
 	public BufferedImage getItemBlockImage(int frameCount) {
-		BufferedImage itemBlock = items.getSubimage(4 + 30 * frameCount, 4,
-				GameSettings.imageSize, GameSettings.imageSize);
+		BufferedImage itemBlock = items.getSubimage(4 + 30 * frameCount, 4, GameSettings.imageSize,
+				GameSettings.imageSize);
 		return itemBlock;
 	}
 
 	public BufferedImage getPipeImage() {
-		BufferedImage pipe = blocksImg.getSubimage(96, 0, 
-				GameSettings.scaledSize * 2, GameSettings.scaledSize * 2);
+		BufferedImage pipe = blocksImg.getSubimage(96, 0, GameSettings.scaledSize * 2, GameSettings.scaledSize * 2);
 		return pipe;
 	}
-	
+
 	public BufferedImage getCoinItemImage(int frameCount) {
-		BufferedImage coin = items.getSubimage(124 + frameCount * 30, 94, 
-				GameSettings.imageSize, GameSettings.imageSize);
+		BufferedImage coin = items.getSubimage(124 + frameCount * 30, 94, GameSettings.imageSize,
+				GameSettings.imageSize);
 		return coin;
-		
+	}
+
+	public BufferedImage getCrashedBlockImage() {
+		BufferedImage img = blocksImg.getSubimage(0, 48, GameSettings.scaledSize, GameSettings.scaledSize);
+		return img;
 	}
 }
