@@ -6,11 +6,11 @@ import java.awt.image.BufferedImage;
 import main.GameSettings;
 import view.ImageLoader;
 
-public class ItemBlock extends GameObject {
+public class BlockItem extends GameObject {
 
 	private ImageLoader imgLoader = ImageLoader.getImageLoader();
 
-	public ItemBlock(double x, double y, int mapWidthBoundary) {
+	public BlockItem(double x, double y, int mapWidthBoundary) {
 		super(x, y, mapWidthBoundary);
 		width = height = GameSettings.scaledSize;
 		

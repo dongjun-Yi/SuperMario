@@ -116,15 +116,15 @@ public class ImageLoader {
 		return carapace;
 	}
 
-	public BufferedImage getBlockImage() {
-		BufferedImage block = blocksImg.getSubimage(0, 0, GameSettings.scaledSize, GameSettings.scaledSize);
-		return block;
+	public BufferedImage getBrickBlockImage() {
+		BufferedImage Brick = blocksImg.getSubimage(0, 0, GameSettings.scaledSize, GameSettings.scaledSize);
+		return Brick;
 	}
 
-	public BufferedImage getGroundBlockImage() {
-		BufferedImage groundBlock = blocksImg.getSubimage(GameSettings.scaledSize, GameSettings.scaledSize,
+	public BufferedImage getHardBlockImage() {
+		BufferedImage HardBlock = blocksImg.getSubimage(GameSettings.scaledSize, GameSettings.scaledSize,
 				GameSettings.scaledSize, GameSettings.scaledSize);
-		return groundBlock;
+		return HardBlock;
 	}
 
 	public BufferedImage getItemBlockImage(int frameCount) {
@@ -144,7 +144,7 @@ public class ImageLoader {
 		return coin;
 	}
 
-	public BufferedImage getCrashedBlockImage() {
+	public BufferedImage getBlockedBlockImage() {
 		BufferedImage img = blocksImg.getSubimage(0, 48, GameSettings.scaledSize, GameSettings.scaledSize);
 		return img;
 	}

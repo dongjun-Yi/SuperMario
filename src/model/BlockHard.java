@@ -6,11 +6,11 @@ import java.awt.image.BufferedImage;
 import main.GameSettings;
 import view.ImageLoader;
 
-public class GroundBlock extends GameObject {
+public class BlockHard extends GameObject {
 
 	private ImageLoader imgLoader = ImageLoader.getImageLoader();
 
-	public GroundBlock(double x, double y, int mapWidthBoundary) {
+	public BlockHard(double x, double y, int mapWidthBoundary) {
 		super(x, y, mapWidthBoundary);
 		width = height = GameSettings.scaledSize;
 		hasGravity = false;
@@ -23,7 +23,7 @@ public class GroundBlock extends GameObject {
 
 	@Override
 	public BufferedImage getCurrentImage() {
-		BufferedImage img = imgLoader.getGroundBlockImage();
+		BufferedImage img = imgLoader.getHardBlockImage();
 		return img;
 	}
 

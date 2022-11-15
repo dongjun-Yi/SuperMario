@@ -6,14 +6,14 @@ import java.awt.image.BufferedImage;
 import main.GameSettings;
 import view.ImageLoader;
 
-public class MushroomItem extends GameObject{
+public class ItemMushroom extends GameObject{
 	
 	private double startY;
 	private boolean isMoving = false;
 	private boolean destroy = false; 
 	private ImageLoader imgLoader = ImageLoader.getImageLoader();
 
-	public MushroomItem(double x, double y, int mapWidthBoundary) {
+	public ItemMushroom(double x, double y, int mapWidthBoundary) {
 		super(x, y, mapWidthBoundary);
 		width = height = GameSettings.scaledSize;
 		

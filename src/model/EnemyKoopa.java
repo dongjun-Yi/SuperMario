@@ -6,12 +6,12 @@ import java.awt.image.BufferedImage;
 import main.GameSettings;
 import view.ImageLoader;
 
-public class Koopa extends GameObject {
+public class EnemyKoopa extends GameObject {
 
 	private boolean isMoving = true;	// !isMoving && isHide(등껍질 상태) 일 땐, 플레이어와 닿으면 공격받지 않고 등껍질이 밀어짐
 	private boolean isHide = false;
 	
-	public Koopa(double x, double y, int mapWidthBoundary) {
+	public EnemyKoopa(double x, double y, int mapWidthBoundary) {
 		super(x, y, mapWidthBoundary);
 		width = GameSettings.scaledSize;
 		height = 24 * GameSettings.scale;

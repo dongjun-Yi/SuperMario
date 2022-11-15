@@ -6,12 +6,12 @@ import java.awt.image.BufferedImage;
 import main.GameSettings;
 import view.ImageLoader;
 
-public class Goomba extends GameObject {
+public class EnemyGoomba extends GameObject {
 	
 	private boolean isDie = false;
 	private boolean destroy = false; 
 	
-	public Goomba(int x, int y, int mapWidthBoundary) {
+	public EnemyGoomba(int x, int y, int mapWidthBoundary) {
 		super(x, y, mapWidthBoundary);
 		width = height = GameSettings.scaledSize;
 		xLeftVel = -2;
