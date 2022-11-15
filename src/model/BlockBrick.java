@@ -6,42 +6,34 @@ import java.awt.image.BufferedImage;
 import main.GameSettings;
 import view.ImageLoader;
 
-public class BlockBrick extends GameObject{
+public class BlockBrick extends ObjectStatic {
 	
+	private double yVel;
 	private boolean isTouched = false;
 	private ImageLoader imgLoader = ImageLoader.getImageLoader();
 	
-	public BlockBrick(double x, double y, int mapWidthBoundary) {
-		super(x, y, mapWidthBoundary);
+	public BlockBrick(double x, double y) {
+		super(x, y);
 		width = height = GameSettings.scaledSize;
 		
-		hasGravity = false;
-		yVel = -3;
-		
+		yVel = -3.0;
 		isTouched = true;	// (임시) 애니메이션 확인용
 	}
 
-	public void touchedAnimation() {
-		
+	public void touchedAnimation() {		
 		if(frameCount >= 14) {
-			initVelocity();
+			yVel = 0;
+			frameCount = 0;
 			isTouched = false;
 			return;
 		}
 		
 		if(frameCount >= 7) {
-			yVel = 3;
+			yVel = 3.0;
 		}
 			
 		frameCount++;
-	}
-	
-	@Override
-	public void move() {
-		if(isTouched) {
-			touchedAnimation();
-			updatesCoordinate();
-		}
+		y += yVel;
 	}
 
 	@Override
@@ -52,7 +44,8 @@ public class BlockBrick extends GameObject{
 
 	@Override
 	public void draw(Graphics2D g2) {
-		g2.drawImage(getCurrentImage(), (int)x, (int)y, width, height,  null);
+		if(isTouched)	touchedAnimation();
+		g2.drawImage(getCurrentImage(), (int)x, (int)y, null);
 	}
 
 }

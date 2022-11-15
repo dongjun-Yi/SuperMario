@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import main.GameSettings;
 import view.ImageLoader;
 
-public class ItemCoin extends GameObject{
+public class ItemCoin extends ObjectDynamic {
 	
 	private double startY;
 	private boolean destroy = false; 

@@ -6,19 +6,13 @@ import java.awt.image.BufferedImage;
 import main.GameSettings;
 import view.ImageLoader;
 
-public class BlockHard extends GameObject {
+public class BlockHard extends ObjectStatic {
 
 	private ImageLoader imgLoader = ImageLoader.getImageLoader();
 
-	public BlockHard(double x, double y, int mapWidthBoundary) {
-		super(x, y, mapWidthBoundary);
+	public BlockHard(double x, double y) {
+		super(x, y);
 		width = height = GameSettings.scaledSize;
-		hasGravity = false;
-	}
-
-	@Override
-	public void move() {
-
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import main.GameSettings;
 import view.ImageLoader;
 
-public class ItemMushroom extends GameObject{
+public class ItemMushroom extends ObjectDynamic{
 	
 	private double startY;
 	private boolean isMoving = false;

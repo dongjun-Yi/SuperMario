@@ -6,18 +6,13 @@ import java.awt.image.BufferedImage;
 import main.GameSettings;
 import view.ImageLoader;
 
-public class BlockPipe extends GameObject {
+public class BlockPipe extends ObjectStatic {
 
 	private ImageLoader imgLoader = ImageLoader.getImageLoader();
 
-	public BlockPipe(double x, double y, int mapWidthBoundary) {
-		super(x, y, mapWidthBoundary);
+	public BlockPipe(double x, double y) {
+		super(x, y);
 		width = height = GameSettings.scaledSize * 2;
-	}
-
-	@Override
-	public void move() {
-		
 	}
 
 	@Override

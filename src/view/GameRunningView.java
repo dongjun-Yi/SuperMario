@@ -7,13 +7,15 @@ import controller.Controller;
 import main.GameSettings;
 import model.GameCamera;
 import model.GameMap;
-import model.GameObject;
+import model.ObjectDynamic;
+import model.ObjectStatic;
 import model.Player;
 
 public class GameRunningView implements GameStatusView {
 
 	private List<Player> players;
-	private List<GameObject> gameObjects;
+	private List<ObjectDynamic> objectDynamic;
+	private List<ObjectStatic> objectStatic;
 	private Player player1;
 	private GameMap map;
 	private GameCamera camera;
@@ -23,7 +25,8 @@ public class GameRunningView implements GameStatusView {
 		map = new GameMap();
 		players = map.getPlayers();
 		camera = map.getCamera();
-		gameObjects = map.getGameObjects();
+		objectDynamic = map.getObjectDynamic();
+		objectStatic = map.getObjectStatic();
 		
 		// players settings (controller and 1p 2p)
 		for (int i = 0; i < GameSettings.maxPlayerCount; i++) {
@@ -33,7 +36,7 @@ public class GameRunningView implements GameStatusView {
 				p.setIsPlayer1(true);
 				player1 = p;
 			} else {
-				p.setController(othersController);
+				p.setController(controller);
 				p.setIsPlayer1(false);
 			}
 		}
@@ -45,9 +48,9 @@ public class GameRunningView implements GameStatusView {
 		}
 	}
 	
-	public void gameObjectsUpdate() {
-		for(GameObject go : gameObjects) {
-			go.move();
+	public void objectDynamicUpdate() {
+		for(ObjectDynamic od : objectDynamic) {
+			od.move();
 		}
 	}
 	
@@ -59,7 +62,7 @@ public class GameRunningView implements GameStatusView {
 	public void updates() {
 		playersInputUpdate();
 		cameraPositionUpdate();
-		gameObjectsUpdate();
+		objectDynamicUpdate();
 	}
 
 	@Override
