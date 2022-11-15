@@ -6,12 +6,12 @@ import java.awt.image.BufferedImage;
 import main.GameSettings;
 import view.ImageLoader;
 
-public class Block extends GameObject{
+public class BlockBrick extends GameObject{
 	
 	private boolean isTouched = false;
 	private ImageLoader imgLoader = ImageLoader.getImageLoader();
 	
-	public Block(double x, double y, int mapWidthBoundary) {
+	public BlockBrick(double x, double y, int mapWidthBoundary) {
 		super(x, y, mapWidthBoundary);
 		width = height = GameSettings.scaledSize;
 		
@@ -22,8 +22,11 @@ public class Block extends GameObject{
 	}
 
 	public void touchedAnimation() {
+		
 		if(frameCount >= 14) {
+			initVelocity();
 			isTouched = false;
+			return;
 		}
 		
 		if(frameCount >= 7) {
@@ -43,7 +46,7 @@ public class Block extends GameObject{
 
 	@Override
 	public BufferedImage getCurrentImage() {
-		BufferedImage img = imgLoader.getBlockImage();
+		BufferedImage img = imgLoader.getBrickBlockImage();
 		return img;
 	}
 

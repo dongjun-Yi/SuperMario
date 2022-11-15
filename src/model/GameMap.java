@@ -21,16 +21,16 @@ public class GameMap {
 			players.add(new Player(0, 0, background.getWidth()));
 		}
 		camera = new GameCamera(background.getWidth());
-		gameObjects.add(new Goomba(100, 300, background.getWidth()));
-		gameObjects.add(new Koopa(300, 300, background.getWidth()));
-		gameObjects.add(new Block(100, 300, background.getWidth()));
-		gameObjects.add(new GroundBlock(200, 300, background.getWidth()));
-		gameObjects.add(new ItemBlock(300, 300, background.getWidth()));
-		gameObjects.add(new Pipe(400, 300, background.getWidth()));
+		gameObjects.add(new EnemyGoomba(100, 300, background.getWidth()));
+		gameObjects.add(new EnemyKoopa(300, 300, background.getWidth()));
+		gameObjects.add(new BlockBrick(100, 300, background.getWidth()));
+		gameObjects.add(new BlockHard(200, 300, background.getWidth()));
+		gameObjects.add(new BlockItem(300, 300, background.getWidth()));
+		gameObjects.add(new BlockPipe(400, 300, background.getWidth()));
 
-		gameObjects.add(new MushroomItem(500, 300, background.getWidth()));
-		gameObjects.add(new CoinItem(550, 300, background.getWidth()));
-		gameObjects.add(new CrashedBlock(600, 300, background.getWidth()));
+		gameObjects.add(new ItemMushroom(500, 300, background.getWidth()));
+		gameObjects.add(new ItemCoin(550, 300, background.getWidth()));
+		gameObjects.add(new BlockBlocked(600, 300, background.getWidth()));
 	}
 
 	public GameCamera getCamera() {

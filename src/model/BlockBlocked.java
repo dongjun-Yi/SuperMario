@@ -6,23 +6,25 @@ import java.awt.image.BufferedImage;
 import main.GameSettings;
 import view.ImageLoader;
 
-public class Pipe extends GameObject {
+public class BlockBlocked extends GameObject {
 
 	private ImageLoader imgLoader = ImageLoader.getImageLoader();
 
-	public Pipe(double x, double y, int mapWidthBoundary) {
+	public BlockBlocked(double x, double y, int mapWidthBoundary) {
 		super(x, y, mapWidthBoundary);
-		width = height = GameSettings.scaledSize * 2;
+		width = height = GameSettings.scaledSize;
+		hasGravity = false;
 	}
 
 	@Override
 	public void move() {
-		
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public BufferedImage getCurrentImage() {
-		BufferedImage img = imgLoader.getPipeImage();
+		BufferedImage img = imgLoader.getBlockedBlockImage();
 		return img;
 	}
 

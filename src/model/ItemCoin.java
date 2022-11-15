@@ -6,18 +6,19 @@ import java.awt.image.BufferedImage;
 import main.GameSettings;
 import view.ImageLoader;
 
-public class CoinItem extends GameObject{
+public class ItemCoin extends GameObject{
 	
-	private int destroyCnt = 0;
+	private double startY;
 	private boolean destroy = false; 
 	private ImageLoader imgLoader = ImageLoader.getImageLoader();
 
-	public CoinItem(double x, double y, int mapWidthBoundary) {
+	public ItemCoin(double x, double y, int mapWidthBoundary) {
 		super(x, y, mapWidthBoundary);
 		width = height = GameSettings.scaledSize;
 		frameCount = 0;
 		
 		yVel = -16;	// first do jump animation
+		startY = y;
 	}
 
 	@Override
@@ -28,7 +29,7 @@ public class CoinItem extends GameObject{
 
 	public BufferedImage coinAnimation(int speed) {
 		
-		if(destroyCnt > 40)	// 애니메이션이 끝나면 제거
+		if(startY - y <= 90 && yVel > 0)	// 애니메이션이 끝나면 제거
 			destroy = true;
 		
 		if(frameCount >= speed) {
@@ -37,7 +38,6 @@ public class CoinItem extends GameObject{
 		}
 		
 		frameCount++;
-		destroyCnt++;
 		
 		if(animationIdx >= 3)
 			animationIdx = 0;

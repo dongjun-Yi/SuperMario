@@ -6,25 +6,23 @@ import java.awt.image.BufferedImage;
 import main.GameSettings;
 import view.ImageLoader;
 
-public class CrashedBlock extends GameObject {
+public class BlockPipe extends GameObject {
 
 	private ImageLoader imgLoader = ImageLoader.getImageLoader();
 
-	public CrashedBlock(double x, double y, int mapWidthBoundary) {
+	public BlockPipe(double x, double y, int mapWidthBoundary) {
 		super(x, y, mapWidthBoundary);
-		width = height = GameSettings.scaledSize;
-		hasGravity = false;
+		width = height = GameSettings.scaledSize * 2;
 	}
 
 	@Override
 	public void move() {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public BufferedImage getCurrentImage() {
-		BufferedImage img = imgLoader.getCrashedBlockImage();
+		BufferedImage img = imgLoader.getPipeImage();
 		return img;
 	}
 
