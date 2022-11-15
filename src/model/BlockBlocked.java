@@ -6,20 +6,13 @@ import java.awt.image.BufferedImage;
 import main.GameSettings;
 import view.ImageLoader;
 
-public class BlockBlocked extends GameObject {
+public class BlockBlocked extends ObjectStatic {
 
 	private ImageLoader imgLoader = ImageLoader.getImageLoader();
 
-	public BlockBlocked(double x, double y, int mapWidthBoundary) {
-		super(x, y, mapWidthBoundary);
+	public BlockBlocked(double x, double y) {
+		super(x, y);
 		width = height = GameSettings.scaledSize;
-		hasGravity = false;
-	}
-
-	@Override
-	public void move() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

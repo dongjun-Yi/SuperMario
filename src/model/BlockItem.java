@@ -6,20 +6,14 @@ import java.awt.image.BufferedImage;
 import main.GameSettings;
 import view.ImageLoader;
 
-public class BlockItem extends GameObject {
+public class BlockItem extends ObjectStatic {
 
 	private ImageLoader imgLoader = ImageLoader.getImageLoader();
 
-	public BlockItem(double x, double y, int mapWidthBoundary) {
-		super(x, y, mapWidthBoundary);
+	public BlockItem(double x, double y) {
+		super(x, y);
 		width = height = GameSettings.scaledSize;
-		
-		hasGravity = false;
-		
-	}
-	
-	@Override
-	public void move() {
+			
 	}
 
 	public BufferedImage animation(int speed) {

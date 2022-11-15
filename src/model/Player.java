@@ -7,7 +7,7 @@ import controller.Controller;
 import main.GameSettings;
 import view.ImageLoader;
 
-public class Player extends GameObject {
+public class Player extends ObjectDynamic {
 	private boolean isPlayer1 = false;
 	
 	private Controller controller = null;

@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import main.GameSettings;
 import view.ImageLoader;
 
-public class EnemyGoomba extends GameObject {
+public class EnemyGoomba extends ObjectDynamic {
 	
 	private boolean isDie = false;
 	private boolean destroy = false; 
