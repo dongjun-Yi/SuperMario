@@ -3,6 +3,7 @@ package view;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import client.GameClient;
 import controller.Controller;
 import main.GamePanel;
 import main.GameSettings;
@@ -34,7 +35,8 @@ public class StartScreenView implements GameStatusView {
 	@Override
 	public void updates() {
 		if (controller.getSpacePressed() && row == CURSOR_GAMESTART_LOCATION) {
-			gamePanel.gameRunning();
+			//gamePanel.gameRunning();
+			gamePanel.setGameStatus("gameReady");
 		}
 		if (controller.getSpacePressed() && row == CURSOR_QUIT_LOCATION) {
 			System.exit(0);
