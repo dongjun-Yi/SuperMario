@@ -17,6 +17,7 @@ public class GameRunningView implements GameStatusView {
 	private List<ObjectDynamic> objectDynamic;
 	private List<ObjectStatic> objectStatic;
 	private Player player1;
+	private Player player2;
 	private GameMap map;
 	private GameCamera camera;
 	
@@ -36,8 +37,9 @@ public class GameRunningView implements GameStatusView {
 				p.setIsPlayer1(true);
 				player1 = p;
 			} else {
-				p.setController(controller);
+				p.setController(othersController);
 				p.setIsPlayer1(false);
+				player2 = p;
 			}
 		}
 	}

@@ -287,8 +287,8 @@ public class GameServer extends JFrame {
 							UserName = "luigi";
 							objectGameMsg.setPlayerName("luigi");
 						}
-
 						Login();
+						WriteOneObject(objectGameMsg);
 					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_READY)) {// 300
 						System.out.println(UserVec.size());
 						UserStatus = "ready";
