@@ -34,8 +34,6 @@ public class GamePanel extends JPanel implements Runnable {
 		setGameStatusView(new StartScreenView(this, controller));
 	}
 	
-	public long getTime() { return timer; }
-	
 	public void setGameStatusView(GameStatusView gameStatusView) {
 		this.gameStatusView = gameStatusView;
 	}

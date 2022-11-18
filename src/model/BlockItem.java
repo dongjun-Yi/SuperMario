@@ -1,6 +1,7 @@
 package model;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import main.GameSettings;
@@ -8,12 +9,13 @@ import view.ImageLoader;
 
 public class BlockItem extends ObjectStatic {
 
+	private int itemNum = 0;
 	private ImageLoader imgLoader = ImageLoader.getImageLoader();
 
-	public BlockItem(double x, double y) {
+	public BlockItem(double x, double y, int itemNum) {
 		super(x, y);
 		width = height = GameSettings.scaledSize;
-			
+		this.itemNum = itemNum;
 	}
 
 	public BufferedImage animation(int speed) {
@@ -37,6 +39,7 @@ public class BlockItem extends ObjectStatic {
 	@Override
 	public BufferedImage getCurrentImage() {
 		BufferedImage img = animation(15);
+	
 		return img;
 	}
 
@@ -46,4 +49,13 @@ public class BlockItem extends ObjectStatic {
 
 	}
 
+	@Override
+	public Rectangle getHitbox() {
+		return new Rectangle((int) x, (int) y, width, height);
+	}
+
+	@Override
+	public int touch() {
+		return itemNum;
+	}
 }
