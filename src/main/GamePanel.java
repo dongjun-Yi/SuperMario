@@ -17,27 +17,35 @@ import view.GameStatusView;
 import view.StartScreenView;
 
 public class GamePanel extends JPanel implements Runnable {
-	
+
 	private static GamePanel instance = new GamePanel();
-	
+
 	private static final long serialVersionUID = 1L;
 	private Thread gameThread;
 
-	private Controller controller = new PlayerController(); 	  // 플레이어의 input값
+	private Controller controller = new PlayerController(); // 플레이어의 input값
 	private Controller othersController = new OthersController(); // 다른 플레이어의 input data값
 
+	public Controller getOthersController() {
+		return othersController;
+	}
+
 	private long timer = 0;
-	private int playerNumber = 0; 			// 서버한테 받은 클라이언트 번호
-	private GameStatusView gameStatusView;	// 시작화면, 인게임 화면 --> GameStatusView로 캡슐화
+	private int playerNumber = 1; // 서버한테 받은 클라이언트 번호
+	private GameStatusView gameStatusView; // 시작화면, 인게임 화면 --> GameStatusView로 캡슐화
 	private String gameStatus;
-	
+
 	private String ip_addr = "127.0.0.1";
 	private String port = "30000";
 	private GameClient c1;
-	private int sendMsgCnt=0;
+
+	public GameClient getC1() {
+		return c1;
+	}
+
 	private int sendMsgRunningCnt = 0;
-	
-	
+	private int sendMsgReadyCnt = 0;
+
 	public GamePanel() {
 		this.setPreferredSize(new Dimension(GameSettings.screenWidth, GameSettings.screenHeight));
 		this.setDoubleBuffered(true);
@@ -45,14 +53,17 @@ public class GamePanel extends JPanel implements Runnable {
 		this.setFocusable(true);
 		// gameStatus == 시작 화면
 		setGameStatusView(new StartScreenView(this, controller));
+
 	}
-	
-	public long getTime() { return timer; }
-	
+
+	public long getTime() {
+		return timer;
+	}
+
 	public void setGameStatusView(GameStatusView gameStatusView) {
 		this.gameStatusView = gameStatusView;
 	}
-	
+
 	public void gameStart() {
 		gameThread = new Thread(this);
 		gameThread.start();
@@ -64,21 +75,23 @@ public class GamePanel extends JPanel implements Runnable {
 		// gameStatus == 게임 중
 		setGameStatusView(new GameRunningView(controller, othersController, playerNumber));
 	}
-	
+
 	public void update() {
-		if(gameStatus == "startScreen") {
-			setGameStatusView(new StartScreenView(this, controller));
-		}
-		if(gameStatus == "gameRunning" && sendMsgRunningCnt==0) { // 계속 그리는것을 방지하기 위해
+		if (gameStatus == "gameRunning" && sendMsgRunningCnt == 0) { // 계속 그리는것을 방지하기 위해
 			gameRunning();
 			sendMsgRunningCnt++;
 		}
-		if(gameStatus == "gameReady" && sendMsgCnt==0) { //게임 준비 완료 메세지를 한번만 보내기 위해
+		if (gameStatus == "gameReady" && sendMsgReadyCnt == 0) { // 게임 준비 완료 메세지를 한번만 보내기 위해
 			GameModelMsg gameReadMsg = new GameModelMsg("player", NetworkStatus.GAME_READY);
 			c1.SendObject(gameReadMsg);
-			sendMsgCnt++;
+			sendMsgReadyCnt++;
 		}
-		
+		if (gameStatus == "gameRunning") {
+			c1.SendButtonAction(controller.getUpPressed(), controller.getDownPressed(), controller.getLeftPressed(),
+					controller.getRightPressed(), controller.getSpacePressed());
+				
+		}
+
 		gameStatusView.updates();
 		repaint();
 	}
@@ -91,7 +104,6 @@ public class GamePanel extends JPanel implements Runnable {
 
 		long lastTime = System.nanoTime();
 		long currentTime;
-		
 
 		while (gameThread != null) {
 			currentTime = System.nanoTime();
@@ -129,8 +141,8 @@ public class GamePanel extends JPanel implements Runnable {
 	public void setGameStatus(String gameStatus) {
 		this.gameStatus = gameStatus;
 	}
-	
-	public static GamePanel getInstance() {
+
+	public synchronized static GamePanel getInstance() {
 		return instance;
 	}
 }

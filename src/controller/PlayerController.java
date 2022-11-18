@@ -1,6 +1,9 @@
 package controller;
 import java.awt.event.KeyEvent;
 
+import client.GameClient;
+import main.GamePanel;
+
 public class PlayerController implements Controller {
 
 	private boolean upPressed, downPressed, leftPressed, rightPressed;
