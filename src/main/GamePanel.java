@@ -10,8 +10,8 @@ import client.GameClient;
 import controller.Controller;
 import controller.OthersController;
 import controller.PlayerController;
-import server.GameModelMsg;
-import server.NetworkStatus;
+
+import view.GameReadyView;
 import view.GameRunningView;
 import view.GameStatusView;
 import view.StartScreenView;
@@ -33,18 +33,10 @@ public class GamePanel extends JPanel implements Runnable {
 	private long timer = 0;
 	private int playerNumber = 1; // 서버한테 받은 클라이언트 번호
 	private GameStatusView gameStatusView; // 시작화면, 인게임 화면 --> GameStatusView로 캡슐화
-	private String gameStatus;
 
 	private String ip_addr = "127.0.0.1";
 	private String port = "30000";
-	private GameClient c1;
-
-	public GameClient getC1() {
-		return c1;
-	}
-
-	private int sendMsgRunningCnt = 0;
-	private int sendMsgReadyCnt = 0;
+	private GameClient gameClient;
 
 	public GamePanel() {
 		this.setPreferredSize(new Dimension(GameSettings.screenWidth, GameSettings.screenHeight));
@@ -56,6 +48,10 @@ public class GamePanel extends JPanel implements Runnable {
 
 	}
 
+	public GameClient getClient() {
+		return gameClient;
+	}
+	
 	public long getTime() {
 		return timer;
 	}
@@ -67,31 +63,20 @@ public class GamePanel extends JPanel implements Runnable {
 	public void gameStart() {
 		gameThread = new Thread(this);
 		gameThread.start();
-		c1 = new GameClient("player", ip_addr, port);
+		gameClient = new GameClient("player", ip_addr, port);
+	}
+
+	public void gameReady() {
+		setGameStatusView(new GameReadyView(gameClient));
 	}
 
 	public void gameRunning() {
 		controller.initKey();
 		// gameStatus == 게임 중
-		setGameStatusView(new GameRunningView(controller, othersController, playerNumber));
+		setGameStatusView(new GameRunningView(controller, othersController, playerNumber, gameClient));
 	}
 
 	public void update() {
-		if (gameStatus == "gameRunning" && sendMsgRunningCnt == 0) { // 계속 그리는것을 방지하기 위해
-			gameRunning();
-			sendMsgRunningCnt++;
-		}
-		if (gameStatus == "gameReady" && sendMsgReadyCnt == 0) { // 게임 준비 완료 메세지를 한번만 보내기 위해
-			GameModelMsg gameReadMsg = new GameModelMsg("player", NetworkStatus.GAME_READY);
-			c1.SendObject(gameReadMsg);
-			sendMsgReadyCnt++;
-		}
-		if (gameStatus == "gameRunning") {
-			c1.SendButtonAction(controller.getUpPressed(), controller.getDownPressed(), controller.getLeftPressed(),
-					controller.getRightPressed(), controller.getSpacePressed());
-				
-		}
-
 		gameStatusView.updates();
 		repaint();
 	}
@@ -132,14 +117,6 @@ public class GamePanel extends JPanel implements Runnable {
 		gameStatusView.draw(g2);
 
 		g2.dispose();
-	}
-
-	public String getGameStatus() {
-		return gameStatus;
-	}
-
-	public void setGameStatus(String gameStatus) {
-		this.gameStatus = gameStatus;
 	}
 
 	public synchronized static GamePanel getInstance() {

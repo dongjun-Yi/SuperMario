@@ -3,6 +3,7 @@ package view;
 import java.awt.Graphics2D;
 import java.util.List;
 
+import client.GameClient;
 import controller.Controller;
 import main.GameSettings;
 import model.GameCamera;
@@ -26,13 +27,20 @@ public class GameRunningView implements GameStatusView {
 	private GameMap map;
 	private GameCamera camera;
 
-	public GameRunningView(Controller controller, Controller othersController, int playerNumber) {
+	private Controller controller;
+	private GameClient gameClient;
+
+	public GameRunningView(Controller controller, Controller othersController, int playerNumber,
+			GameClient gameClient) {
 		// 게임 첫 시작 -> 맵생성, 플레이어 설정
 		map = new GameMap();
 		players = map.getPlayers();
 		camera = map.getCamera();
 		objectDynamic = map.getObjectDynamic();
 		objectStatic = map.getObjectStatic();
+
+		this.controller = controller;
+		this.gameClient = gameClient;
 
 		// players settings (controller and 1p 2p)
 		for (int i = 0; i < GameSettings.maxPlayerCount; i++) {
@@ -65,8 +73,14 @@ public class GameRunningView implements GameStatusView {
 		camera.moveX(player1.getX() - GameSettings.scaledSize * 5); // 플레이어가 화면 왼쪽에서 6칸 이상을 넘어갈 때, 카메라를 이동시킴
 	}
 
+	public void playerInputSend() {
+		gameClient.SendButtonAction(controller.getUpPressed(), controller.getDownPressed(), controller.getLeftPressed(),
+				controller.getRightPressed(), controller.getSpacePressed());
+	}
+
 	@Override
 	public void updates() {
+		playerInputSend();
 		playersInputUpdate();
 		cameraPositionUpdate();
 		objectDynamicUpdate();

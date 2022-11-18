@@ -69,7 +69,7 @@ public class GameClient {
 						userName = objectGameMsg.getPlayerName();
 					}
 					if (objectGameMsg.getCode().matches(NetworkStatus.GAME_START)) { // 400
-						gamePanel.setGameStatus("gameRunning");
+						gamePanel.gameRunning();
 					}
 					if (objectGameMsg.getCode().matches(NetworkStatus.GAME_BUTTON)) {
 						otherController.setKeyPressed(objectGameMsg.isUpPressed(), objectGameMsg.isDownPressed(),

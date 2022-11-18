@@ -11,31 +11,23 @@ public class GameModelMsg implements Serializable {
 	// private String data;
 	public ImageIcon img;
 	private double x, y;
-	private boolean upPressed;
+	private boolean upPressed, downPressed, leftPressed, rightPressed, spacePressed;
 
 	public boolean isUpPressed() {
 		return upPressed;
 	}
 
-	private boolean downPressed;
-
 	public boolean isDownPressed() {
 		return downPressed;
 	}
-
-	private boolean leftPressed;
 
 	public boolean isLeftPressed() {
 		return leftPressed;
 	}
 
-	private boolean rightPressed;
-
 	public boolean isRightPressed() {
 		return rightPressed;
 	}
-
-	private boolean spacePressed;
 
 	public boolean isSpacePressed() {
 		return spacePressed;
