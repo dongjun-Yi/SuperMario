@@ -32,7 +32,7 @@ public class GameMap {
 
 		objectStatic.add(new BlockBrick(100, 500));
 		objectStatic.add(new BlockHard(200, 529));
-		objectStatic.add(new BlockItem(300, 300, 1));
+		objectStatic.add(new BlockItem(300, 300, 2));
 		objectStatic.add(new BlockPipe(400, 300));
 		objectStatic.add(new BlockBlocked(600, 300));
 		
@@ -117,7 +117,7 @@ public class GameMap {
 				}
 
 				// 플레이어가 블록 위에 서 있을 때
-				if (BottomHitbox.intersects(osHitbox)) {
+				else if (BottomHitbox.intersects(osHitbox)) {
 					p.landing(os.getY() + 3);
 					p.setCollided(true);	// 현재 블록 바닥과 충돌함
 				}
@@ -149,9 +149,10 @@ public class GameMap {
 				// 플레이어와 닿았을 때
 				else if (centerHitbox.intersects(osHitbox)) {
 					if (od.isItem()) {
-						if(od instanceof ItemMushroom)
+						if(od instanceof ItemMushroom)	{
 							p.startSpeedUp();
-						od.setDestroy(true);
+							od.setDestroy(true);
+						}
 					} else if (od instanceof EnemyKoopa && ((EnemyKoopa) od).isHide()	// 등껍질이 움직이지 않은 상태면 친다
 							&& !((EnemyKoopa) od).isMoving()) {
 						od.attacked((int) p.getX() + p.getWidth() / 2);

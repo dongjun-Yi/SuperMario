@@ -21,7 +21,6 @@ public class GamePanel extends JPanel implements Runnable {
 	private Controller controller = new PlayerController(); 	  // 플레이어의 input값
 	private Controller othersController = new OthersController(); // 다른 플레이어의 input data값
 
-	private long timer = 0;
 	private int playerNumber = 0; 			// 서버한테 받은 클라이언트 번호
 	private GameStatusView gameStatusView;	// 시작화면, 인게임 화면 --> GameStatusView로 캡슐화
 	
@@ -63,22 +62,15 @@ public class GamePanel extends JPanel implements Runnable {
 		long lastTime = System.nanoTime();
 		long currentTime;
 		
-
 		while (gameThread != null) {
 			currentTime = System.nanoTime();
 			delta += (currentTime - lastTime) / interval;
-			timer += (currentTime - lastTime);
 			lastTime = currentTime;
 
 			// draw every 1/60 second
 			if (delta >= 1) {
 				update();
 				delta--;
-			}
-
-			if (timer >= 1000000000) {
-				// 1 second
-				timer = 0;
 			}
 		}
 	}
