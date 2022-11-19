@@ -10,6 +10,7 @@ public class GameModelMsg implements Serializable {
 	private String code;
 	// private String data;
 	private double x, y;
+	private double xLeftVel, xRightVel, yVel;
 	private boolean upPressed, downPressed, leftPressed, rightPressed, spacePressed;
 
 	public boolean isUpPressed() {
@@ -37,10 +38,14 @@ public class GameModelMsg implements Serializable {
 		this.code = code;
 	}
 
-	public GameModelMsg(String playerName, String code, double x, double y, boolean upPressed, boolean downPressed, boolean leftPressed,
-			boolean rightPressed, boolean spacePressed) {
+	public GameModelMsg(String playerName, String code, double x, double y, double xLeftVel, double xRightVel, double yVel,
+			boolean upPressed, boolean downPressed, boolean leftPressed, boolean rightPressed, boolean spacePressed) {
 		this.x = x;
 		this.y = y;
+		this.xLeftVel = xLeftVel;
+		this.xRightVel = xRightVel;
+		this.yVel = yVel;
+		
 		this.playerName = playerName;
 		this.code = code;
 		this.upPressed = upPressed;
@@ -50,9 +55,30 @@ public class GameModelMsg implements Serializable {
 		this.spacePressed = spacePressed;
 	}
 
+	public double getxLeftVel() {
+		return xLeftVel;
+	}
+
+	public double getxRightVel() {
+		return xRightVel;
+	}
+
+	public double getyVel() {
+		return yVel;
+	}
+
+	public String posToString() {
+		return "x=" + x + ", y=" + y;
+	}
+	
+	public String velToString() {
+		return "xLeftVel=" + xLeftVel + ", xRightVel=" + xRightVel +
+				"\nyVel=" + yVel;
+	}
+	
 	public String inputToString() {
-		return "upPressed=" + upPressed + ", spacePressed=" + spacePressed
-			+ "\nleftPressed=" + leftPressed + ", rightPressed=" + rightPressed;
+		return "upPressed=" + upPressed + ", spacePressed=" + spacePressed + "\nleftPressed=" + leftPressed
+				+ ", rightPressed=" + rightPressed;
 	}
 
 	public String getPlayerName() {

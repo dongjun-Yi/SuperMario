@@ -58,7 +58,7 @@ public class PlayerController implements Controller {
 		}
 		// 키 누르면 전송
 		if(player != null)
-			gameClient.SendButtonAction(player.getX(), player.getY(), upPressed, downPressed, leftPressed, rightPressed, spacePressed);	
+			gameClient.SendButtonAction(player.getX(), player.getY(), player.getxLeftVel(), player.getxRightVel(), player.getyVel(), upPressed, downPressed, leftPressed, rightPressed, spacePressed);	
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class PlayerController implements Controller {
 		}
 		// 키 떼면 전송
 		if(player != null)
-			gameClient.SendButtonAction(player.getX(), player.getY(), upPressed, downPressed, leftPressed, rightPressed, spacePressed);	
+			gameClient.SendButtonAction(player.getX(), player.getY(), player.getxLeftVel(), player.getxRightVel(), player.getyVel(), upPressed, downPressed, leftPressed, rightPressed, spacePressed);	
 	}
 
 	@Override

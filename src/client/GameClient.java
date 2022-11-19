@@ -69,6 +69,10 @@ public class GameClient {
 						// 좌표 동기화
 						otherController.getPlayer().setX(objectGameMsg.getX());
 						otherController.getPlayer().setY(objectGameMsg.getY());
+						// 속도 동기화
+						otherController.getPlayer().setxLeftVel(objectGameMsg.getxLeftVel());
+						otherController.getPlayer().setxRightVel(objectGameMsg.getxRightVel());
+						otherController.getPlayer().setyVel(objectGameMsg.getyVel());
 						// 키 동기화
 						otherController.setKeyPressed(objectGameMsg.isUpPressed(), objectGameMsg.isDownPressed(),
 								objectGameMsg.isLeftPressed(), objectGameMsg.isRightPressed(),
@@ -99,11 +103,11 @@ public class GameClient {
 		}
 	}
 
-	public void SendButtonAction(double x, double y, boolean upPressed, boolean downPressed, boolean leftPressed,
-			boolean rightPressed, boolean spacePressed) {
+	public void SendButtonAction(double x, double y, double xLeftVel, double xRightVel, double yVel, boolean upPressed,
+			boolean downPressed, boolean leftPressed, boolean rightPressed, boolean spacePressed) {
 		// 좌표와 키 입력 값 보냄
-		GameModelMsg objectGameMsg = new GameModelMsg(userName, NetworkStatus.GAME_BUTTON, x, y, upPressed, downPressed,
-				leftPressed, rightPressed, spacePressed);
+		GameModelMsg objectGameMsg = new GameModelMsg(userName, NetworkStatus.GAME_BUTTON, x, y, xLeftVel, xRightVel, yVel,
+				upPressed, downPressed, leftPressed, rightPressed, spacePressed);
 		SendObject(objectGameMsg);
 	}
 }

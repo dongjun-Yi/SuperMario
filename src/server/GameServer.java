@@ -300,6 +300,8 @@ public class GameServer extends JFrame {
 
 					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_BUTTON)) {
 						WriteOthersObject(objectGameMsg);
+						AppendText(objectGameMsg.posToString());
+						AppendText(objectGameMsg.velToString());
 						AppendText(objectGameMsg.inputToString());
 					}
 
