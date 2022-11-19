@@ -30,7 +30,6 @@ public class GamePanel extends JPanel implements Runnable {
 		return othersController;
 	}
 
-	private long timer = 0;
 	private int playerNumber = 1; // 서버한테 받은 클라이언트 번호
 	private GameStatusView gameStatusView; // 시작화면, 인게임 화면 --> GameStatusView로 캡슐화
 
@@ -45,17 +44,12 @@ public class GamePanel extends JPanel implements Runnable {
 		this.setFocusable(true);
 		// gameStatus == 시작 화면
 		setGameStatusView(new StartScreenView(this, controller));
-
 	}
 
 	public GameClient getClient() {
 		return gameClient;
 	}
 	
-	public long getTime() {
-		return timer;
-	}
-
 	public void setGameStatusView(GameStatusView gameStatusView) {
 		this.gameStatusView = gameStatusView;
 	}
@@ -64,6 +58,8 @@ public class GamePanel extends JPanel implements Runnable {
 		gameThread = new Thread(this);
 		gameThread.start();
 		gameClient = new GameClient("player", ip_addr, port);
+		
+		((PlayerController) controller).setGameClient(gameClient);	// controller에 gameClient 등록
 	}
 
 	public void gameReady() {
@@ -73,7 +69,7 @@ public class GamePanel extends JPanel implements Runnable {
 	public void gameRunning() {
 		controller.initKey();
 		// gameStatus == 게임 중
-		setGameStatusView(new GameRunningView(controller, othersController, playerNumber, gameClient));
+		setGameStatusView(new GameRunningView(controller, othersController, playerNumber));
 	}
 
 	public void update() {
@@ -93,18 +89,12 @@ public class GamePanel extends JPanel implements Runnable {
 		while (gameThread != null) {
 			currentTime = System.nanoTime();
 			delta += (currentTime - lastTime) / interval;
-			timer += (currentTime - lastTime);
 			lastTime = currentTime;
 
 			// draw every 1/60 second
 			if (delta >= 1) {
 				update();
 				delta--;
-			}
-
-			if (timer >= 1000000000) {
-				// 1 second
-				timer = 0;
 			}
 		}
 	}

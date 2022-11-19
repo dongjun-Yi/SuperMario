@@ -2,11 +2,22 @@ package controller;
 
 import java.awt.event.KeyEvent;
 
+import model.Player;
+
 public class OthersController implements Controller {
 
 	private boolean upPressed, downPressed, leftPressed, rightPressed;
 	private boolean spacePressed;
-
+	
+	private Player player;
+	
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+	public Player getPlayer() {
+		return player;
+	}
+	
 	@Override
 	public void initKey() {
 		this.upPressed = false;

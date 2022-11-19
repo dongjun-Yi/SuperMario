@@ -9,7 +9,6 @@ public class GameModelMsg implements Serializable {
 	private String playerName;
 	private String code;
 	// private String data;
-	public ImageIcon img;
 	private double x, y;
 	private boolean upPressed, downPressed, leftPressed, rightPressed, spacePressed;
 
@@ -33,20 +32,27 @@ public class GameModelMsg implements Serializable {
 		return spacePressed;
 	}
 
-	public GameModelMsg(String palyerName, String code) {
-		this.playerName = palyerName;
+	public GameModelMsg(String playerName, String code) {
+		this.playerName = playerName;
 		this.code = code;
 	}
 
-	public GameModelMsg(String palyerName, String code, boolean upPressed, boolean downPressed, boolean leftPressed,
+	public GameModelMsg(String playerName, String code, double x, double y, boolean upPressed, boolean downPressed, boolean leftPressed,
 			boolean rightPressed, boolean spacePressed) {
-		this.playerName = palyerName;
+		this.x = x;
+		this.y = y;
+		this.playerName = playerName;
 		this.code = code;
 		this.upPressed = upPressed;
 		this.downPressed = downPressed;
 		this.leftPressed = leftPressed;
 		this.rightPressed = rightPressed;
 		this.spacePressed = spacePressed;
+	}
+
+	public String inputToString() {
+		return "upPressed=" + upPressed + ", spacePressed=" + spacePressed
+			+ "\nleftPressed=" + leftPressed + ", rightPressed=" + rightPressed;
 	}
 
 	public String getPlayerName() {
@@ -63,10 +69,6 @@ public class GameModelMsg implements Serializable {
 
 	public void setCode(String code) {
 		this.code = code;
-	}
-
-	public void setImg(ImageIcon img) {
-		this.img = img;
 	}
 
 	public double getX() {

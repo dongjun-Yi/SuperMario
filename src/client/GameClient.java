@@ -4,17 +4,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
-import javax.swing.JFrame;
-
-import controller.Controller;
 import controller.OthersController;
-import controller.PlayerController;
 import main.GamePanel;
 import server.GameModelMsg;
 import server.NetworkStatus;
-import view.StartScreenView;
 
 public class GameClient {
 	private String userName;
@@ -23,7 +17,7 @@ public class GameClient {
 	private Socket socket;
 	private ListenNetwork net;
 	private GamePanel gamePanel = GamePanel.getInstance();
-	OthersController otherController = (OthersController) gamePanel.getOthersController();
+	private OthersController otherController = (OthersController) gamePanel.getOthersController();
 
 	public GameClient(String username, String ip_addr, String port_no) {
 		try {
@@ -72,6 +66,10 @@ public class GameClient {
 						gamePanel.gameRunning();
 					}
 					if (objectGameMsg.getCode().matches(NetworkStatus.GAME_BUTTON)) {
+						// 좌표 동기화
+						otherController.getPlayer().setX(objectGameMsg.getX());
+						otherController.getPlayer().setY(objectGameMsg.getY());
+						// 키 동기화
 						otherController.setKeyPressed(objectGameMsg.isUpPressed(), objectGameMsg.isDownPressed(),
 								objectGameMsg.isLeftPressed(), objectGameMsg.isRightPressed(),
 								objectGameMsg.isSpacePressed());
@@ -101,9 +99,10 @@ public class GameClient {
 		}
 	}
 
-	public void SendButtonAction(boolean upPressed, boolean downPressed, boolean leftPressed, boolean rightPressed,
-			boolean spacePressed) {
-		GameModelMsg objectGameMsg = new GameModelMsg(userName, NetworkStatus.GAME_BUTTON, upPressed, downPressed,
+	public void SendButtonAction(double x, double y, boolean upPressed, boolean downPressed, boolean leftPressed,
+			boolean rightPressed, boolean spacePressed) {
+		// 좌표와 키 입력 값 보냄
+		GameModelMsg objectGameMsg = new GameModelMsg(userName, NetworkStatus.GAME_BUTTON, x, y, upPressed, downPressed,
 				leftPressed, rightPressed, spacePressed);
 		SendObject(objectGameMsg);
 	}
