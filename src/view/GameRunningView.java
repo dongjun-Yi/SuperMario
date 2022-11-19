@@ -10,7 +10,6 @@ import main.GameSettings;
 import model.GameCamera;
 import model.GameMap;
 import model.ObjectDynamic;
-import model.ObjectStatic;
 import model.Player;
 
 public class GameRunningView implements GameStatusView {
@@ -22,9 +21,7 @@ public class GameRunningView implements GameStatusView {
 	}
 
 	private List<ObjectDynamic> objectDynamic;
-	private List<ObjectStatic> objectStatic;
 	private Player player1;
-	private Player player2;
 	private GameMap map;
 	private GameCamera camera;
 
@@ -34,20 +31,16 @@ public class GameRunningView implements GameStatusView {
 		players = map.getPlayers();
 		camera = map.getCamera();
 		objectDynamic = map.getObjectDynamic();
-		objectStatic = map.getObjectStatic();
 		
 		// players settings (controller and 1p 2p)
 		for (int i = 0; i < GameSettings.maxPlayerCount; i++) {
 			Player p = players.get(i);
 			if (i == playerNumber) {
 				p.setController(controller);
-				p.setIsPlayer1(true);
-				player1 = p;
+				player1 = p;	// 카메라 이동을 위해
 				((PlayerController)controller).setPlayer(p);
 			} else {
 				p.setController(othersController);
-				p.setIsPlayer1(false);
-				player2 = p;
 				((OthersController)othersController).setPlayer(p);
 			}
 		}
