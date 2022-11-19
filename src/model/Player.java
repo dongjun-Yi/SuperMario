@@ -8,10 +8,10 @@ import main.GameSettings;
 import view.ImageLoader;
 
 public class Player extends ObjectDynamic {
-	private boolean isPlayer1 = false;
 	
 	private Controller controller = null;
 	
+	private boolean isMario = false;	// true : mario, false : luigi
 	private boolean isDie = false;
 	private boolean isAttacked = false;
 	private boolean controlBlocked = false;
@@ -24,11 +24,9 @@ public class Player extends ObjectDynamic {
 		setDefaultValues();
 	}
 	
-	public boolean isPlayer1() { return isPlayer1; }
-	
-	public void setIsPlayer1(boolean isPlayer1) {
-		this.isPlayer1 = isPlayer1;
-		if(isPlayer1)	x = 100.0;	// players have different x coordinate
+	public void setMario(boolean isMario) {
+		this.isMario = isMario;
+		if(isMario)	x = 100.0;	// players have different x coordinate
 	}
 	
 	public void setController(Controller controller) {
@@ -37,7 +35,7 @@ public class Player extends ObjectDynamic {
 	
 	public void setDefaultValues() {
 		direction = jumpDir = 0;
-		x = (isPlayer1) ? 100.0 : 200.0;
+		x = (isMario) ? 100.0 : 200.0;
 		y = 300.0;
 		xRightVel = 0.0;
 		xLeftVel = 0.0;
@@ -163,12 +161,12 @@ public class Player extends ObjectDynamic {
 	@Override
 	public BufferedImage getCurrentImage() {
 		ImageLoader imageLoader = ImageLoader.getImageLoader();
-		BufferedImage[][] marioImg = imageLoader.getPlayerImage(isPlayer1);
+		BufferedImage[][] marioImg = imageLoader.getPlayerImage(isMario);
 		BufferedImage img = marioImg[direction][0];
 		
 		// dying animation
 		if(isDie) {
-			img = imageLoader.getPlayerDie(isPlayer1);
+			img = imageLoader.getPlayerDie(isMario);
 			dyingAnimation();
 		}
 		// attacked animation

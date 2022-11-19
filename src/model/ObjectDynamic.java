@@ -21,6 +21,30 @@ public abstract class ObjectDynamic extends GameObject {
 		this.mapWidthBoundary = mapWidthBoundary;
 	}
 
+	public double getxRightVel() {
+		return xRightVel;
+	}
+
+	public void setxRightVel(double xRightVel) {
+		this.xRightVel = xRightVel;
+	}
+
+	public double getxLeftVel() {
+		return xLeftVel;
+	}
+
+	public void setxLeftVel(double xLeftVel) {
+		this.xLeftVel = xLeftVel;
+	}
+
+	public double getyVel() {
+		return yVel;
+	}
+
+	public void setyVel(double yVel) {
+		this.yVel = yVel;
+	}
+
 	public boolean hasCollision() { return hasCollision; }
 	
 	public void setMaxSpeed(int maxSpeed) {

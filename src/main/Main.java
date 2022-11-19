@@ -8,7 +8,7 @@ public class Main {
 		window.setResizable(false);
 		window.setTitle("Super Mario Bros");
 		
-		GamePanel gamePanel = new GamePanel();
+		GamePanel gamePanel = GamePanel.getInstance();
 		window.add(gamePanel);
 		
 		window.pack();
