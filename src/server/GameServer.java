@@ -175,7 +175,7 @@ public class GameServer extends JFrame {
 			if (user.UserStatus == "ready") {
 				for (int i = 0; i < user_vc.size(); i++) {
 					UserService sendUser = (UserService) user_vc.elementAt(i);
-					GameModelMsg objectGameStart = new GameModelMsg(user.UserName, NetworkStatus.GAME_START);
+					GameModelMsg objectGameStart = new GameModelMsg(user.UserName, NetworkStatus.GAME_START, i);
 					sendUser.WriteOneObject(objectGameStart);
 					AppendObject(objectGameStart);
 				}

@@ -63,6 +63,7 @@ public class GameClient {
 						userName = objectGameMsg.getPlayerName();
 					}
 					if (objectGameMsg.getCode().matches(NetworkStatus.GAME_START)) { // 400
+						gamePanel.setPlayerNumber(objectGameMsg.getPlayerNum());
 						gamePanel.gameRunning();
 					}
 					if (objectGameMsg.getCode().matches(NetworkStatus.GAME_BUTTON)) {
@@ -106,8 +107,8 @@ public class GameClient {
 	public void SendButtonAction(double x, double y, double xLeftVel, double xRightVel, double yVel, boolean upPressed,
 			boolean downPressed, boolean leftPressed, boolean rightPressed, boolean spacePressed) {
 		// 좌표와 키 입력 값 보냄
-		GameModelMsg objectGameMsg = new GameModelMsg(userName, NetworkStatus.GAME_BUTTON, x, y, xLeftVel, xRightVel, yVel,
-				upPressed, downPressed, leftPressed, rightPressed, spacePressed);
+		GameModelMsg objectGameMsg = new GameModelMsg(userName, NetworkStatus.GAME_BUTTON, x, y, xLeftVel, xRightVel,
+				yVel, upPressed, downPressed, leftPressed, rightPressed, spacePressed);
 		SendObject(objectGameMsg);
 	}
 }

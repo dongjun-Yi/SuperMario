@@ -30,7 +30,12 @@ public class GamePanel extends JPanel implements Runnable {
 		return othersController;
 	}
 
-	private int playerNumber = 1; // 서버한테 받은 클라이언트 번호
+	private int playerNumber; // 서버한테 받은 클라이언트 번호
+
+	public void setPlayerNumber(int playerNumber) {
+		this.playerNumber = playerNumber;
+	}
+
 	private GameStatusView gameStatusView; // 시작화면, 인게임 화면 --> GameStatusView로 캡슐화
 
 	private String ip_addr = "127.0.0.1";
@@ -49,7 +54,7 @@ public class GamePanel extends JPanel implements Runnable {
 	public GameClient getClient() {
 		return gameClient;
 	}
-	
+
 	public void setGameStatusView(GameStatusView gameStatusView) {
 		this.gameStatusView = gameStatusView;
 	}
@@ -58,12 +63,12 @@ public class GamePanel extends JPanel implements Runnable {
 		gameThread = new Thread(this);
 		gameThread.start();
 		gameClient = new GameClient("player", ip_addr, port);
-		
-		((PlayerController) controller).setGameClient(gameClient);	// controller에 gameClient 등록
+
+		((PlayerController) controller).setGameClient(gameClient); // controller에 gameClient 등록
 	}
 
 	public void gameReady() {
-		if(!(gameStatusView instanceof GameReadyView))	// ready 두번 보내지는 문제 방지
+		if (!(gameStatusView instanceof GameReadyView)) // ready 두번 보내지는 문제 방지
 			setGameStatusView(new GameReadyView(gameClient));
 	}
 
