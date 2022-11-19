@@ -1,6 +1,7 @@
 package model;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import main.GameSettings;
@@ -24,6 +25,17 @@ public class BlockPipe extends ObjectStatic {
 	@Override
 	public void draw(Graphics2D g2) {
 		g2.drawImage(getCurrentImage(), (int) x, (int) y, null);
+
+		g2.drawRect((int) x, (int) y, width, height);
 	}
 
+	@Override
+	public Rectangle getHitbox() {
+		return new Rectangle((int) x, (int) y, width, height);
+	}
+
+	@Override
+	public int touch() {
+		return 0;
+	}
 }

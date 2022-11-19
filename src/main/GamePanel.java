@@ -25,16 +25,8 @@ public class GamePanel extends JPanel implements Runnable {
 
 	private Controller controller = new PlayerController(); // 플레이어의 input값
 	private Controller othersController = new OthersController(); // 다른 플레이어의 input data값
-
-	public Controller getOthersController() {
-		return othersController;
-	}
-
+	
 	private int playerNumber; // 서버한테 받은 클라이언트 번호
-
-	public void setPlayerNumber(int playerNumber) {
-		this.playerNumber = playerNumber;
-	}
 
 	private GameStatusView gameStatusView; // 시작화면, 인게임 화면 --> GameStatusView로 캡슐화
 
@@ -51,6 +43,14 @@ public class GamePanel extends JPanel implements Runnable {
 		setGameStatusView(new StartScreenView(this, controller));
 	}
 
+	public Controller getOthersController() {
+		return othersController;
+	}
+
+	public void setPlayerNumber(int playerNumber) {
+		this.playerNumber = playerNumber;
+	}
+	
 	public GameClient getClient() {
 		return gameClient;
 	}

@@ -15,18 +15,14 @@ import model.Player;
 public class GameRunningView implements GameStatusView {
 
 	private List<Player> players;
-
-	public List<Player> getPlayers() {
-		return players;
-	}
-
 	private List<ObjectDynamic> objectDynamic;
+
 	private Player player1;
 	private GameMap map;
 	private GameCamera camera;
-
+	
 	public GameRunningView(Controller controller, Controller othersController, int playerNumber) {
-		// 게임 첫 시작 -> 맵생성, 플레이어 설정
+		// 게임 첫 시작 -> 맵 생성, 플레이어 설정
 		map = new GameMap();
 		players = map.getPlayers();
 		camera = map.getCamera();
@@ -46,6 +42,10 @@ public class GameRunningView implements GameStatusView {
 		}
 	}
 
+	public List<Player> getPlayers() {
+		return players;
+	}
+	
 	public void playersInputUpdate() {
 		for (Player p : players) {
 			p.move();
@@ -64,9 +64,17 @@ public class GameRunningView implements GameStatusView {
 
 	@Override
 	public void updates() {
-		playersInputUpdate();
+		map.playersInputUpdate();
+		map.objectDynamicUpdate();
+
+		map.playerCollisionDetection();
+		map.objectDynamicCollisionDetection();
+
+		map.dynamicObjectsUpdateCoordinate();
+
 		cameraPositionUpdate();
-		objectDynamicUpdate();
+		map.addDeletedObjects();
+		map.clearDeletedObjects();
 	}
 
 	@Override
