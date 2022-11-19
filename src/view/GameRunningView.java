@@ -5,6 +5,7 @@ import java.util.List;
 
 import client.GameClient;
 import controller.Controller;
+import controller.PlayerController;
 import main.GameSettings;
 import model.GameCamera;
 import model.GameMap;
@@ -28,6 +29,7 @@ public class GameRunningView implements GameStatusView {
 	private GameCamera camera;
 
 	private Controller controller;
+	private PlayerController playerController;
 	private GameClient gameClient;
 
 	public GameRunningView(Controller controller, Controller othersController, int playerNumber,
@@ -40,6 +42,7 @@ public class GameRunningView implements GameStatusView {
 		objectStatic = map.getObjectStatic();
 
 		this.controller = controller;
+		this.playerController = (PlayerController) controller;
 		this.gameClient = gameClient;
 
 		// players settings (controller and 1p 2p)
@@ -80,7 +83,10 @@ public class GameRunningView implements GameStatusView {
 
 	@Override
 	public void updates() {
-		playerInputSend();
+		if (playerController.isKeyPressedVal() || playerController.isKeyReleasedVal()) {
+			playerInputSend();
+			playerController.setKeyReleasedVal(false);
+		}
 		playersInputUpdate();
 		cameraPositionUpdate();
 		objectDynamicUpdate();

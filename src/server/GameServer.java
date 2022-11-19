@@ -186,7 +186,6 @@ public class GameServer extends JFrame {
 		public void WriteOthers(String str) {
 			for (int i = 0; i < user_vc.size(); i++) {
 				UserService user = (UserService) user_vc.elementAt(i);
-
 				user.WriteOne(str);
 			}
 		}
@@ -195,7 +194,8 @@ public class GameServer extends JFrame {
 		public void WriteOthersObject(Object obj) {
 			for (int i = 0; i < user_vc.size(); i++) {
 				UserService user = (UserService) user_vc.elementAt(i);
-				user.WriteOneObject(obj);
+				if (user != this)
+					user.WriteOneObject(obj);
 			}
 		}
 
