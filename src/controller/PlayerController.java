@@ -1,11 +1,29 @@
 package controller;
+
 import java.awt.event.KeyEvent;
+
+import client.GameClient;
+import model.Player;
 
 public class PlayerController implements Controller {
 
 	private boolean upPressed, downPressed, leftPressed, rightPressed;
 	private boolean spacePressed;
+
+	private GameClient gameClient;
+	private Player player;
 	
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+	public Player getPlayer() {
+		return player;
+	}
+	
+	public void setGameClient(GameClient gameClient) {
+		this.gameClient = gameClient;
+	}
+
 	@Override
 	public void initKey() {
 		this.upPressed = false;
@@ -14,50 +32,57 @@ public class PlayerController implements Controller {
 		this.rightPressed = false;
 		this.spacePressed = false;
 	}
-	
+
 	@Override
-	public void keyTyped(KeyEvent e) {}
+	public void keyTyped(KeyEvent e) {
+	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int code = e.getKeyCode();
-		
-		if(code == KeyEvent.VK_W) {
+
+		if (code == KeyEvent.VK_W) {
 			upPressed = true;
 		}
-		if(code == KeyEvent.VK_S) {
+		if (code == KeyEvent.VK_S) {
 			downPressed = true;
 		}
-		if(code == KeyEvent.VK_A) {
+		if (code == KeyEvent.VK_A) {
 			leftPressed = true;
 		}
-		if(code == KeyEvent.VK_D) {
+		if (code == KeyEvent.VK_D) {
 			rightPressed = true;
 		}
-		if(code == KeyEvent.VK_SPACE) {
+		if (code == KeyEvent.VK_SPACE) {
 			spacePressed = true;
 		}
+		// 키 누르면 전송
+		if(player != null)
+			gameClient.SendButtonAction(player.getX(), player.getY(), player.getxLeftVel(), player.getxRightVel(), player.getyVel(), upPressed, downPressed, leftPressed, rightPressed, spacePressed);	
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		int code = e.getKeyCode();
-		
-		if(code == KeyEvent.VK_W) {
+
+		if (code == KeyEvent.VK_W) {
 			upPressed = false;
 		}
-		if(code == KeyEvent.VK_S) {
+		if (code == KeyEvent.VK_S) {
 			downPressed = false;
 		}
-		if(code == KeyEvent.VK_A) {
+		if (code == KeyEvent.VK_A) {
 			leftPressed = false;
 		}
-		if(code == KeyEvent.VK_D) {
+		if (code == KeyEvent.VK_D) {
 			rightPressed = false;
 		}
-		if(code == KeyEvent.VK_SPACE) {
+		if (code == KeyEvent.VK_SPACE) {
 			spacePressed = false;
 		}
+		// 키 떼면 전송
+		if(player != null)
+			gameClient.SendButtonAction(player.getX(), player.getY(), player.getxLeftVel(), player.getxRightVel(), player.getyVel(), upPressed, downPressed, leftPressed, rightPressed, spacePressed);	
 	}
 
 	@Override
@@ -84,5 +109,4 @@ public class PlayerController implements Controller {
 	public boolean getSpacePressed() {
 		return spacePressed;
 	}
-
 }

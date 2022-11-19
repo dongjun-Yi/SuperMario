@@ -23,6 +23,8 @@ public class GameMap {
 		for (int i = 0; i < GameSettings.maxPlayerCount; i++) {
 			players.add(new Player(0, 0, background.getWidth()));
 		}
+		players.get(0).setMario(true);	// 첫번째 플레이어 = mario
+		
 		camera = new GameCamera(background.getWidth());
 		objectDynamic.add(new EnemyGoomba(100, 500, background.getWidth()));
 		objectDynamic.add(new EnemyKoopa(300, 300, background.getWidth()));

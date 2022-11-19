@@ -4,35 +4,57 @@ import java.awt.Graphics2D;
 import java.util.List;
 
 import controller.Controller;
+import controller.OthersController;
+import controller.PlayerController;
 import main.GameSettings;
 import model.GameCamera;
 import model.GameMap;
+import model.ObjectDynamic;
 import model.Player;
 
 public class GameRunningView implements GameStatusView {
 
 	private List<Player> players;
+	private List<ObjectDynamic> objectDynamic;
+
 	private Player player1;
 	private GameMap map;
 	private GameCamera camera;
-
+	
 	public GameRunningView(Controller controller, Controller othersController, int playerNumber) {
 		// 게임 첫 시작 -> 맵 생성, 플레이어 설정
 		map = new GameMap();
 		players = map.getPlayers();
 		camera = map.getCamera();
-
+		objectDynamic = map.getObjectDynamic();
+		
 		// players settings (controller and 1p 2p)
 		for (int i = 0; i < GameSettings.maxPlayerCount; i++) {
 			Player p = players.get(i);
 			if (i == playerNumber) {
 				p.setController(controller);
-				p.setIsPlayer1(true);
-				player1 = p;
+				player1 = p;	// 카메라 이동을 위해
+				((PlayerController)controller).setPlayer(p);
 			} else {
-				p.setController(controller);
-				p.setIsPlayer1(false);
+				p.setController(othersController);
+				((OthersController)othersController).setPlayer(p);
 			}
+		}
+	}
+
+	public List<Player> getPlayers() {
+		return players;
+	}
+	
+	public void playersInputUpdate() {
+		for (Player p : players) {
+			p.move();
+		}
+	}
+
+	public void objectDynamicUpdate() {
+		for (ObjectDynamic od : objectDynamic) {
+			od.move();
 		}
 	}
 

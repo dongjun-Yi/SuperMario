@@ -45,7 +45,31 @@ public abstract class ObjectDynamic extends GameObject {
 	public boolean hasCollision() {
 		return hasCollision;
 	}
+	
+	public double getxRightVel() {
+		return xRightVel;
+	}
 
+	public void setxRightVel(double xRightVel) {
+		this.xRightVel = xRightVel;
+	}
+
+	public double getxLeftVel() {
+		return xLeftVel;
+	}
+
+	public void setxLeftVel(double xLeftVel) {
+		this.xLeftVel = xLeftVel;
+	}
+
+	public double getyVel() {
+		return yVel;
+	}
+
+	public void setyVel(double yVel) {
+		this.yVel = yVel;
+	}
+	
 	public void setMaxSpeed(int maxSpeed) {
 		this.maxSpeed = maxSpeed;
 	}
@@ -91,28 +115,12 @@ public abstract class ObjectDynamic extends GameObject {
 			this.x = mapWidthBoundary - width;
 	}
 
-	public void setyVel(double yVel) {
-		this.yVel = yVel;
-	}
-
 	public boolean isJump() {
 		return isJump;
 	}
 
 	public void setJump(boolean isJump) {
 		this.isJump = isJump;
-	}
-
-	public double getyVel() {
-		return yVel;
-	}
-
-	public void setxRightVel(double xRightVel) {
-		this.xRightVel = xRightVel;
-	}
-
-	public void setxLeftVel(double xLeftVel) {
-		this.xLeftVel = xLeftVel;
 	}
 
 	public Rectangle getBottomHitbox() {

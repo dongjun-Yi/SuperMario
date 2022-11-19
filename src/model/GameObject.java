@@ -34,9 +34,13 @@ public abstract class GameObject {
 	public double getY() {
 		return y;
 	}
-
+	
 	public void setX(double x) {
 		this.x = x;
+	}
+	
+	public void setY(double y) {
+		this.y = y;
 	}
 
 	public int getWidth() {
@@ -45,10 +49,6 @@ public abstract class GameObject {
 
 	public int getHeight() {
 		return height;
-	}
-
-	public void setY(double y) {
-		this.y = y;
 	}
 
 	public void setWidth(int width) {
