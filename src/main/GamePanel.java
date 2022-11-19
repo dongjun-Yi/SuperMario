@@ -63,7 +63,8 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 
 	public void gameReady() {
-		setGameStatusView(new GameReadyView(gameClient));
+		if(!(gameStatusView instanceof GameReadyView))	// ready 두번 보내지는 문제 방지
+			setGameStatusView(new GameReadyView(gameClient));
 	}
 
 	public void gameRunning() {
