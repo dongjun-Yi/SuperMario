@@ -73,8 +73,6 @@ public class GameRunningView implements GameStatusView {
 		map.dynamicObjectsUpdateCoordinate();
 
 		cameraPositionUpdate();
-		map.addDeletedObjects();
-		map.clearDeletedObjects();
 	}
 
 	@Override

@@ -7,7 +7,8 @@ import main.GameSettings;
 public abstract class ObjectDynamic extends GameObject {
 
 	protected int mapWidthBoundary;
-
+	protected int objectNum;
+	
 	protected double xRightVel = 0;
 	protected double xLeftVel = 0;
 	protected double yVel = 0;
@@ -21,13 +22,26 @@ public abstract class ObjectDynamic extends GameObject {
 	protected boolean isItem = false;
 	protected boolean isJump = false;
 	protected boolean isCollided = false;
-
+	private boolean isMoving = true; 
+	
 	protected boolean hasCollision = true;
 	protected boolean hasGravity = true;
 
 	public ObjectDynamic(double x, double y, int mapWidthBoundary) {
 		super(x, y);
 		this.mapWidthBoundary = mapWidthBoundary;
+	}
+	
+	public boolean isMoving() {
+		return isMoving;
+	}
+
+	public void setMoving(boolean isMoving) {
+		this.isMoving = isMoving;
+	}
+
+	public int getObjectNum() {
+		return objectNum;
 	}
 
 	public boolean isItem() {
@@ -127,6 +141,18 @@ public abstract class ObjectDynamic extends GameObject {
 		return new Rectangle((int) x + 8, (int) y + height - 7, width - 16, 5 + (int) yVel);
 	}
 
+	public Rectangle getHitboxSpace() {
+		return new Rectangle((int) x - 2 * width, (int) y - 2 * height, width * 5, height * 5);
+	}
+	
+	public boolean isItInHitboxSpace(double x, double y) {
+		if(this.x - 2 * width <= x && x <= this.x + width * 5 &&
+				this.y - 2 * height <= y && y <= this.y + height * 5) {
+			return true;
+		}
+		return false;
+	}
+	
 	public abstract void attacked(double x);
 	public abstract void move();
 }

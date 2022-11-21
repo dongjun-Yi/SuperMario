@@ -26,7 +26,7 @@ public class BlockPipe extends ObjectStatic {
 	public void draw(Graphics2D g2) {
 		g2.drawImage(getCurrentImage(), (int) x, (int) y, null);
 
-		g2.drawRect((int) x, (int) y, width, height);
+		//g2.drawRect((int) x, (int) y, width, height);
 	}
 
 	@Override

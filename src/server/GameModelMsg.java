@@ -11,9 +11,9 @@ public class GameModelMsg implements Serializable {
 	private double xLeftVel, xRightVel, yVel;
 	private boolean upPressed, downPressed, leftPressed, rightPressed, spacePressed;
 	private int playerNum = 0;
-	private int randomSeedNumber = 0;
+	private long randomSeedNumber = 0;
 
-	public int getRandomSeedNumber() {
+	public long getRandomSeedNumber() {
 		return randomSeedNumber;
 	}
 
@@ -46,7 +46,7 @@ public class GameModelMsg implements Serializable {
 		this.code = code;
 	}
 
-	public GameModelMsg(String playerName, String code, int playerNum, int randomSeedNumber) {
+	public GameModelMsg(String playerName, String code, int playerNum, long randomSeedNumber) {
 		this.playerName = playerName;
 		this.code = code;
 		this.playerNum = playerNum;
