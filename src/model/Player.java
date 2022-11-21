@@ -19,6 +19,8 @@ public class Player extends ObjectDynamic {
 	
 	private boolean controlBlocked = false;
 
+	private ImageLoader imageLoader = ImageLoader.getImageLoader();
+	
 	private double dx = 0, dy = 0; // attacked animation용 변수
 	private long timer = 0;	// 아이템용 타이머
 
@@ -180,7 +182,6 @@ public class Player extends ObjectDynamic {
 
 	@Override
 	public BufferedImage getCurrentImage() {
-		ImageLoader imageLoader = ImageLoader.getImageLoader();
 		BufferedImage[][] marioImg = imageLoader.getPlayerImage(isMario);
 		BufferedImage img = marioImg[direction][0];
 
@@ -227,11 +228,12 @@ public class Player extends ObjectDynamic {
 
 		// HitBox 표시
 		// g2.drawRect((int) x + 8, (int) y + 5, width - 16, height - 7 - 5); // hitbox
-		g2.drawRect((int) x + 8, (int) y + 5, width - 16, 5); // tophitbox
-		g2.drawRect((int) (x + xLeftVel + xRightVel) + 8, (int) y + 10, width - 16, 31); // centerhitbox
-		g2.drawRect((int) x + 8, (int) y + height - 7, width - 16, 5 + (int) yVel); // bottomhitbox
+		//g2.drawRect((int) x + 8, (int) y + 5, width - 16, 5); // tophitbox
+		//g2.drawRect((int) (x + xLeftVel + xRightVel) + 8, (int) y + 10, width - 16, 31); // centerhitbox
+		//g2.drawRect((int) x + 8, (int) y + height - 7, width - 16, 5 + (int) yVel); // bottomhitbox
+		//g2.drawRect((int) x - 2 * width, (int) y - 2 * height, width * 5, height * 5);	// hitbox space
 	}
-
+	
 	@Override
 	public Rectangle getHitbox() {
 		return new Rectangle((int) x + 8, (int) y + 5, width - 16, height - 7 - 5);

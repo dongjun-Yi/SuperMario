@@ -11,7 +11,7 @@ public class ItemCoin extends ObjectDynamic {
 
 	private double startY;
 	private ImageLoader imgLoader = ImageLoader.getImageLoader();
-
+	
 	public ItemCoin(double x, double y, int mapWidthBoundary) {
 		super(x, y, mapWidthBoundary);
 		width = height = GameSettings.scaledSize;
@@ -21,8 +21,9 @@ public class ItemCoin extends ObjectDynamic {
 
 		yVel = -16; // first do jump animation
 		startY = y;
+		objectNum = 2;
 	}
-
+	
 	@Override
 	public void move() {
 	}

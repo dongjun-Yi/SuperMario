@@ -72,8 +72,8 @@ public class EnemyGoomba extends ObjectDynamic {
 		g2.drawImage(getCurrentImage(), (int) x, (int) y, width, height, null);
 
 		// HitBox 표시
-		g2.drawRect((int)(x + xLeftVel + xRightVel) + 5, (int) y + 12, width - 10, height - 25);
-		g2.drawRect((int) x + 8, (int) y + height - 7, width - 16, 5 + (int) yVel);
+		//g2.drawRect((int)(x + xLeftVel + xRightVel) + 5, (int) y + 12, width - 10, height - 25);
+		//g2.drawRect((int) x + 8, (int) y + height - 7, width - 16, 5 + (int) yVel);
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package model;
 
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +22,8 @@ public class GameMap {
 		for (int i = 0; i < GameSettings.maxPlayerCount; i++) {
 			players.add(new Player(0, 0, background.getWidth()));
 		}
-		players.get(0).setMario(true);	// 첫번째 플레이어 = mario
-		
+		players.get(0).setMario(true); // 첫번째 플레이어 = mario
+
 		camera = new GameCamera(background.getWidth());
 		objectDynamic.add(new EnemyGoomba(100, 500, background.getWidth()));
 		objectDynamic.add(new EnemyKoopa(300, 300, background.getWidth()));
@@ -37,7 +36,7 @@ public class GameMap {
 		objectStatic.add(new BlockItem(300, 300, 2));
 		objectStatic.add(new BlockPipe(400, 300));
 		objectStatic.add(new BlockBlocked(600, 300));
-		
+
 		objectStatic.add(new BlockHard(400, 577));
 		objectStatic.add(new BlockHard(200, 577));
 	}
@@ -57,57 +56,54 @@ public class GameMap {
 	public List<ObjectStatic> getObjectStatic() {
 		return objectStatic;
 	}
-	
+
 	public ObjectStatic createBlockedBlock(double x, double y) {
 		return new BlockBlocked(x, y);
 	}
-	
+
 	public ObjectDynamic createItem(int itemNum, double x, double y) {
 		ObjectDynamic od = null;
-		switch(itemNum) {
+		switch (itemNum) {
 		case 1:
 			od = new ItemMushroom(x, y, background.getWidth());
 			break;
-			
+
 		case 2:
 			od = new ItemCoin(x, y, background.getWidth());
 			break;
 		}
 		return od;
 	}
-	
+
 	public void playersInputUpdate() {
 		for (Player p : players) {
 			p.move();
 		}
 	}
-	
+
 	public void objectDynamicUpdate() {
 		for (ObjectDynamic od : objectDynamic) {
 			od.move();
 		}
 	}
-	
+
 	public void playerCollisionDetection() {
 
 		for (Player p : players) {
 			if (!p.hasCollision())
 				continue;
 
-			p.setCollided(false);	// 현재 바닥과 충돌했는지 체크하는 변수
-
-			Rectangle centerHitbox = p.getCenterHitbox();
-			Rectangle TopHitbox = p.getTopHitbox();
-			Rectangle BottomHitbox = p.getBottomHitbox();
+			p.setCollided(false); // 현재 바닥과 충돌했는지 체크하는 변수
 
 			// 정적인 오브젝트 (블록 등)과의 충돌 처리
 			for (int i = 0; i < objectStatic.size(); i++) {
 
 				ObjectStatic os = objectStatic.get(i);
-				Rectangle osHitbox = os.getHitbox();
+				if (!p.isItInHitboxSpace(os.x, os.y)) // 플레이어 주변에 있을 때만 충돌 검사함
+					continue;
 
 				// 플레이어가 블록을 머리로 충돌했을 때
-				if (TopHitbox.intersects(osHitbox)) {
+				if (p.getTopHitbox().intersects(os.getHitbox())) {
 					p.setY(os.getY() + os.getHeight());
 					p.setyVel(GameSettings.gravity);
 
@@ -119,47 +115,54 @@ public class GameMap {
 				}
 
 				// 플레이어가 블록 위에 서 있을 때
-				else if (BottomHitbox.intersects(osHitbox)) {
+				else if (p.getBottomHitbox().intersects(os.getHitbox())) {
 					p.landing(os.getY() + 3);
-					p.setCollided(true);	// 현재 블록 바닥과 충돌함
+					p.setCollided(true); // 현재 블록 바닥과 충돌함
 				}
 
 				// 플레이어가 블록 옆면에 충돌했을 때
-				else if (centerHitbox.intersects(osHitbox)) {
+				else if (p.getCenterHitbox().intersects(os.getHitbox())) {
 					p.setxLeftVel(0);
 					p.setxRightVel(0);
 				}
 			}
-			
-			// 한번도 블록과 충돌하지 않으면, 즉 공중에 떠있는 상태라면 
+
+			// 한번도 블록과 충돌하지 않으면, 즉 공중에 떠있는 상태라면
 			if (!p.isCollided()) {
-				p.setyGround(625.0);	// 기본 땅에 떨어지도록 yGround 설정
+				p.setyGround(625.0); // 기본 땅에 떨어지도록 yGround 설정
 			}
 
 			// 동적인 오브젝트 (적, 아이템 등)과의 충돌 처리
 			for (ObjectDynamic od : objectDynamic) {
-				Rectangle osHitbox = od.getHitbox();
+
+				if (!od.hasCollision() || !p.isItInHitboxSpace(od.x, od.y))
+					continue;
 
 				// 플레이어가 밟았을 때
-				if (BottomHitbox.intersects(osHitbox)) {
-					if (!od.isItem()) {
-						p.setyVel(0);
-						p.jump(11);
-						od.attacked((int) p.getX());
-					}
+				if (p.getBottomHitbox().intersects(od.getHitbox()) && !od.isItem()) {
+					p.setyVel(0);
+					p.jump(11);
+					od.attacked((int) p.getX());
 				}
 				// 플레이어와 닿았을 때
-				else if (centerHitbox.intersects(osHitbox)) {
-					if (od.isItem()) {
-						if(od instanceof ItemMushroom)	{
-							p.startSpeedUp();
-							od.setDestroy(true);
-						}
-					} else if (od instanceof EnemyKoopa && ((EnemyKoopa) od).isHide()	// 등껍질이 움직이지 않은 상태면 친다
-							&& !((EnemyKoopa) od).isMoving()) {
-						od.attacked((int) p.getX() + p.getWidth() / 2);
-					} else {
+				else if (p.getCenterHitbox().intersects(od.getHitbox())) {
+					switch (od.getObjectNum()) {
+					case 1: // 버섯
+						p.startSpeedUp();
+						od.setDestroy(true);
+						break;
+					case 2: // 동전
+						break;
+					case 10: // 쿠파
+						if (!od.isMoving())
+							od.attacked((int) p.getX() + p.getWidth() / 2);
+						else
+							p.die();
+
+						break;
+					default: // 나머지
 						p.die();
+						break;
 					}
 				}
 			}
@@ -169,51 +172,49 @@ public class GameMap {
 				if (p == pJ || !pJ.hasCollision())
 					continue;
 
-				Rectangle pJTopHitbox = pJ.getTopHitbox();
-
 				// 다른 플레이어를 밟았을 때
-				if (BottomHitbox.intersects(pJTopHitbox)) {
+				if (p.getBottomHitbox().intersects(pJ.getTopHitbox())) {
 					p.setyVel(0);
 					p.jump(13);
 					pJ.attacked(0);
 				}
 			}
-			
+
 			// 아이템 제거
 			addDeletedObjects();
 			clearDeletedObjects();
 		}
 	}
-	
+
 	public void objectDynamicCollisionDetection() {
 		for (ObjectDynamic od : objectDynamic) {
-			
-			if(!od.hasCollision()) 
-				continue;
-			
-			od.setCollided(false);
-			Rectangle odHitbox = od.getHitbox();
-			Rectangle odBottomHitbox = od.getBottomHitbox();
-			
-			for (ObjectStatic os : objectStatic) {
-				Rectangle osHitbox = os.getHitbox();
 
-				if (odHitbox.intersects(osHitbox)) {
+			if (!od.hasCollision())
+				continue;
+
+			od.setCollided(false);
+
+			for (ObjectStatic os : objectStatic) {
+
+				if (!od.isItInHitboxSpace(os.x, os.y)) // 주변에 있을 때만 충돌 검사함
+					continue;
+
+				if (od.getHitbox().intersects(os.getHitbox())) {
 					od.changeDir();
 				}
-				
-				else if (odBottomHitbox.intersects(osHitbox)) {
+
+				else if (od.getBottomHitbox().intersects(os.getHitbox())) {
 					od.landing(os.getY() + 3);
 					od.setCollided(true);
 				}
 			}
-			
+
 			if (!od.isCollided()) {
 				od.setyGround(625.0);
 			}
 		}
 	}
-	
+
 	public void dynamicObjectsUpdateCoordinate() {
 		for (Player p : players) {
 			p.updatesCoordinate();
@@ -222,25 +223,26 @@ public class GameMap {
 			od.updatesCoordinate();
 		}
 	}
-	
+
 	public void addDeletedObjects() {
 		for (GameObject go : objectDynamic) {
-			if(go.isDestroy()) {
+			if (go.isDestroy()) {
 				deletedObjects.add(go);
 			}
 		}
 		for (GameObject go : objectStatic) {
-			if(go.isDestroy()) {
+			if (go.isDestroy()) {
 				deletedObjects.add(go);
 			}
 		}
 	}
-	
+
 	public void clearDeletedObjects() {
-		if(deletedObjects.size() == 0)	return;
-		
-		for(GameObject go : deletedObjects) {
-			if(go instanceof ObjectDynamic) {
+		if (deletedObjects.size() == 0)
+			return;
+
+		for (GameObject go : deletedObjects) {
+			if (go instanceof ObjectDynamic) {
 				objectDynamic.remove(go);
 			} else {
 				objectStatic.remove(go);
@@ -248,7 +250,7 @@ public class GameMap {
 		}
 		deletedObjects.clear();
 	}
-	
+
 	public void drawPlayers(Graphics2D g2) {
 		for (Player player : players) {
 			player.draw(g2);

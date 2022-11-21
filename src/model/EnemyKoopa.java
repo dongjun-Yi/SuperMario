@@ -9,8 +9,7 @@ import view.ImageLoader;
 
 public class EnemyKoopa extends ObjectDynamic {
 
-	private boolean isMoving = true; // !isMoving && isHide(등껍질 상태) 일 땐, 플레이어와 닿으면 공격받지 않고 등껍질이 밀어짐
-	private boolean isHide = false;
+	private boolean isHide = false;// !isMoving && isHide(등껍질 상태) 일 땐, 플레이어와 닿으면 공격받지 않고 등껍질이 밀어짐
 
 	public EnemyKoopa(double x, double y, int mapWidthBoundary) {
 		super(x, y, mapWidthBoundary);
@@ -18,17 +17,15 @@ public class EnemyKoopa extends ObjectDynamic {
 		height = 24 * GameSettings.scale;
 		xLeftVel = -2;
 		direction = 1;
+		
+		objectNum = 10;
 	}
 
 	private void hide() {
-		isMoving = false;
+		setMoving(false);
 		isHide = true;
 		height = GameSettings.scaledSize;
 		initVelocity();
-	}
-
-	public boolean isMoving() {
-		return isMoving;
 	}
 
 	public boolean isHide() {
@@ -36,14 +33,14 @@ public class EnemyKoopa extends ObjectDynamic {
 	}
 	
 	public void touched(double playerX) {
-		if (!isMoving) {
-			isMoving = true;
+		if (!isMoving()) {
+			setMoving(true);
 
 			this.direction = (playerX <= x + width / 2) ? 0 : 1; // 플레이어가 등껍질 왼쪽에서 친다면 오른쪽으로 진행
 			if (direction == 0)
-				xLeftVel = 8;
+				xLeftVel = 7;
 			else
-				xLeftVel = -8;
+				xLeftVel = -7;
 		} else {
 			hide();
 		}
@@ -92,8 +89,8 @@ public class EnemyKoopa extends ObjectDynamic {
 		g2.drawImage(getCurrentImage(), (int) x, (int) y, width, height, null);
 
 		// HitBox 표시
-		g2.drawRect((int) (x + xLeftVel + xRightVel) + 6, (int) y + height / 2 - 12, width - 12, height - height / 2);
-		g2.drawRect((int) x + 8, (int) y + height - 7, width - 16, 5 + (int) yVel);
+		//g2.drawRect((int) (x + xLeftVel + xRightVel) + 6, (int) y + height / 2 - 12, width - 12, height - height / 2);
+		//g2.drawRect((int) x + 8, (int) y + height - 7, width - 16, 5 + (int) yVel);
 	}
 
 	@Override

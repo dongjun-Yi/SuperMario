@@ -38,6 +38,7 @@ public class GameServer extends JFrame {
 	private static final int BUF_LEN = 128; // Windows 처럼 BUF_LEN 을 정의
 	private static final int USER_MAX_COUNT = 2;
 	private int userCnt = 0; // 마리오,루이지 순으로 GameClient 생성을 위해 구분하는 변
+	private int userReadyCount = 0;	// 유저들의 준비완료 수
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -152,6 +153,12 @@ public class GameServer extends JFrame {
 			UserVec.removeElement(this); // Logout한 현재 객체를 벡터에서 지운다
 			WriteAll(msg); // 나를 제외한 다른 User들에게 전송
 			AppendText("사용자 " + "[" + UserName + "] 퇴장. 현재 참가자 수 " + UserVec.size());
+			
+			// 1p(마리오)가 나가면, 2p가 마리오가 된다
+			if(user_vc.size() != 0) {
+				UserService user = (UserService) user_vc.elementAt(0);
+				user.UserName = "mario";
+			}
 		}
 
 		// 모든 User들에게 방송. 각각의 UserService Thread의 WriteONe() 을 호출한다.
@@ -172,8 +179,7 @@ public class GameServer extends JFrame {
 		}
 
 		public void WriteGameStartObject() {
-			Random r = new Random();
-			int randomSeedNumber = r.nextInt(10); // 0 ~ 10까지 난수 발생
+			long randomSeedNumber = System.nanoTime();
 			UserService user = (UserService) user_vc.elementAt(0);
 			if (user.UserStatus == "ready") {
 				for (int i = 0; i < user_vc.size(); i++) {
@@ -294,10 +300,9 @@ public class GameServer extends JFrame {
 					} else
 						continue;
 					if (objectGameMsg.getCode().matches(NetworkStatus.LOG_IN)) { // 100
-						if (userCnt == 0) {
+						if (user_vc.size() == 1) {
 							UserName = "mario";
 							objectGameMsg.setPlayerName("mario");
-							userCnt++;
 						} else {
 							UserName = "luigi";
 							objectGameMsg.setPlayerName("luigi");
@@ -307,7 +312,10 @@ public class GameServer extends JFrame {
 					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_READY)) {// 300
 						UserStatus = "ready";
 						AppendText(UserName + " 게임준비완료 ");
-						if (UserVec.size() == USER_MAX_COUNT) {// 유저가 2명이면 게임 시작
+						userReadyCount++;
+						
+						if (userReadyCount == USER_MAX_COUNT) {// 유저가 2명이면 게임 시작
+							userReadyCount = 0;
 							WriteGameStartObject();
 						}
 					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_BUTTON)) {
