@@ -3,7 +3,10 @@ package controller;
 import java.awt.event.KeyEvent;
 
 import client.GameClient;
+import main.GamePanel;
 import model.Player;
+import server.GameModelMsg;
+import server.NetworkStatus;
 
 public class PlayerController implements Controller {
 
@@ -55,6 +58,12 @@ public class PlayerController implements Controller {
 		}
 		if (code == KeyEvent.VK_SPACE) {
 			spacePressed = true;
+		}
+		if(code == KeyEvent.VK_G) { //게임 승리, 패배 프로토콜 확인하기 위한 코드
+			GameModelMsg obejctGameMsg = new GameModelMsg("player", NetworkStatus.GAME_WIN);
+			gameClient.SendObject(obejctGameMsg);
+			GamePanel gp = GamePanel.getInstance();
+			gp.gameWin();
 		}
 		// 키 누르면 전송
 		if(player != null)

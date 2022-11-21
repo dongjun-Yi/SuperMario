@@ -11,6 +11,11 @@ public class GameModelMsg implements Serializable {
 	private double xLeftVel, xRightVel, yVel;
 	private boolean upPressed, downPressed, leftPressed, rightPressed, spacePressed;
 	private int playerNum = 0;
+	private int randomSeedNumber = 0;
+
+	public int getRandomSeedNumber() {
+		return randomSeedNumber;
+	}
 
 	public int getPlayerNum() {
 		return playerNum;
@@ -41,10 +46,11 @@ public class GameModelMsg implements Serializable {
 		this.code = code;
 	}
 
-	public GameModelMsg(String playerName, String code, int playerNum) {
+	public GameModelMsg(String playerName, String code, int playerNum, int randomSeedNumber) {
 		this.playerName = playerName;
 		this.code = code;
 		this.playerNum = playerNum;
+		this.randomSeedNumber = randomSeedNumber;
 	}
 
 	public GameModelMsg(String playerName, String code, double x, double y, double xLeftVel, double xRightVel,

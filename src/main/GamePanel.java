@@ -10,10 +10,11 @@ import client.GameClient;
 import controller.Controller;
 import controller.OthersController;
 import controller.PlayerController;
-
+import view.GameLoseView;
 import view.GameReadyView;
 import view.GameRunningView;
 import view.GameStatusView;
+import view.GameWinView;
 import view.StartScreenView;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -76,6 +77,14 @@ public class GamePanel extends JPanel implements Runnable {
 		controller.initKey();
 		// gameStatus == 게임 중
 		setGameStatusView(new GameRunningView(controller, othersController, playerNumber));
+	}
+	
+	public void gameWin() {
+		setGameStatusView(new GameWinView());
+	}
+	
+	public void gameLose() {
+		setGameStatusView(new GameLoseView());
 	}
 
 	public void update() {
