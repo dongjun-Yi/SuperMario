@@ -63,6 +63,7 @@ public class GameClient {
 						userName = objectGameMsg.getPlayerName();
 					}
 					if (objectGameMsg.getCode().matches(NetworkStatus.GAME_START)) { // 400
+						System.out.println("randomNumber" + objectGameMsg.getRandomSeedNumber());
 						gamePanel.setPlayerNumber(objectGameMsg.getPlayerNum());
 						gamePanel.gameRunning();
 					}
@@ -78,7 +79,9 @@ public class GameClient {
 						otherController.setKeyPressed(objectGameMsg.isUpPressed(), objectGameMsg.isDownPressed(),
 								objectGameMsg.isLeftPressed(), objectGameMsg.isRightPressed(),
 								objectGameMsg.isSpacePressed());
-
+					}
+					if (objectGameMsg.getCode().matches(NetworkStatus.GAME_LOSE)) {
+						gamePanel.gameLose();
 					}
 				} catch (IOException e) {
 					try {

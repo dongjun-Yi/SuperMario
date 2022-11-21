@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Random;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -170,16 +171,30 @@ public class GameServer extends JFrame {
 			}
 		}
 
-		public void WriteGameStartObject(Object ob) {
+		public void WriteGameStartObject() {
+			Random r = new Random();
+			int randomSeedNumber = r.nextInt(10); // 0 ~ 10까지 난수 발생
 			UserService user = (UserService) user_vc.elementAt(0);
 			if (user.UserStatus == "ready") {
 				for (int i = 0; i < user_vc.size(); i++) {
 					UserService sendUser = (UserService) user_vc.elementAt(i);
-					GameModelMsg objectGameStart = new GameModelMsg(user.UserName, NetworkStatus.GAME_START, i);
+					GameModelMsg objectGameStart = new GameModelMsg(sendUser.UserName, NetworkStatus.GAME_START, i,
+							randomSeedNumber);
 					sendUser.WriteOneObject(objectGameStart);
 					AppendObject(objectGameStart);
 				}
 			}
+		}
+
+		public void WriteGameLoseObject(GameModelMsg objectGameMsg) {
+			GameModelMsg objectGameLose = null;
+			for (int i = 0; i < user_vc.size(); i++) {
+				UserService user = (UserService) user_vc.elementAt(i);
+				objectGameLose = new GameModelMsg(user.UserName, NetworkStatus.GAME_LOSE);
+				if (user != this) // 나말고 다른 유저에게 보내
+					user.WriteOneObject(objectGameLose);
+			}
+			AppendObject(objectGameLose);
 		}
 
 		// 나를 제외한 User들에게 방송. 각각의 UserService Thread의 WriteONe() 을 호출한다.
@@ -290,19 +305,18 @@ public class GameServer extends JFrame {
 						Login();
 						WriteOneObject(objectGameMsg);
 					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_READY)) {// 300
-						System.out.println(UserVec.size());
 						UserStatus = "ready";
 						AppendText(UserName + " 게임준비완료 ");
 						if (UserVec.size() == USER_MAX_COUNT) {// 유저가 2명이면 게임 시작
-							WriteGameStartObject(objectGameMsg);
+							WriteGameStartObject();
 						}
-					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_START)) {
-
 					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_BUTTON)) {
 						WriteOthersObject(objectGameMsg);
 						AppendText(objectGameMsg.posToString());
 						AppendText(objectGameMsg.velToString());
 						AppendText(objectGameMsg.inputToString());
+					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_WIN)) { // 700 수신
+						WriteGameLoseObject(objectGameMsg); // 다른 유저에게 졌다는 메세지 보내기 //800으로 보내기
 					}
 
 				} catch (IOException e) {
