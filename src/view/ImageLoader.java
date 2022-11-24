@@ -32,7 +32,7 @@ public class ImageLoader {
 		try {
 			startScreen = ImageIO.read(getClass().getResourceAsStream("/images/startscreen.png"));
 			playerAllImg = ImageIO.read(getClass().getResourceAsStream("/images/mario.png"));
-			background = ImageIO.read(getClass().getResourceAsStream("/images/background.png"));
+			background = ImageIO.read(getClass().getResourceAsStream("/images/background_short_version.png"));
 			items = ImageIO.read(getClass().getResourceAsStream("/images/items.png"));
 			enemies = ImageIO.read(getClass().getResourceAsStream("/images/enemies.png"));
 			blocksImg = ImageIO.read(getClass().getResourceAsStream("/images/blocks.png"));
