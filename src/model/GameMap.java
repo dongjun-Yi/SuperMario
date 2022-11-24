@@ -16,6 +16,7 @@ public class GameMap {
 	private Vector<ObjectDynamic> objectDynamic = new Vector<ObjectDynamic>();
 	private Vector<ObjectStatic> objectStatic = new Vector<ObjectStatic>();
 	private Vector<Player> players = new Vector<Player>();
+	private FlagPole flagPole;
 	private GameCamera camera;
 	private Audio audio = Audio.getInstance();
 	
@@ -42,8 +43,14 @@ public class GameMap {
 
 		objectStatic.add(new BlockHard(400, 577));
 		objectStatic.add(new BlockHard(200, 577));
+		
+		flagPole = new FlagPole(2603, 108);
 	}
 
+	public FlagPole getFlagPole() {
+		return flagPole;
+	}
+	
 	public GameCamera getCamera() {
 		return camera;
 	}
@@ -91,13 +98,13 @@ public class GameMap {
 	}
 
 	public void playerCollisionDetection() {
-
+	
 		for (Player p : players) {
 			if (!p.hasCollision())
 				continue;
 
 			p.setCollided(false); // 현재 바닥과 충돌했는지 체크하는 변수
-
+			
 			// 정적인 오브젝트 (블록 등)과의 충돌 처리
 			for (int i = 0; i < objectStatic.size(); i++) {
 

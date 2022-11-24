@@ -76,10 +76,11 @@ public class GamePanel extends JPanel implements Runnable {
 	public void gameRunning() {
 		controller.initKey();
 		// gameStatus == 게임 중
-		setGameStatusView(new GameRunningView(controller, othersController, playerNumber));
+		setGameStatusView(new GameRunningView(this, controller, othersController, playerNumber));
 	}
 	
 	public void gameWin() {
+		gameClient.SendWinMessage();
 		setGameStatusView(new GameWinView());
 	}
 	

@@ -38,6 +38,10 @@ public class GameClient {
 		}
 	}
 
+	public String getUserName() {
+		return userName;
+	}
+
 	class ListenNetwork extends Thread {
 		public void run() {
 			while (true) {
@@ -113,5 +117,15 @@ public class GameClient {
 		GameModelMsg objectGameMsg = new GameModelMsg(userName, NetworkStatus.GAME_BUTTON, x, y, xLeftVel, xRightVel,
 				yVel, upPressed, downPressed, leftPressed, rightPressed, spacePressed);
 		SendObject(objectGameMsg);
+	}
+	
+	public void SendWinMessage() {
+		GameModelMsg obejctGameMsg = new GameModelMsg(userName, NetworkStatus.GAME_WIN);
+		SendObject(obejctGameMsg);
+	}
+	
+	public void SendReadyMessage() {
+		GameModelMsg gameReadMsg = new GameModelMsg("player", NetworkStatus.GAME_READY);
+		SendObject(gameReadMsg);
 	}
 }

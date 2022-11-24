@@ -41,6 +41,10 @@ public class Player extends ObjectDynamic {
 		this.controller = controller;
 	}
 
+	public void setControlBlocked(boolean controlBlocked) {
+		this.controlBlocked = controlBlocked;
+	}
+
 	public void setDefaultValues() {
 		direction = jumpDir = 0;
 		x = (isMario) ? 100.0 : 200.0;

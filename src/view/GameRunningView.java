@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Vector;
 
@@ -7,6 +8,7 @@ import audio.Audio;
 import controller.Controller;
 import controller.OthersController;
 import controller.PlayerController;
+import main.GamePanel;
 import main.GameSettings;
 import model.GameCamera;
 import model.GameMap;
@@ -25,8 +27,15 @@ public class GameRunningView implements GameStatusView {
 	private GameCamera camera;
 	
 	private Audio audio = Audio.getInstance();
+	private GamePanel gamePanel;
 	
-	public GameRunningView(Controller controller, Controller othersController, int playerNumber) {
+	private boolean win = false;
+	private double animation = 1.0;
+	
+	public GameRunningView(GamePanel gamePanel, Controller controller, Controller othersController, int playerNumber) {
+		
+		this.gamePanel = gamePanel;
+		
 		// 게임 첫 시작 -> 맵 생성, 플레이어 설정
 		map = new GameMap();
 		players = map.getPlayers();
@@ -70,6 +79,29 @@ public class GameRunningView implements GameStatusView {
 		camera.moveX(player1.getX() - GameSettings.scaledSize * 5); // 플레이어가 화면 왼쪽에서 6칸 이상을 넘어갈 때, 카메라를 이동시킴
 	}
 
+	public void blockAllPlayer() {
+		for (Player p : players) {
+			p.setControlBlocked(true);
+		}
+	}
+	
+	public void checkPlayer1Won() {
+		if (player1.getCenterHitbox().intersects(map.getFlagPole().getHitbox()) && !win) {
+			win = true;
+			blockAllPlayer();
+			audio.play("smb_flagpole");
+		}
+	}
+	
+	public void winAnimation(Graphics2D g) {
+		g.setColor(Color.black);
+		g.fillRect(0, 0, GameSettings.screenWidth, 
+				(int) (GameSettings.screenHeight - GameSettings.screenHeight * animation));
+		animation -= 0.017;
+		if(animation <= 0.0) 
+			gamePanel.gameWin();
+	}
+	
 	@Override
 	public void updates() {
 		map.playersInputUpdate();
@@ -81,6 +113,7 @@ public class GameRunningView implements GameStatusView {
 		map.dynamicObjectsUpdateCoordinate();
 
 		cameraPositionUpdate();
+		checkPlayer1Won();
 	}
 
 	@Override
@@ -91,5 +124,9 @@ public class GameRunningView implements GameStatusView {
 		
 		g.drawString("player1 x : " + (int)player1.getX(), 0, 100);
 		g.drawString("player2 x : " + (int)player2.getX(), 0, 150);
+		
+		if(win) {
+			winAnimation(g);
+		}
 	}
 }
