@@ -4,16 +4,17 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import main.GameSettings;
 import view.ImageLoader;
 
 public class GameMap {
 	private BufferedImage background;
-	private List<GameObject> deletedObjects = new ArrayList<GameObject>();
-	private List<ObjectDynamic> objectDynamic = new ArrayList<ObjectDynamic>();
-	private List<ObjectStatic> objectStatic = new ArrayList<ObjectStatic>();
-	private List<Player> players = new ArrayList<Player>();
+	private Vector<GameObject> deletedObjects = new Vector<GameObject>();
+	private Vector<ObjectDynamic> objectDynamic = new Vector<ObjectDynamic>();
+	private Vector<ObjectStatic> objectStatic = new Vector<ObjectStatic>();
+	private Vector<Player> players = new Vector<Player>();
 	private GameCamera camera;
 
 	public GameMap() {
@@ -45,15 +46,15 @@ public class GameMap {
 		return camera;
 	}
 
-	public List<Player> getPlayers() {
+	public Vector<Player> getPlayers() {
 		return players;
 	}
 
-	public List<ObjectDynamic> getObjectDynamic() {
+	public Vector<ObjectDynamic> getObjectDynamic() {
 		return objectDynamic;
 	}
 
-	public List<ObjectStatic> getObjectStatic() {
+	public Vector<ObjectStatic> getObjectStatic() {
 		return objectStatic;
 	}
 
