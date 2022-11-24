@@ -1,8 +1,9 @@
 package view;
 
 import java.awt.Graphics2D;
-import java.util.List;
+import java.util.Vector;
 
+import audio.Audio;
 import controller.Controller;
 import controller.OthersController;
 import controller.PlayerController;
@@ -14,12 +15,16 @@ import model.Player;
 
 public class GameRunningView implements GameStatusView {
 
-	private List<Player> players;
-	private List<ObjectDynamic> objectDynamic;
+	private Vector<Player> players;
+	private Vector<ObjectDynamic> objectDynamic;
 
 	private Player player1;
+	private Player player2;
+	
 	private GameMap map;
 	private GameCamera camera;
+	
+	private Audio audio = Audio.getInstance();
 	
 	public GameRunningView(Controller controller, Controller othersController, int playerNumber) {
 		// 게임 첫 시작 -> 맵 생성, 플레이어 설정
@@ -37,12 +42,15 @@ public class GameRunningView implements GameStatusView {
 				((PlayerController)controller).setPlayer(p);
 			} else {
 				p.setController(othersController);
+				player2 = p;
 				((OthersController)othersController).setPlayer(p);
 			}
 		}
+		
+		audio.playBackground("smb_background");
 	}
 
-	public List<Player> getPlayers() {
+	public Vector<Player> getPlayers() {
 		return players;
 	}
 	
@@ -80,5 +88,8 @@ public class GameRunningView implements GameStatusView {
 		g.translate(-camera.getX(), 0); // 그릴 맵 정보들의 원점을 현재 카메라 x좌표만큼 왼쪽으로 이동
 		map.draw(g); // 바뀐 원점에서 그려서 카메라가 이동하는 것처럼 보임
 		g.translate(camera.getX(), 0); // 원점 원상복구
+		
+		g.drawString("player1 x : " + (int)player1.getX(), 0, 100);
+		g.drawString("player2 x : " + (int)player2.getX(), 0, 150);
 	}
 }

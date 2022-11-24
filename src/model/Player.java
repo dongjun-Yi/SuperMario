@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+import audio.Audio;
 import controller.Controller;
 import main.GameSettings;
 import view.ImageLoader;
@@ -20,6 +21,7 @@ public class Player extends ObjectDynamic {
 	private boolean controlBlocked = false;
 
 	private ImageLoader imageLoader = ImageLoader.getImageLoader();
+	private Audio audio = Audio.getInstance();
 	
 	private double dx = 0, dy = 0; // attacked animation용 변수
 	private long timer = 0;	// 아이템용 타이머
@@ -60,7 +62,18 @@ public class Player extends ObjectDynamic {
 		yVel = -power;
 	}
 
+	public void stomp(int power) {
+		audio.play("smb_stomp");
+		jump(power);
+	}
+	
+	public void kick(int power) {
+		audio.play("smb_kick");
+		jump(power);
+	}
+	
 	public void die() {
+		audio.play("smb_mariodie");
 		dx = dy = 0; // 밟히는 애니메이션 종료
 
 		isDie = true;
@@ -85,6 +98,7 @@ public class Player extends ObjectDynamic {
 	}
 
 	public void startSpeedUp() {
+		audio.play("smb_powerup");
 		isSpeedup = true;
 		maxSpeed = 10;
 		timer = 0;
@@ -154,6 +168,7 @@ public class Player extends ObjectDynamic {
 			}
 
 			if (!isJump && controller.getUpPressed() && yVel <= 0) {
+				audio.play("smb_jump-small");
 				jump(16);
 			}
 

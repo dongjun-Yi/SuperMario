@@ -4,18 +4,21 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
+import audio.Audio;
 import main.GameSettings;
 import view.ImageLoader;
 
 public class GameMap {
 	private BufferedImage background;
-	private List<GameObject> deletedObjects = new ArrayList<GameObject>();
-	private List<ObjectDynamic> objectDynamic = new ArrayList<ObjectDynamic>();
-	private List<ObjectStatic> objectStatic = new ArrayList<ObjectStatic>();
-	private List<Player> players = new ArrayList<Player>();
+	private Vector<GameObject> deletedObjects = new Vector<GameObject>();
+	private Vector<ObjectDynamic> objectDynamic = new Vector<ObjectDynamic>();
+	private Vector<ObjectStatic> objectStatic = new Vector<ObjectStatic>();
+	private Vector<Player> players = new Vector<Player>();
 	private GameCamera camera;
-
+	private Audio audio = Audio.getInstance();
+	
 	public GameMap() {
 		ImageLoader imageLoader = ImageLoader.getImageLoader();
 		background = imageLoader.getBackgroundImage();
@@ -45,15 +48,15 @@ public class GameMap {
 		return camera;
 	}
 
-	public List<Player> getPlayers() {
+	public Vector<Player> getPlayers() {
 		return players;
 	}
 
-	public List<ObjectDynamic> getObjectDynamic() {
+	public Vector<ObjectDynamic> getObjectDynamic() {
 		return objectDynamic;
 	}
 
-	public List<ObjectStatic> getObjectStatic() {
+	public Vector<ObjectStatic> getObjectStatic() {
 		return objectStatic;
 	}
 
@@ -107,6 +110,7 @@ public class GameMap {
 					p.setY(os.getY() + os.getHeight());
 					p.setyVel(GameSettings.gravity);
 
+					audio.play("smb_bump");
 					int itemNum = os.touch();
 					if (itemNum != 0) {
 						objectStatic.set(i, createBlockedBlock(os.getX(), os.getY()));
@@ -141,7 +145,10 @@ public class GameMap {
 				// 플레이어가 밟았을 때
 				if (p.getBottomHitbox().intersects(od.getHitbox()) && !od.isItem()) {
 					p.setyVel(0);
-					p.jump(11);
+					if(od.getObjectNum() == 10)	// 쿠파(거북이)일 때
+						p.kick(11);
+					else
+						p.stomp(11);
 					od.attacked((int) p.getX());
 				}
 				// 플레이어와 닿았을 때
@@ -154,8 +161,10 @@ public class GameMap {
 					case 2: // 동전
 						break;
 					case 10: // 쿠파
-						if (!od.isMoving())
+						if (!od.isMoving()) {
+							audio.play("smb_kick");
 							od.attacked((int) p.getX() + p.getWidth() / 2);
+						}
 						else
 							p.die();
 
@@ -175,7 +184,7 @@ public class GameMap {
 				// 다른 플레이어를 밟았을 때
 				if (p.getBottomHitbox().intersects(pJ.getTopHitbox())) {
 					p.setyVel(0);
-					p.jump(13);
+					p.stomp(13);
 					pJ.attacked(0);
 				}
 			}

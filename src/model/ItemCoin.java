@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+import audio.Audio;
 import main.GameSettings;
 import view.ImageLoader;
 
@@ -11,6 +12,7 @@ public class ItemCoin extends ObjectDynamic {
 
 	private double startY;
 	private ImageLoader imgLoader = ImageLoader.getImageLoader();
+	private Audio audio = Audio.getInstance();
 	
 	public ItemCoin(double x, double y, int mapWidthBoundary) {
 		super(x, y, mapWidthBoundary);
@@ -22,6 +24,8 @@ public class ItemCoin extends ObjectDynamic {
 		yVel = -16; // first do jump animation
 		startY = y;
 		objectNum = 2;
+		
+		audio.play("smb_coin");
 	}
 	
 	@Override

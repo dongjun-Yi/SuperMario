@@ -45,18 +45,23 @@ public class PlayerController implements Controller {
 		int code = e.getKeyCode();
 
 		if (code == KeyEvent.VK_W) {
+			//if(upPressed) return;	// 한번만 보내기
 			upPressed = true;
 		}
 		if (code == KeyEvent.VK_S) {
+			//if(downPressed) return;
 			downPressed = true;
 		}
 		if (code == KeyEvent.VK_A) {
+			//if(leftPressed) return;
 			leftPressed = true;
 		}
 		if (code == KeyEvent.VK_D) {
+			//if(rightPressed) return;
 			rightPressed = true;
 		}
 		if (code == KeyEvent.VK_SPACE) {
+			//if(spacePressed) return;
 			spacePressed = true;
 		}
 		if(code == KeyEvent.VK_G) { //게임 승리, 패배 프로토콜 확인하기 위한 코드

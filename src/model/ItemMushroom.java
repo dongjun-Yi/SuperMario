@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+import audio.Audio;
 import main.GameSettings;
 import view.ImageLoader;
 
@@ -12,6 +13,7 @@ public class ItemMushroom extends ObjectDynamic {
 	private double startY;
 	private boolean isMoving = false;
 	private ImageLoader imgLoader = ImageLoader.getImageLoader();
+	private Audio audio =Audio.getInstance();
 	
 	public ItemMushroom(double x, double y, int mapWidthBoundary) {
 		super(x, y, mapWidthBoundary);
@@ -24,6 +26,7 @@ public class ItemMushroom extends ObjectDynamic {
 		yVel = -5;
 		
 		objectNum = 1;
+		audio.play("smb_powerup_appears");
 	}
 	
 	public void apearAnimation() {
