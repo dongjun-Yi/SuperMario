@@ -3,10 +3,7 @@ package controller;
 import java.awt.event.KeyEvent;
 
 import client.GameClient;
-import main.GamePanel;
 import model.Player;
-import server.GameModelMsg;
-import server.NetworkStatus;
 
 public class PlayerController implements Controller {
 
@@ -15,18 +12,19 @@ public class PlayerController implements Controller {
 
 	private GameClient gameClient;
 	private Player player;
-	
+
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
+
 	public Player getPlayer() {
 		return player;
 	}
-	
+
 	public void setGameClient(GameClient gameClient) {
 		this.gameClient = gameClient;
 	}
-	
+
 	@Override
 	public void initKey() {
 		this.upPressed = false;
@@ -45,28 +43,29 @@ public class PlayerController implements Controller {
 		int code = e.getKeyCode();
 
 		if (code == KeyEvent.VK_W) {
-			//if(upPressed) return;	// 한번만 보내기
+			if(upPressed) return; // 한번만 보내기
 			upPressed = true;
 		}
 		if (code == KeyEvent.VK_S) {
-			//if(downPressed) return;
+			if(downPressed) return;
 			downPressed = true;
 		}
 		if (code == KeyEvent.VK_A) {
-			//if(leftPressed) return;
+			if(leftPressed) return;
 			leftPressed = true;
 		}
 		if (code == KeyEvent.VK_D) {
-			//if(rightPressed) return;
+			if(rightPressed) return;
 			rightPressed = true;
 		}
 		if (code == KeyEvent.VK_SPACE) {
-			//if(spacePressed) return;
+			if(spacePressed) return;
 			spacePressed = true;
 		}
 		// 키 누르면 전송
-		if(player != null)
-			gameClient.SendButtonAction(player.getX(), player.getY(), player.getxLeftVel(), player.getxRightVel(), player.getyVel(), upPressed, downPressed, leftPressed, rightPressed, spacePressed);	
+		if (player != null && !player.isControlBlocked())
+			gameClient.SendButtonAction(player.getX(), player.getY(), player.getxLeftVel(), player.getxRightVel(),
+					player.getyVel(), upPressed, downPressed, leftPressed, rightPressed, spacePressed);
 	}
 
 	@Override
@@ -89,8 +88,9 @@ public class PlayerController implements Controller {
 			spacePressed = false;
 		}
 		// 키 떼면 전송
-		if(player != null)
-			gameClient.SendButtonAction(player.getX(), player.getY(), player.getxLeftVel(), player.getxRightVel(), player.getyVel(), upPressed, downPressed, leftPressed, rightPressed, spacePressed);	
+		if (player != null)
+			gameClient.SendButtonAction(player.getX(), player.getY(), player.getxLeftVel(), player.getxRightVel(),
+					player.getyVel(), upPressed, downPressed, leftPressed, rightPressed, spacePressed);
 	}
 
 	@Override

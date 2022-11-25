@@ -24,24 +24,33 @@ public class GamePanel extends JPanel implements Runnable {
 	private static final long serialVersionUID = 1L;
 	private Thread gameThread;
 
-	private Controller controller = new PlayerController(); // 플레이어의 input값
-	private Controller othersController = new OthersController(); // 다른 플레이어의 input data값
-	
+	private Controller controller; // 플레이어의 input값
+	private Controller othersController; // 다른 플레이어의 input data값
+
 	private int playerNumber; // 서버한테 받은 클라이언트 번호
 
 	private GameStatusView gameStatusView; // 시작화면, 인게임 화면 --> GameStatusView로 캡슐화
+	private GameClient gameClient;
 
 	private String ip_addr = "127.0.0.1";
 	private String port = "30000";
-	private GameClient gameClient;
 
-	public GamePanel() {
+	private GamePanel() {
+		controller = new PlayerController(); // 플레이어의 input값
+		othersController = new OthersController(); // 다른 플레이어의 input data값
+
 		this.setPreferredSize(new Dimension(GameSettings.screenWidth, GameSettings.screenHeight));
 		this.setDoubleBuffered(true);
 		this.addKeyListener(controller);
 		this.setFocusable(true);
-		// gameStatus == 시작 화면
-		setGameStatusView(new StartScreenView(this, controller));
+
+		gameStartScreen();
+	}
+
+	public void initControllers() {
+		controller = new PlayerController();
+		othersController = new OthersController();
+		this.addKeyListener(controller);
 	}
 
 	public Controller getOthersController() {
@@ -51,7 +60,7 @@ public class GamePanel extends JPanel implements Runnable {
 	public void setPlayerNumber(int playerNumber) {
 		this.playerNumber = playerNumber;
 	}
-	
+
 	public GameClient getClient() {
 		return gameClient;
 	}
@@ -75,24 +84,55 @@ public class GamePanel extends JPanel implements Runnable {
 
 	public void gameRunning() {
 		controller.initKey();
+		othersController.initKey();
+		
+		// 게임이 시작하면 게임 스레드 초기화하여 동기화
+		gameThread.interrupt();
+		gameThread = null;
+		gameThread = new Thread(this);
+		gameThread.start();
+		
 		// gameStatus == 게임 중
 		setGameStatusView(new GameRunningView(this, controller, othersController, playerNumber));
 	}
-	
+
+	public void gameStartScreen() {
+		// gameStatus == 시작 화면
+		setGameStatusView(new StartScreenView(this, controller));
+	}
+
 	public void gameWin() {
 		gameClient.SendWinMessage();
-		setGameStatusView(new GameWinView());
+		gameClient.SendLogoutMessage();
+		setGameStatusView(new GameWinView(this, controller));
 	}
-	
+
 	public void gameLose() {
-		setGameStatusView(new GameLoseView());
+		setGameStatusView(new GameLoseView(this, controller));
+	}
+
+	public void gameRestart() {
+		// 스레드 종료
+		gameClient.threadInterrupt();
+		gameThread.interrupt();
+
+		// 초기화
+		controller = null;
+		othersController = null;
+		gameStatusView = null;
+		gameClient = null;
+		gameThread = null;
+		
+		initControllers();
+		gameStartScreen();
+		gameStart(); // 재시작
 	}
 
 	public void update() {
 		gameStatusView.updates();
 		repaint();
 	}
-
+	
 	@Override
 	public void run() {
 		double fps = 60.0;
@@ -112,6 +152,9 @@ public class GamePanel extends JPanel implements Runnable {
 				update();
 				delta--;
 			}
+
+			if (Thread.interrupted())
+				break;
 		}
 	}
 

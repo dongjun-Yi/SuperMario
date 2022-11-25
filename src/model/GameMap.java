@@ -2,8 +2,6 @@ package model;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 
 import audio.Audio;
@@ -19,7 +17,9 @@ public class GameMap {
 	private FlagPole flagPole;
 	private GameCamera camera;
 	private Audio audio = Audio.getInstance();
-	
+
+	public EnemyKoopa koopa; // for debug
+
 	public GameMap() {
 		ImageLoader imageLoader = ImageLoader.getImageLoader();
 		background = imageLoader.getBackgroundImage();
@@ -30,7 +30,9 @@ public class GameMap {
 
 		camera = new GameCamera(background.getWidth());
 		objectDynamic.add(new EnemyGoomba(100, 500, background.getWidth()));
-		objectDynamic.add(new EnemyKoopa(300, 300, background.getWidth()));
+
+		koopa = new EnemyKoopa(300, 500, background.getWidth());
+		objectDynamic.add(koopa);
 
 		objectDynamic.add(new ItemMushroom(500, 300, background.getWidth()));
 		objectDynamic.add(new ItemCoin(550, 300, background.getWidth()));
@@ -43,14 +45,14 @@ public class GameMap {
 
 		objectStatic.add(new BlockHard(400, 577));
 		objectStatic.add(new BlockHard(200, 577));
-		
+
 		flagPole = new FlagPole(2603, 108);
 	}
 
 	public FlagPole getFlagPole() {
 		return flagPole;
 	}
-	
+
 	public GameCamera getCamera() {
 		return camera;
 	}
@@ -98,13 +100,13 @@ public class GameMap {
 	}
 
 	public void playerCollisionDetection() {
-	
+
 		for (Player p : players) {
 			if (!p.hasCollision())
 				continue;
 
 			p.setCollided(false); // 현재 바닥과 충돌했는지 체크하는 변수
-			
+
 			// 정적인 오브젝트 (블록 등)과의 충돌 처리
 			for (int i = 0; i < objectStatic.size(); i++) {
 
@@ -152,7 +154,7 @@ public class GameMap {
 				// 플레이어가 밟았을 때
 				if (p.getBottomHitbox().intersects(od.getHitbox()) && !od.isItem()) {
 					p.setyVel(0);
-					if(od.getObjectNum() == 10)	// 쿠파(거북이)일 때
+					if (od.getObjectNum() == 10) // 쿠파(거북이)일 때
 						p.kick(11);
 					else
 						p.stomp(11);
@@ -171,8 +173,7 @@ public class GameMap {
 						if (!od.isMoving()) {
 							audio.play("smb_kick");
 							od.attacked((int) p.getX() + p.getWidth() / 2);
-						}
-						else
+						} else
 							p.die();
 
 						break;
