@@ -10,35 +10,40 @@ import main.GameSettings;
 import view.ImageLoader;
 
 public class Player extends ObjectDynamic {
-	
+
 	private Controller controller = null;
-	
-	private boolean isMario = false;	// true : mario, false : luigi
+
+	private boolean isMario = false; // true : mario, false : luigi
 	private boolean isDie = false;
 	private boolean isAttacked = false;
 	private boolean isSpeedup = false;
-	
+
 	private boolean controlBlocked = false;
 
 	private ImageLoader imageLoader = ImageLoader.getImageLoader();
 	private Audio audio = Audio.getInstance();
-	
+
 	private double dx = 0, dy = 0; // attacked animation용 변수
-	private long timer = 0;	// 아이템용 타이머
+	private long timer = 0; // 아이템용 타이머
 
 	public Player(double x, double y, int mapWidthBoundary) {
 		super(x, y, mapWidthBoundary);
 		width = height = GameSettings.scaledSize;
 		setDefaultValues();
 	}
-	
+
 	public void setMario(boolean isMario) {
 		this.isMario = isMario;
-		if(isMario)	x = 100.0;	// players have different x coordinate
+		if (isMario)
+			x = 100.0; // players have different x coordinate
 	}
 
 	public void setController(Controller controller) {
 		this.controller = controller;
+	}
+
+	public boolean isControlBlocked() {
+		return controlBlocked;
 	}
 
 	public void setControlBlocked(boolean controlBlocked) {
@@ -70,12 +75,12 @@ public class Player extends ObjectDynamic {
 		audio.play("smb_stomp");
 		jump(power);
 	}
-	
+
 	public void kick(int power) {
 		audio.play("smb_kick");
 		jump(power);
 	}
-	
+
 	public void die() {
 		audio.play("smb_mariodie");
 		dx = dy = 0; // 밟히는 애니메이션 종료
@@ -107,15 +112,15 @@ public class Player extends ObjectDynamic {
 		maxSpeed = 10;
 		timer = 0;
 	}
-	
+
 	private void speedUp() {
-		if(timer >= 90) {
+		if (timer >= 90) {
 			isSpeedup = false;
 			maxSpeed = 7;
 		}
 		timer++;
 	}
-	
+
 	@Override
 	public void attacked(double x) {
 		isAttacked = true;
@@ -145,7 +150,7 @@ public class Player extends ObjectDynamic {
 		if (isSpeedup) {
 			speedUp();
 		}
-		
+
 		if (!controlBlocked) {
 			if (controller.getRightPressed()) {
 				direction = 0;
@@ -205,7 +210,7 @@ public class Player extends ObjectDynamic {
 		BufferedImage img = marioImg[direction][0];
 
 		// dying animation
-		if(isDie) {
+		if (isDie) {
 			img = imageLoader.getPlayerDie(isMario);
 			dyingAnimation();
 		}
@@ -247,12 +252,15 @@ public class Player extends ObjectDynamic {
 
 		// HitBox 표시
 		// g2.drawRect((int) x + 8, (int) y + 5, width - 16, height - 7 - 5); // hitbox
-		//g2.drawRect((int) x + 8, (int) y + 5, width - 16, 5); // tophitbox
-		//g2.drawRect((int) (x + xLeftVel + xRightVel) + 8, (int) y + 10, width - 16, 31); // centerhitbox
-		//g2.drawRect((int) x + 8, (int) y + height - 7, width - 16, 5 + (int) yVel); // bottomhitbox
-		//g2.drawRect((int) x - 2 * width, (int) y - 2 * height, width * 5, height * 5);	// hitbox space
+		// g2.drawRect((int) x + 8, (int) y + 5, width - 16, 5); // tophitbox
+		// g2.drawRect((int) (x + xLeftVel + xRightVel) + 8, (int) y + 10, width - 16,
+		// 31); // centerhitbox
+		// g2.drawRect((int) x + 8, (int) y + height - 7, width - 16, 5 + (int) yVel);
+		// // bottomhitbox
+		// g2.drawRect((int) x - 2 * width, (int) y - 2 * height, width * 5, height *
+		// 5); // hitbox space
 	}
-	
+
 	@Override
 	public Rectangle getHitbox() {
 		return new Rectangle((int) x + 8, (int) y + 5, width - 16, height - 7 - 5);

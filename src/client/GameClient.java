@@ -26,8 +26,7 @@ public class GameClient {
 			oos.flush();
 			ois = new ObjectInputStream(socket.getInputStream());
 
-			GameModelMsg objectGameMsg = new GameModelMsg(username, NetworkStatus.LOG_IN);
-			SendObject(objectGameMsg);
+			SendLoginMessage(username);
 
 			net = new ListenNetwork();
 			net.start();
@@ -36,6 +35,10 @@ public class GameClient {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public void threadInterrupt() {
+		net.interrupt();
 	}
 
 	public String getUserName() {
@@ -76,9 +79,9 @@ public class GameClient {
 						otherController.getPlayer().setX(objectGameMsg.getX());
 						otherController.getPlayer().setY(objectGameMsg.getY());
 						// 속도 동기화
-						//otherController.getPlayer().setxLeftVel(objectGameMsg.getxLeftVel());
-						//otherController.getPlayer().setxRightVel(objectGameMsg.getxRightVel());
-						//otherController.getPlayer().setyVel(objectGameMsg.getyVel());
+						// otherController.getPlayer().setxLeftVel(objectGameMsg.getxLeftVel());
+						// otherController.getPlayer().setxRightVel(objectGameMsg.getxRightVel());
+						// otherController.getPlayer().setyVel(objectGameMsg.getyVel());
 						// 키 동기화
 						otherController.setKeyPressed(objectGameMsg.isUpPressed(), objectGameMsg.isDownPressed(),
 								objectGameMsg.isLeftPressed(), objectGameMsg.isRightPressed(),
@@ -86,9 +89,17 @@ public class GameClient {
 					}
 					if (objectGameMsg.getCode().matches(NetworkStatus.GAME_LOSE)) {
 						gamePanel.gameLose();
+						SendLogoutMessage();
+						break; // 종료
 					}
+
+					if (Thread.interrupted())
+						break;
+
 				} catch (IOException e) {
 					try {
+						SendLogoutMessage();
+
 						ois.close();
 						oos.close();
 						socket.close();
@@ -98,7 +109,6 @@ public class GameClient {
 						break;
 					} // catch문 끝
 				} // 바깥 catch문끝
-
 			}
 		}
 	}
@@ -118,14 +128,24 @@ public class GameClient {
 				yVel, upPressed, downPressed, leftPressed, rightPressed, spacePressed);
 		SendObject(objectGameMsg);
 	}
-	
+
 	public void SendWinMessage() {
 		GameModelMsg obejctGameMsg = new GameModelMsg(userName, NetworkStatus.GAME_WIN);
 		SendObject(obejctGameMsg);
 	}
-	
+
 	public void SendReadyMessage() {
-		GameModelMsg gameReadMsg = new GameModelMsg("player", NetworkStatus.GAME_READY);
+		GameModelMsg gameReadMsg = new GameModelMsg(userName, NetworkStatus.GAME_READY);
 		SendObject(gameReadMsg);
+	}
+
+	public void SendLoginMessage(String username) {
+		GameModelMsg objectGameMsg = new GameModelMsg(username, NetworkStatus.LOG_IN);
+		SendObject(objectGameMsg);
+	}
+
+	public void SendLogoutMessage() {
+		GameModelMsg objectGameMsg = new GameModelMsg(userName, NetworkStatus.LOG_OUT);
+		SendObject(objectGameMsg);
 	}
 }

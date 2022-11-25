@@ -11,8 +11,8 @@ public class GameReadyView implements GameStatusView {
 
 	private ImageLoader imageLoader = ImageLoader.getImageLoader();
 	
-	private String msg = "WAITING OTHER PLAYERS...";
-	private int fontSize = 15;
+	private String msg = "WAITING OTHER PLAYER...";
+	private int fontSize = 15;	
 	private Font font = FontLoader.getInstance().loadMarioFont();
 	
 	private boolean isPlayer1 = false;
@@ -35,7 +35,8 @@ public class GameReadyView implements GameStatusView {
 		g.fillRect(0, 0, GameSettings.screenWidth, GameSettings.screenHeight);
 		g.setColor(Color.white);	
 		g.setFont(font.deriveFont(20f));
-		g.drawString(msg, GameSettings.screenWidth/2 - msg.length()/2*15,  
+		g.drawString(msg,
+				GameSettings.screenWidth / 2 - msg.length() / 2 * fontSize,  
 				GameSettings.screenHeight/2 - 48);
 		g.drawImage(imageLoader.getPlayerStartImage(isPlayer1), 
 				GameSettings.screenWidth/2 - GameSettings.scaledSize/2, 
