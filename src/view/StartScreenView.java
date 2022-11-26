@@ -40,6 +40,7 @@ public class StartScreenView implements GameStatusView {
 	@Override
 	public void updates() {
 		if (controller.getSpacePressed() && row == CURSOR_GAMESTART_LOCATION && showListMsg == null) {
+			gamePanel.gameRoomMake(null);
 			showListMsg = new GameModelMsg(NetworkStatus.SHOW_LIST);
 			gameClient.SendObject(showListMsg);
 		}

@@ -11,4 +11,5 @@ public class NetworkStatus {
 	public static final String GAME_LOSE = "800";
 	public static final String SHOW_LIST = "900";
 	public static final String MAKE_ROOM_REQUEST = "1000";
+	public static final String ERROR = "1100";
 }

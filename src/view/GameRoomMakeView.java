@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,6 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import client.GameClient;
@@ -25,6 +27,13 @@ public class GameRoomMakeView extends JFrame implements GameStatusView {
 		this.gameClient = gameClient;
 		getContentPane().setBackground(new Color(0, 252, 255));
 		getContentPane().setLayout(null);
+		drawGameRoomView(roomList);
+
+		this.setSize(500, 400);
+		this.setVisible(true);
+	}
+
+	public void drawGameRoomView(String roomList[]) {
 		long roomNumber = System.nanoTime();
 
 		JButton makeRoomBtn = new JButton("방 생성하기");
@@ -45,6 +54,7 @@ public class GameRoomMakeView extends JFrame implements GameStatusView {
 			getContentPane().add(label);
 		} else {
 			userList = roomList;
+			label.setText("");
 			for (i = 0; i < userList.length; i++) {
 				JButton[] btnNewButton = new JButton[userList.length];
 				btnNewButton[i] = new JButton("방" + (i + 1));
@@ -63,8 +73,14 @@ public class GameRoomMakeView extends JFrame implements GameStatusView {
 				});
 			}
 		}
+	}
 
-		this.setSize(500, 400);
+	public void errorMsg() {
+		JOptionPane.showMessageDialog(this, "유저수가 이미 꽉 차있어 입장 불가", "경고", JOptionPane.WARNING_MESSAGE);
+	}
+
+	public void updateRoomListView(String roomList[]) {
+		drawGameRoomView(roomList);
 		this.setVisible(true);
 	}
 

@@ -36,6 +36,7 @@ public class GamePanel extends JPanel implements Runnable {
 	private String ip_addr = "127.0.0.1";
 	private String port = "30000";
 	private static StartScreenView startScreenView;
+	private static GameRoomMakeView gameRoomMakeView;
 
 	private GamePanel() {
 		controller = new PlayerController(); // 플레이어의 input값
@@ -80,8 +81,10 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 
 	public void gameRoomMake(String roomList[]) {
-		if (!(gameStatusView instanceof GameRoomMakeView)) // ready 두번 보내지는 문제 방지
-			setGameStatusView(new GameRoomMakeView(gameClient, roomList));
+		if (!(gameStatusView instanceof GameRoomMakeView)) {// ready 두번 보내지는 문제 방지
+			gameRoomMakeView = new GameRoomMakeView(gameClient, roomList);
+			setGameStatusView(gameRoomMakeView);
+		}
 	}
 
 	public void gameReady() {
@@ -178,5 +181,9 @@ public class GamePanel extends JPanel implements Runnable {
 
 	public synchronized static GamePanel getInstance() {
 		return instance;
+	}
+
+	public synchronized static GameRoomMakeView getGameMakeView() {
+		return gameRoomMakeView;
 	}
 }

@@ -7,6 +7,10 @@ import server.GameServer.UserService;
 public class GameRoom {
 	private String roomNumber;
 	private int readyStatusCnt = 0;
+	public void setReadyStatusCnt(int readyStatusCnt) {
+		this.readyStatusCnt = readyStatusCnt;
+	}
+
 	Vector<UserService> userList;
 
 	public int getReadyStatusCnt() {

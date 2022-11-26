@@ -9,6 +9,7 @@ import controller.OthersController;
 import main.GamePanel;
 import server.GameModelMsg;
 import server.NetworkStatus;
+import view.GameRoomMakeView;
 
 public class GameClient {
 	private String userName;
@@ -20,6 +21,7 @@ public class GameClient {
 	private OthersController otherController = (OthersController) gamePanel.getOthersController();
 	String roomList[] = null;
 	private String roomNumber = "";
+	private GameRoomMakeView gameRoomMakeView;
 
 	public String getRoomNumber() {
 		return roomNumber;
@@ -71,6 +73,9 @@ public class GameClient {
 						objectGameMsg = (GameModelMsg) obgm;
 					} else
 						continue;
+					if(objectGameMsg.getCode().matches(NetworkStatus.ERROR)) {
+						gameRoomMakeView.errorMsg();
+					}
 					// System.out.println(objectGameMsg.getCode());
 					if (objectGameMsg.getCode().matches(NetworkStatus.LOG_IN)) { // 400
 						userName = objectGameMsg.getPlayerName();
@@ -78,9 +83,11 @@ public class GameClient {
 					if (objectGameMsg.getCode().matches(NetworkStatus.SHOW_LIST)) { // 1000
 						if (objectGameMsg.getRoomList().matches("")) {
 							gamePanel.gameRoomMake(null);
+						} else {
+							gameRoomMakeView = GamePanel.getGameMakeView();
+							roomList = objectGameMsg.getRoomList().split(" ");
+							gameRoomMakeView.updateRoomListView(roomList);
 						}
-						roomList = objectGameMsg.getRoomList().split(" ");
-						gamePanel.gameRoomMake(roomList);
 					}
 					if (objectGameMsg.getCode().matches(NetworkStatus.GAME_READY)) { // 400
 						gamePanel.gameReady();
