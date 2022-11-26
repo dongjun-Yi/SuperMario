@@ -83,7 +83,7 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	public void gameRoomMake() {
 		if (!(gameStatusView instanceof GameRoomListView)) {
-			setGameStatusView(new GameRoomListView(gameClient, null));
+			setGameStatusView(new GameRoomListView(this, gameClient, null));
 			gameClient.SendShowRoomListMessage();
 		}
 	}
@@ -100,7 +100,6 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	public void gameReady() {
 		if (!(gameStatusView instanceof GameReadyView)) { // ready 두번 보내지는 문제 방지
-			((GameRoomListView)gameStatusView).dispose();	// 창 종료
 			setGameStatusView(new GameReadyView(gameClient));
 		}
 	}

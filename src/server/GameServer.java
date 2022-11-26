@@ -3,17 +3,11 @@ package server;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Random;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -37,7 +31,6 @@ public class GameServer extends JFrame {
 	private Vector UserVec = new Vector(); // 연결된 사용자를 저장할 벡터
 	private static final int BUF_LEN = 128; // Windows 처럼 BUF_LEN 을 정의
 	private static final int USER_MAX_COUNT = 2;
-	private int userCnt = 0; // 마리오,루이지 순으로 GameClient 생성을 위해 구분하는 변
 	private Vector<GameRoom> roomVector = new Vector<GameRoom>();
 
 	private volatile int roomNumberCnt = 1;
@@ -212,8 +205,8 @@ public class GameServer extends JFrame {
 			else {
 				for (int i = 0; i < roomVector.size(); i++) {
 					String roomNumber = roomVector.elementAt(i).getRoomNumber();
-					roomList.append(roomNumber);
-					roomList.append(" ");
+					int userCount = roomVector.elementAt(i).getUserList().size();	// 방 유저 수
+					roomList.append(roomNumber + " " + userCount + "/");
 				}
 			}
 			GameModelMsg objectGameMsg = null;
@@ -228,8 +221,8 @@ public class GameServer extends JFrame {
 		public void WriteGameButtonMsg(int roomVectorindex, GameModelMsg objectGameMsg) {
 			for (int i = 0; i < roomVector.elementAt(roomVectorindex).userList.size(); i++) {
 				UserService sendUser = (UserService) roomVector.elementAt(roomVectorindex).userList.elementAt(i);
-				System.out.println("sendUser " + sendUser);
-				System.out.println("this " + this);
+				//System.out.println("sendUser " + sendUser);
+				//System.out.println("this " + this);
 				if (roomVector.elementAt(roomVectorindex).userList.elementAt(i) != this) {
 					sendUser.WriteOneObject(objectGameMsg);
 				}
@@ -256,24 +249,6 @@ public class GameServer extends JFrame {
 				if (user != this)
 					user.WriteOneObject(obj);
 			}
-		}
-
-		// Windows 처럼 message 제외한 나머지 부분은 NULL 로 만들기 위한 함수
-		public byte[] MakePacket(String msg) {
-			byte[] packet = new byte[BUF_LEN];
-			byte[] bb = null;
-			int i;
-			for (i = 0; i < BUF_LEN; i++)
-				packet[i] = 0;
-			try {
-				bb = msg.getBytes("euc-kr");
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			for (i = 0; i < bb.length; i++)
-				packet[i] = bb[i];
-			return packet;
 		}
 
 		// UserService Thread가 담당하는 Client 에게 1:1 전송

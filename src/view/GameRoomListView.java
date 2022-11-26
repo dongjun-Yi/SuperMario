@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,18 +12,24 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import client.GameClient;
+import main.GamePanel;
 
 public class GameRoomListView extends JFrame implements GameStatusView {
 	private static final long serialVersionUID = 3L;
-	
+
+	private GamePanel gamePanel;
 	private GameClient gameClient;
 	private String[] userList;
 	private JButton makeRoomBtn;
 	private JLabel label;
 	private JButton[] btnNewButton;
+	private JLabel[] userCntLabel;
 	private int i;
+	
+	private Font font = FontLoader.getInstance().loadMarioFont();
 
-	public GameRoomListView(GameClient gameClient, String roomList[]) {
+	public GameRoomListView(GamePanel gamePanel, GameClient gameClient, String roomList[]) {
+		this.gamePanel = gamePanel;
 		this.gameClient = gameClient;
 		
 		getContentPane().setBackground(new Color(0, 252, 255));
@@ -36,7 +43,9 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 
 	public void drawGameRoomView(String roomList[]) {
 	
-		makeRoomBtn = new JButton("방 생성하기");
+		//makeRoomBtn = new JButton("방 생성하기");
+		makeRoomBtn = new JButton("CREATE ROOM");
+		makeRoomBtn.setFont(font.deriveFont(10f));
 		makeRoomBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				gameClient.SendMakeRoomRequestMessage();
@@ -46,23 +55,47 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 		getContentPane().add(makeRoomBtn);
 
 		if (roomList == null) {
-			label = new JLabel("아직 방이 없습니다.");
-			label.setBounds(200, 100, 142, 38);
+			//label = new JLabel("아직 방이 없습니다.");
+			label = new JLabel("NO GAME ROOM");
+			label.setFont(font.deriveFont(20f));
+			label.setBounds(155, 100, 542, 38);
 			getContentPane().add(label);
 		} else {
 			userList = roomList;
 			
-			for (i = 0; i < userList.length; i++) {
-				btnNewButton = new JButton[userList.length];
-				btnNewButton[i] = new JButton("방" + (i + 1));
+			btnNewButton = new JButton[userList.length];
+			userCntLabel = new JLabel[userList.length];
+			
+			for (i = 0; i < userList.length; i++) {	
+				String roomInfo[];
+				roomInfo = userList[i].split(" ");
+				
+				// 방 참가 버튼
+				//btnNewButton[i] = new JButton("방" + (i + 1));
+				btnNewButton[i] = new JButton("ROOM" + (i + 1));
+				btnNewButton[i].setFont(font.deriveFont(15f));
 				btnNewButton[i].setBounds(100, 52 + (i * 60), 300, 60);
 				getContentPane().add(btnNewButton[i]);
 
+				// 방 유저 수
+				userCntLabel[i] = new JLabel(roomInfo[1] + "/2");
+				userCntLabel[i].setBounds(410, 52 + (i * 60), 300, 60);
+				getContentPane().add(userCntLabel[i]);
+				System.out.println(userCntLabel[i].getText());
+				
 				btnNewButton[i].addActionListener(new ActionListener() {
-					int j = i;
+					String roomNumber = roomInfo[0];
+					String roomUsr = roomInfo[1];
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						gameClient.SendReadyMessage(userList[j]);
+						// 인원 수 꽉 차지 않으면 참가
+						if(!roomUsr.equals("2")) {
+							dispose();
+							gameClient.SendReadyMessage(roomNumber);
+							gamePanel.gameReady();
+						}
+						else
+							errorMsg();
 					}
 				});
 			}
@@ -82,14 +115,13 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 			for (i = 0; i < userList.length; i++) {
 				if(btnNewButton[i] != null)
 					remove(btnNewButton[i]);
+				if(userCntLabel[i] != null)
+					remove(userCntLabel[i]);
 			}
 			btnNewButton = null;
+			userCntLabel = null;
 			userList = null;
 		}
-	}
-	
-	public void disposeView() {
-		dispose();
 	}
 	
 	public void errorMsg() {
@@ -113,5 +145,4 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 		// TODO Auto-generated method stub
 
 	}
-
 }
