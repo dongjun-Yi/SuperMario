@@ -12,6 +12,7 @@ import controller.OthersController;
 import controller.PlayerController;
 import view.GameLoseView;
 import view.GameReadyView;
+import view.GameRoomMakeView;
 import view.GameRunningView;
 import view.GameStatusView;
 import view.GameWinView;
@@ -34,6 +35,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 	private String ip_addr = "127.0.0.1";
 	private String port = "30000";
+	private static StartScreenView startScreenView;
 
 	private GamePanel() {
 		controller = new PlayerController(); // 플레이어의 input값
@@ -73,8 +75,13 @@ public class GamePanel extends JPanel implements Runnable {
 		gameThread = new Thread(this);
 		gameThread.start();
 		gameClient = new GameClient("player", ip_addr, port);
-
+		startScreenView.setGameClient(gameClient);
 		((PlayerController) controller).setGameClient(gameClient); // controller에 gameClient 등록
+	}
+
+	public void gameRoomMake(String roomList[]) {
+		if (!(gameStatusView instanceof GameRoomMakeView)) // ready 두번 보내지는 문제 방지
+			setGameStatusView(new GameRoomMakeView(gameClient, roomList));
 	}
 
 	public void gameReady() {
@@ -85,20 +92,21 @@ public class GamePanel extends JPanel implements Runnable {
 	public void gameRunning() {
 		controller.initKey();
 		othersController.initKey();
-		
+
 		// 게임이 시작하면 게임 스레드 초기화하여 동기화
 		gameThread.interrupt();
 		gameThread = null;
 		gameThread = new Thread(this);
 		gameThread.start();
-		
+
 		// gameStatus == 게임 중
 		setGameStatusView(new GameRunningView(this, controller, othersController, playerNumber));
 	}
 
 	public void gameStartScreen() {
 		// gameStatus == 시작 화면
-		setGameStatusView(new StartScreenView(this, controller));
+		startScreenView = new StartScreenView(this, controller);
+		setGameStatusView(startScreenView);
 	}
 
 	public void gameWin() {
@@ -122,7 +130,7 @@ public class GamePanel extends JPanel implements Runnable {
 		gameStatusView = null;
 		gameClient = null;
 		gameThread = null;
-		
+
 		initControllers();
 		gameStartScreen();
 		gameStart(); // 재시작
@@ -132,7 +140,7 @@ public class GamePanel extends JPanel implements Runnable {
 		gameStatusView.updates();
 		repaint();
 	}
-	
+
 	@Override
 	public void run() {
 		double fps = 60.0;

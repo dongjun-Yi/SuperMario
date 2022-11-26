@@ -18,6 +18,12 @@ public class GameClient {
 	private ListenNetwork net;
 	private GamePanel gamePanel = GamePanel.getInstance();
 	private OthersController otherController = (OthersController) gamePanel.getOthersController();
+	String roomList[] = null;
+	private String roomNumber = "";
+
+	public String getRoomNumber() {
+		return roomNumber;
+	}
 
 	public GameClient(String username, String ip_addr, String port_no) {
 		try {
@@ -69,8 +75,18 @@ public class GameClient {
 					if (objectGameMsg.getCode().matches(NetworkStatus.LOG_IN)) { // 400
 						userName = objectGameMsg.getPlayerName();
 					}
+					if (objectGameMsg.getCode().matches(NetworkStatus.SHOW_LIST)) { // 1000
+						if (objectGameMsg.getRoomList().matches("")) {
+							gamePanel.gameRoomMake(null);
+						}
+						roomList = objectGameMsg.getRoomList().split(" ");
+						gamePanel.gameRoomMake(roomList);
+					}
+					if (objectGameMsg.getCode().matches(NetworkStatus.GAME_READY)) { // 400
+						gamePanel.gameReady();
+					}
 					if (objectGameMsg.getCode().matches(NetworkStatus.GAME_START)) { // 400
-						System.out.println("randomNumber" + objectGameMsg.getRandomSeedNumber());
+						roomNumber = objectGameMsg.getRoomNumber();
 						gamePanel.setPlayerNumber(objectGameMsg.getPlayerNum());
 						gamePanel.gameRunning();
 					}
@@ -121,11 +137,11 @@ public class GameClient {
 		}
 	}
 
-	public void SendButtonAction(double x, double y, double xLeftVel, double xRightVel, double yVel, boolean upPressed,
-			boolean downPressed, boolean leftPressed, boolean rightPressed, boolean spacePressed) {
+	public void SendButtonAction(String roomNumber, double x, double y, double xLeftVel, double xRightVel, double yVel,
+			boolean upPressed, boolean downPressed, boolean leftPressed, boolean rightPressed, boolean spacePressed) {
 		// 좌표와 키 입력 값 보냄
-		GameModelMsg objectGameMsg = new GameModelMsg(userName, NetworkStatus.GAME_BUTTON, x, y, xLeftVel, xRightVel,
-				yVel, upPressed, downPressed, leftPressed, rightPressed, spacePressed);
+		GameModelMsg objectGameMsg = new GameModelMsg(roomNumber, userName, NetworkStatus.GAME_BUTTON, x, y, xLeftVel,
+				xRightVel, yVel, upPressed, downPressed, leftPressed, rightPressed, spacePressed);
 		SendObject(objectGameMsg);
 	}
 
