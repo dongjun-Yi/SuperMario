@@ -1,7 +1,6 @@
 package view;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,39 +9,37 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 
 import client.GameClient;
-import main.GamePanel;
-import server.GameModelMsg;
-import server.NetworkStatus;
 
-public class GameRoomMakeView extends JFrame implements GameStatusView {
-	GameClient gameClient;
+public class GameRoomListView extends JFrame implements GameStatusView {
+	private static final long serialVersionUID = 3L;
+	
+	private GameClient gameClient;
 	private String[] userList;
-	JLabel label;
-	int i;
+	private JButton makeRoomBtn;
+	private JLabel label;
+	private JButton[] btnNewButton;
+	private int i;
 
-	public GameRoomMakeView(GameClient gameClient, String roomList[]) {
+	public GameRoomListView(GameClient gameClient, String roomList[]) {
 		this.gameClient = gameClient;
+		
 		getContentPane().setBackground(new Color(0, 252, 255));
 		getContentPane().setLayout(null);
+			
 		drawGameRoomView(roomList);
-
+		
 		this.setSize(500, 400);
 		this.setVisible(true);
 	}
 
 	public void drawGameRoomView(String roomList[]) {
-		long roomNumber = System.nanoTime();
-
-		JButton makeRoomBtn = new JButton("방 생성하기");
+	
+		makeRoomBtn = new JButton("방 생성하기");
 		makeRoomBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				GameModelMsg gameReadMsg = new GameModelMsg(String.valueOf(roomNumber), "player",
-						NetworkStatus.MAKE_ROOM_REQUEST);
-				gameClient.SendObject(gameReadMsg);
-				dispose();
+				gameClient.SendMakeRoomRequestMessage();
 			}
 		});
 		makeRoomBtn.setBounds(180, 300, 142, 38);
@@ -54,34 +51,55 @@ public class GameRoomMakeView extends JFrame implements GameStatusView {
 			getContentPane().add(label);
 		} else {
 			userList = roomList;
-			label.setText("");
+			
 			for (i = 0; i < userList.length; i++) {
-				JButton[] btnNewButton = new JButton[userList.length];
+				btnNewButton = new JButton[userList.length];
 				btnNewButton[i] = new JButton("방" + (i + 1));
 				btnNewButton[i].setBounds(100, 52 + (i * 60), 300, 60);
 				getContentPane().add(btnNewButton[i]);
 
 				btnNewButton[i].addActionListener(new ActionListener() {
 					int j = i;
-
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						GameModelMsg gameStartMsg = new GameModelMsg(userList[j], "player", NetworkStatus.GAME_READY);
-						gameClient.SendObject(gameStartMsg);
-						dispose();
+						gameClient.SendReadyMessage(userList[j]);
 					}
 				});
 			}
 		}
 	}
 
+	public void removeList() {
+		if(makeRoomBtn != null) {
+			remove(makeRoomBtn);
+			makeRoomBtn = null;
+		}
+		if(label != null) {
+			remove(label);
+			label = null;
+		}
+		if(userList != null) {
+			for (i = 0; i < userList.length; i++) {
+				if(btnNewButton[i] != null)
+					remove(btnNewButton[i]);
+			}
+			btnNewButton = null;
+			userList = null;
+		}
+	}
+	
+	public void disposeView() {
+		dispose();
+	}
+	
 	public void errorMsg() {
-		JOptionPane.showMessageDialog(this, "유저수가 이미 꽉 차있어 입장 불가", "경고", JOptionPane.WARNING_MESSAGE);
+		JOptionPane.showMessageDialog(this, "유저 수가 이미 꽉 차있어서 입장 불가", "경고", JOptionPane.WARNING_MESSAGE);
 	}
 
 	public void updateRoomListView(String roomList[]) {
+		removeList();
 		drawGameRoomView(roomList);
-		this.setVisible(true);
+		repaint();
 	}
 
 	@Override

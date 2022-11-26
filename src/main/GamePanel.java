@@ -12,7 +12,7 @@ import controller.OthersController;
 import controller.PlayerController;
 import view.GameLoseView;
 import view.GameReadyView;
-import view.GameRoomMakeView;
+import view.GameRoomListView;
 import view.GameRunningView;
 import view.GameStatusView;
 import view.GameWinView;
@@ -35,8 +35,6 @@ public class GamePanel extends JPanel implements Runnable {
 
 	private String ip_addr = "127.0.0.1";
 	private String port = "30000";
-	private static StartScreenView startScreenView;
-	private static GameRoomMakeView gameRoomMakeView;
 
 	private GamePanel() {
 		controller = new PlayerController(); // 플레이어의 input값
@@ -76,20 +74,35 @@ public class GamePanel extends JPanel implements Runnable {
 		gameThread = new Thread(this);
 		gameThread.start();
 		gameClient = new GameClient("player", ip_addr, port);
-		startScreenView.setGameClient(gameClient);
 		((PlayerController) controller).setGameClient(gameClient); // controller에 gameClient 등록
 	}
 
-	public void gameRoomMake(String roomList[]) {
-		if (!(gameStatusView instanceof GameRoomMakeView)) {// ready 두번 보내지는 문제 방지
-			gameRoomMakeView = new GameRoomMakeView(gameClient, roomList);
-			setGameStatusView(gameRoomMakeView);
+	public boolean isGameRoomView() {
+		return (gameStatusView instanceof GameRoomListView);
+	}
+	
+	public void gameRoomMake() {
+		if (!(gameStatusView instanceof GameRoomListView)) {
+			setGameStatusView(new GameRoomListView(gameClient, null));
+			gameClient.SendShowRoomListMessage();
 		}
 	}
 
+	public void updateGameRoomList(String roomList[]) {
+		if(gameStatusView instanceof GameRoomListView)
+			((GameRoomListView) gameStatusView).updateRoomListView(roomList);
+	}
+	
+	public void errorMsgGameRoomList() {
+		if(gameStatusView instanceof GameRoomListView)
+			((GameRoomListView) gameStatusView).errorMsg();
+	}
+	
 	public void gameReady() {
-		if (!(gameStatusView instanceof GameReadyView)) // ready 두번 보내지는 문제 방지
+		if (!(gameStatusView instanceof GameReadyView)) { // ready 두번 보내지는 문제 방지
+			((GameRoomListView)gameStatusView).dispose();	// 창 종료
 			setGameStatusView(new GameReadyView(gameClient));
+		}
 	}
 
 	public void gameRunning() {
@@ -108,8 +121,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 	public void gameStartScreen() {
 		// gameStatus == 시작 화면
-		startScreenView = new StartScreenView(this, controller);
-		setGameStatusView(startScreenView);
+		setGameStatusView(new StartScreenView(this, controller));
 	}
 
 	public void gameWin() {
@@ -181,9 +193,5 @@ public class GamePanel extends JPanel implements Runnable {
 
 	public synchronized static GamePanel getInstance() {
 		return instance;
-	}
-
-	public synchronized static GameRoomMakeView getGameMakeView() {
-		return gameRoomMakeView;
 	}
 }

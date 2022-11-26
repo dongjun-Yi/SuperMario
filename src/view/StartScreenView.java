@@ -3,12 +3,9 @@ package view;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-import client.GameClient;
 import controller.Controller;
 import main.GamePanel;
 import main.GameSettings;
-import server.GameModelMsg;
-import server.NetworkStatus;
 
 public class StartScreenView implements GameStatusView {
 	private ImageLoader imageLoader = ImageLoader.getImageLoader();
@@ -24,9 +21,6 @@ public class StartScreenView implements GameStatusView {
 
 	private Controller controller;
 	private GamePanel gamePanel;
-	private GameClient gameClient;
-
-	GameModelMsg showListMsg;
 
 	public StartScreenView(GamePanel gamePanel, Controller controller) {
 		this.controller = controller;
@@ -39,10 +33,8 @@ public class StartScreenView implements GameStatusView {
 
 	@Override
 	public void updates() {
-		if (controller.getSpacePressed() && row == CURSOR_GAMESTART_LOCATION && showListMsg == null) {
-			gamePanel.gameRoomMake(null);
-			showListMsg = new GameModelMsg(NetworkStatus.SHOW_LIST);
-			gameClient.SendObject(showListMsg);
+		if (controller.getSpacePressed() && row == CURSOR_GAMESTART_LOCATION) {
+			gamePanel.gameRoomMake();
 		}
 		if (controller.getSpacePressed() && row == CURSOR_QUIT_LOCATION) {
 			System.exit(0);
@@ -61,9 +53,5 @@ public class StartScreenView implements GameStatusView {
 		g.drawImage(selectIconImage, 215, 48 * row + 15, GameSettings.scaledSize, GameSettings.scaledSize, null);
 		g.drawImage(marioStartImage, 92, 48 * 12, GameSettings.scaledSize, GameSettings.scaledSize, null);
 		g.drawImage(luigiStartImage, 150, 48 * 12, GameSettings.scaledSize, GameSettings.scaledSize, null);
-	}
-
-	public void setGameClient(GameClient gameClient) {
-		this.gameClient = gameClient;
 	}
 }

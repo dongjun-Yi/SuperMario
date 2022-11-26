@@ -40,7 +40,7 @@ public class GameServer extends JFrame {
 	private int userCnt = 0; // 마리오,루이지 순으로 GameClient 생성을 위해 구분하는 변
 	private Vector<GameRoom> roomVector = new Vector<GameRoom>();
 
-	private int roomNumberCnt = 1;
+	private volatile int roomNumberCnt = 1;
 	private String generatedRoomNumber;
 
 	public static void main(String[] args) {
@@ -162,6 +162,8 @@ public class GameServer extends JFrame {
 				UserService user = (UserService) user_vc.elementAt(0);
 				user.UserName = "mario";
 			}
+			
+			
 		}
 
 		// 모든 User들에게 방송. 각각의 UserService Thread의 WriteONe() 을 호출한다.
@@ -221,7 +223,6 @@ public class GameServer extends JFrame {
 				objectGameMsg = new GameModelMsg(roomList.toString(), NetworkStatus.SHOW_LIST);
 				user.WriteOneObject(objectGameMsg);
 			}
-			AppendObject(objectGameMsg);
 		}
 
 		public void WriteGameButtonMsg(int roomVectorindex, GameModelMsg objectGameMsg) {
@@ -349,10 +350,9 @@ public class GameServer extends JFrame {
 					} else if (objectGameMsg.getCode().matches(NetworkStatus.SHOW_LIST)) { // 1200
 						WriteRoomListObject();
 					} else if (objectGameMsg.getCode().matches(NetworkStatus.MAKE_ROOM_REQUEST)) { // 1200 방을 만듬과 동시에
-						generatedRoomNumber = objectGameMsg.getRoomNumber() + roomNumberCnt;
+						generatedRoomNumber = objectGameMsg.getRoomNumber() + roomNumberCnt++;
 						GameRoom gameRoom = new GameRoom(generatedRoomNumber);
 						roomVector.add(gameRoom);
-						roomNumberCnt++;
 						WriteRoomListObject();
 					} else if (objectGameMsg.getCode().matches(NetworkStatus.LOG_OUT)) {
 						Logout();

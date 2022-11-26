@@ -18,8 +18,6 @@ public class GameReadyView implements GameStatusView {
 	private boolean isPlayer1 = false;
 	
 	public GameReadyView(GameClient gameClient) {
-		gameClient.SendReadyMessage();
-		
 		if(gameClient.getUserName().equals("mario"))
 			isPlayer1 = true;
 	}
