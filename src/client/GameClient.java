@@ -18,6 +18,11 @@ public class GameClient {
 	private ListenNetwork net;
 	private GamePanel gamePanel = GamePanel.getInstance();
 	private OthersController otherController = (OthersController) gamePanel.getOthersController();
+	private String roomNumber = "";
+
+	public String getRoomNumber() {
+		return roomNumber;
+	}
 
 	public GameClient(String username, String ip_addr, String port_no) {
 		try {
@@ -32,7 +37,6 @@ public class GameClient {
 			net.start();
 
 		} catch (NumberFormatException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -55,7 +59,6 @@ public class GameClient {
 					try {
 						obgm = ois.readObject();
 					} catch (ClassNotFoundException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 						break;
 					}
@@ -65,29 +68,42 @@ public class GameClient {
 						objectGameMsg = (GameModelMsg) obgm;
 					} else
 						continue;
-					// System.out.println(objectGameMsg.getCode());
-					if (objectGameMsg.getCode().matches(NetworkStatus.LOG_IN)) { // 400
+					if (objectGameMsg.getCode().matches(NetworkStatus.ERROR)) {
+						gamePanel.errorMsgGameRoomList();
+					} else if (objectGameMsg.getCode().matches(NetworkStatus.LOG_IN)) {
 						userName = objectGameMsg.getPlayerName();
-					}
-					if (objectGameMsg.getCode().matches(NetworkStatus.GAME_START)) { // 400
-						System.out.println("randomNumber" + objectGameMsg.getRandomSeedNumber());
+					} else if (objectGameMsg.getCode().matches(NetworkStatus.SHOW_LIST)) {
+
+						// 방리스트 뷰가 아니면 무시
+						if (!gamePanel.isGameRoomView())
+							continue;
+
+						if (objectGameMsg.getRoomList().matches(""))
+							gamePanel.updateGameRoomList(null);
+						else {
+							String roomList[] = null;
+							roomList = objectGameMsg.getRoomList().split("/");
+							gamePanel.updateGameRoomList(roomList);
+						}
+					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_READY)) {
+						gamePanel.gameReady();
+					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_START)) {
+						roomNumber = objectGameMsg.getRoomNumber();
 						gamePanel.setPlayerNumber(objectGameMsg.getPlayerNum());
 						gamePanel.gameRunning();
-					}
-					if (objectGameMsg.getCode().matches(NetworkStatus.GAME_BUTTON)) {
+					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_BUTTON)) {
 						// 좌표 동기화
 						otherController.getPlayer().setX(objectGameMsg.getX());
 						otherController.getPlayer().setY(objectGameMsg.getY());
 						// 속도 동기화
-						// otherController.getPlayer().setxLeftVel(objectGameMsg.getxLeftVel());
-						// otherController.getPlayer().setxRightVel(objectGameMsg.getxRightVel());
-						// otherController.getPlayer().setyVel(objectGameMsg.getyVel());
+						otherController.getPlayer().setxLeftVel(objectGameMsg.getxLeftVel());
+						otherController.getPlayer().setxRightVel(objectGameMsg.getxRightVel());
+						otherController.getPlayer().setyVel(objectGameMsg.getyVel());
 						// 키 동기화
 						otherController.setKeyPressed(objectGameMsg.isUpPressed(), objectGameMsg.isDownPressed(),
 								objectGameMsg.isLeftPressed(), objectGameMsg.isRightPressed(),
 								objectGameMsg.isSpacePressed());
-					}
-					if (objectGameMsg.getCode().matches(NetworkStatus.GAME_LOSE)) {
+					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_LOSE)) {
 						gamePanel.gameLose();
 						SendLogoutMessage();
 						break; // 종료
@@ -121,11 +137,11 @@ public class GameClient {
 		}
 	}
 
-	public void SendButtonAction(double x, double y, double xLeftVel, double xRightVel, double yVel, boolean upPressed,
-			boolean downPressed, boolean leftPressed, boolean rightPressed, boolean spacePressed) {
+	public void SendButtonAction(String roomNumber, double x, double y, double xLeftVel, double xRightVel, double yVel,
+			boolean upPressed, boolean downPressed, boolean leftPressed, boolean rightPressed, boolean spacePressed) {
 		// 좌표와 키 입력 값 보냄
-		GameModelMsg objectGameMsg = new GameModelMsg(userName, NetworkStatus.GAME_BUTTON, x, y, xLeftVel, xRightVel,
-				yVel, upPressed, downPressed, leftPressed, rightPressed, spacePressed);
+		GameModelMsg objectGameMsg = new GameModelMsg(roomNumber, userName, NetworkStatus.GAME_BUTTON, x, y, xLeftVel,
+				xRightVel, yVel, upPressed, downPressed, leftPressed, rightPressed, spacePressed);
 		SendObject(objectGameMsg);
 	}
 
@@ -134,8 +150,9 @@ public class GameClient {
 		SendObject(obejctGameMsg);
 	}
 
-	public void SendReadyMessage() {
-		GameModelMsg gameReadMsg = new GameModelMsg(userName, NetworkStatus.GAME_READY);
+	public void SendReadyMessage(String roomNumber) {
+		this.roomNumber = roomNumber;	// 유저 방번호 저장
+		GameModelMsg gameReadMsg = new GameModelMsg(roomNumber, userName, NetworkStatus.GAME_READY);
 		SendObject(gameReadMsg);
 	}
 
@@ -147,5 +164,17 @@ public class GameClient {
 	public void SendLogoutMessage() {
 		GameModelMsg objectGameMsg = new GameModelMsg(userName, NetworkStatus.LOG_OUT);
 		SendObject(objectGameMsg);
+	}
+
+	public void SendShowRoomListMessage() {
+		GameModelMsg showListMsg = new GameModelMsg(NetworkStatus.SHOW_LIST);
+		SendObject(showListMsg);
+	}
+	
+	public void SendMakeRoomRequestMessage() {
+		long roomNumber = System.nanoTime();
+		GameModelMsg gameReadMsg = new GameModelMsg(String.valueOf(roomNumber), "player",
+				NetworkStatus.MAKE_ROOM_REQUEST);
+		SendObject(gameReadMsg);
 	}
 }

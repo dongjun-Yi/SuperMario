@@ -43,29 +43,35 @@ public class PlayerController implements Controller {
 		int code = e.getKeyCode();
 
 		if (code == KeyEvent.VK_W) {
-			if(upPressed) return; // 한번만 보내기
+			if (upPressed)
+				return; // 한번만 보내기
 			upPressed = true;
 		}
 		if (code == KeyEvent.VK_S) {
-			if(downPressed) return;
+			if (downPressed)
+				return;
 			downPressed = true;
 		}
 		if (code == KeyEvent.VK_A) {
-			if(leftPressed) return;
+			if (leftPressed)
+				return;
 			leftPressed = true;
 		}
 		if (code == KeyEvent.VK_D) {
-			if(rightPressed) return;
+			if (rightPressed)
+				return;
 			rightPressed = true;
 		}
 		if (code == KeyEvent.VK_SPACE) {
-			if(spacePressed) return;
+			if (spacePressed)
+				return;
 			spacePressed = true;
 		}
 		// 키 누르면 전송
 		if (player != null && !player.isControlBlocked())
-			gameClient.SendButtonAction(player.getX(), player.getY(), player.getxLeftVel(), player.getxRightVel(),
-					player.getyVel(), upPressed, downPressed, leftPressed, rightPressed, spacePressed);
+			gameClient.SendButtonAction(gameClient.getRoomNumber(), player.getX(), player.getY(), player.getxLeftVel(),
+					player.getxRightVel(), player.getyVel(), upPressed, downPressed, leftPressed, rightPressed,
+					spacePressed);
 	}
 
 	@Override
@@ -89,8 +95,9 @@ public class PlayerController implements Controller {
 		}
 		// 키 떼면 전송
 		if (player != null)
-			gameClient.SendButtonAction(player.getX(), player.getY(), player.getxLeftVel(), player.getxRightVel(),
-					player.getyVel(), upPressed, downPressed, leftPressed, rightPressed, spacePressed);
+			gameClient.SendButtonAction(gameClient.getRoomNumber(), player.getX(), player.getY(), player.getxLeftVel(),
+					player.getxRightVel(), player.getyVel(), upPressed, downPressed, leftPressed, rightPressed,
+					spacePressed);
 	}
 
 	@Override

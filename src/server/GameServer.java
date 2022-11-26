@@ -3,17 +3,11 @@ package server;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Random;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -37,8 +31,10 @@ public class GameServer extends JFrame {
 	private Vector UserVec = new Vector(); // 연결된 사용자를 저장할 벡터
 	private static final int BUF_LEN = 128; // Windows 처럼 BUF_LEN 을 정의
 	private static final int USER_MAX_COUNT = 2;
-	private int userCnt = 0; // 마리오,루이지 순으로 GameClient 생성을 위해 구분하는 변
-	private int userReadyCount = 0; // 유저들의 준비완료 수
+	private Vector<GameRoom> roomVector = new Vector<GameRoom>();
+
+	private volatile int roomNumberCnt = 1;
+	private String generatedRoomNumber;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -159,6 +155,8 @@ public class GameServer extends JFrame {
 				UserService user = (UserService) user_vc.elementAt(0);
 				user.UserName = "mario";
 			}
+			
+			
 		}
 
 		// 모든 User들에게 방송. 각각의 UserService Thread의 WriteONe() 을 호출한다.
@@ -178,17 +176,14 @@ public class GameServer extends JFrame {
 			}
 		}
 
-		public void WriteGameStartObject() {
+		public void WriteGameStartObject(int roomVectorindex, String roomNumber) {
 			long randomSeedNumber = System.nanoTime();
-			UserService user = (UserService) user_vc.elementAt(0);
-			if (user.UserStatus == "ready") {
-				for (int i = 0; i < user_vc.size(); i++) {
-					UserService sendUser = (UserService) user_vc.elementAt(i);
-					GameModelMsg objectGameStart = new GameModelMsg(sendUser.UserName, NetworkStatus.GAME_START, i,
-							randomSeedNumber);
-					sendUser.WriteOneObject(objectGameStart);
-					AppendObject(objectGameStart);
-				}
+			for (int i = 0; i < roomVector.elementAt(roomVectorindex).userList.size(); i++) {
+				UserService sendUser = (UserService) roomVector.elementAt(roomVectorindex).userList.elementAt(i);
+				GameModelMsg objectGameStart = new GameModelMsg(roomNumber, UserName, NetworkStatus.GAME_START, i,
+						randomSeedNumber);
+				sendUser.WriteOneObject(objectGameStart);
+				AppendObject(objectGameStart);
 			}
 		}
 
@@ -201,6 +196,42 @@ public class GameServer extends JFrame {
 					user.WriteOneObject(objectGameLose);
 			}
 			AppendObject(objectGameLose);
+		}
+
+		public void WriteRoomListObject() {
+			StringBuffer roomList = new StringBuffer();
+			if (roomVector.size() == 0)
+				roomList.append("");
+			else {
+				for (int i = 0; i < roomVector.size(); i++) {
+					String roomNumber = roomVector.elementAt(i).getRoomNumber();
+					int userCount = roomVector.elementAt(i).getUserList().size();	// 방 유저 수
+					roomList.append(roomNumber + " " + userCount + "/");
+				}
+			}
+			GameModelMsg objectGameMsg = null;
+
+			for (int i = 0; i < user_vc.size(); i++) {
+				UserService user = (UserService) user_vc.elementAt(i);
+				objectGameMsg = new GameModelMsg(roomList.toString(), NetworkStatus.SHOW_LIST);
+				user.WriteOneObject(objectGameMsg);
+			}
+		}
+
+		public void WriteGameButtonMsg(int roomVectorindex, GameModelMsg objectGameMsg) {
+			for (int i = 0; i < roomVector.elementAt(roomVectorindex).userList.size(); i++) {
+				UserService sendUser = (UserService) roomVector.elementAt(roomVectorindex).userList.elementAt(i);
+				//System.out.println("sendUser " + sendUser);
+				//System.out.println("this " + this);
+				if (roomVector.elementAt(roomVectorindex).userList.elementAt(i) != this) {
+					sendUser.WriteOneObject(objectGameMsg);
+				}
+			}
+		}
+
+		public void WriteErrorMsg() {
+			GameModelMsg errorMsg = new GameModelMsg(NetworkStatus.ERROR);
+			WriteOneObject(errorMsg);
 		}
 
 		// 나를 제외한 User들에게 방송. 각각의 UserService Thread의 WriteONe() 을 호출한다.
@@ -218,24 +249,6 @@ public class GameServer extends JFrame {
 				if (user != this)
 					user.WriteOneObject(obj);
 			}
-		}
-
-		// Windows 처럼 message 제외한 나머지 부분은 NULL 로 만들기 위한 함수
-		public byte[] MakePacket(String msg) {
-			byte[] packet = new byte[BUF_LEN];
-			byte[] bb = null;
-			int i;
-			for (i = 0; i < BUF_LEN; i++)
-				packet[i] = 0;
-			try {
-				bb = msg.getBytes("euc-kr");
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			for (i = 0; i < bb.length; i++)
-				packet[i] = bb[i];
-			return packet;
 		}
 
 		// UserService Thread가 담당하는 Client 에게 1:1 전송
@@ -309,23 +322,50 @@ public class GameServer extends JFrame {
 						}
 						Login();
 						WriteOneObject(objectGameMsg);
+					} else if (objectGameMsg.getCode().matches(NetworkStatus.SHOW_LIST)) { // 1200
+						WriteRoomListObject();
+					} else if (objectGameMsg.getCode().matches(NetworkStatus.MAKE_ROOM_REQUEST)) { // 1200 방을 만듬과 동시에
+						generatedRoomNumber = objectGameMsg.getRoomNumber() + roomNumberCnt++;
+						GameRoom gameRoom = new GameRoom(generatedRoomNumber);
+						roomVector.add(gameRoom);
+						WriteRoomListObject();
 					} else if (objectGameMsg.getCode().matches(NetworkStatus.LOG_OUT)) {
 						Logout();
 						break;
 					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_READY)) {// 300
-						UserStatus = "ready";
-						AppendText(UserName + " 게임준비완료 ");
-						userReadyCount++;
-
-						if (userReadyCount == USER_MAX_COUNT) {// 유저가 2명이면 게임 시작
-							userReadyCount = 0;
-							WriteGameStartObject();
+						for (int i = 0; i < roomVector.size(); i++) {
+							if (roomVector.elementAt(i).getRoomNumber().matches(objectGameMsg.getRoomNumber())) {
+								if (roomVector.elementAt(i).userList.size() == USER_MAX_COUNT) {
+									WriteErrorMsg();
+									break;
+								} else {
+									roomVector.elementAt(i).increaseReadyStatusCnt();
+									roomVector.elementAt(i).addPlayerinGameRoom(this);
+									WriteRoomListObject();
+								}
+							}
+							if (roomVector.elementAt(i).userList.size() == USER_MAX_COUNT
+									&& roomVector.elementAt(i).getReadyStatusCnt() == USER_MAX_COUNT) { // 게임 시작 프로토콜
+																										// 보내기
+								WriteGameStartObject(i, objectGameMsg.getRoomNumber());
+								roomVector.elementAt(i).setReadyStatusCnt(0);
+								break;
+							} else { // 게임 대기 화면 상태 보내기
+								WriteOneObject(objectGameMsg);
+							}
 						}
+						AppendText(UserName + " 게임준비완료 ");
+
 					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_BUTTON)) {
-						WriteOthersObject(objectGameMsg);
-						AppendText(objectGameMsg.posToString());
-						AppendText(objectGameMsg.velToString());
-						AppendText(objectGameMsg.inputToString());
+						for (int i = 0; i < roomVector.size(); i++) {
+							if (roomVector.elementAt(i).getRoomNumber().matches(objectGameMsg.getRoomNumber())) { // 받은
+
+								WriteGameButtonMsg(i, objectGameMsg);
+								AppendText(objectGameMsg.posToString());
+								AppendText(objectGameMsg.velToString());
+								AppendText(objectGameMsg.inputToString());
+							}
+						}
 					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_WIN)) { // 700 수신
 						WriteGameLoseObject(objectGameMsg); // 다른 유저에게 졌다는 메세지 보내기 //800으로 보내기
 					}

@@ -12,6 +12,7 @@ import controller.OthersController;
 import controller.PlayerController;
 import view.GameLoseView;
 import view.GameReadyView;
+import view.GameRoomListView;
 import view.GameRunningView;
 import view.GameStatusView;
 import view.GameWinView;
@@ -73,25 +74,46 @@ public class GamePanel extends JPanel implements Runnable {
 		gameThread = new Thread(this);
 		gameThread.start();
 		gameClient = new GameClient("player", ip_addr, port);
-
 		((PlayerController) controller).setGameClient(gameClient); // controller에 gameClient 등록
 	}
 
+	public boolean isGameRoomView() {
+		return (gameStatusView instanceof GameRoomListView);
+	}
+	
+	public void gameRoomMake() {
+		if (!(gameStatusView instanceof GameRoomListView)) {
+			setGameStatusView(new GameRoomListView(this, gameClient, null));
+			gameClient.SendShowRoomListMessage();
+		}
+	}
+
+	public void updateGameRoomList(String roomList[]) {
+		if(gameStatusView instanceof GameRoomListView)
+			((GameRoomListView) gameStatusView).updateRoomListView(roomList);
+	}
+	
+	public void errorMsgGameRoomList() {
+		if(gameStatusView instanceof GameRoomListView)
+			((GameRoomListView) gameStatusView).errorMsg();
+	}
+	
 	public void gameReady() {
-		if (!(gameStatusView instanceof GameReadyView)) // ready 두번 보내지는 문제 방지
+		if (!(gameStatusView instanceof GameReadyView)) { // ready 두번 보내지는 문제 방지
 			setGameStatusView(new GameReadyView(gameClient));
+		}
 	}
 
 	public void gameRunning() {
 		controller.initKey();
 		othersController.initKey();
-		
+
 		// 게임이 시작하면 게임 스레드 초기화하여 동기화
 		gameThread.interrupt();
 		gameThread = null;
 		gameThread = new Thread(this);
 		gameThread.start();
-		
+
 		// gameStatus == 게임 중
 		setGameStatusView(new GameRunningView(this, controller, othersController, playerNumber));
 	}
@@ -122,7 +144,7 @@ public class GamePanel extends JPanel implements Runnable {
 		gameStatusView = null;
 		gameClient = null;
 		gameThread = null;
-		
+
 		initControllers();
 		gameStartScreen();
 		gameStart(); // 재시작
@@ -132,7 +154,7 @@ public class GamePanel extends JPanel implements Runnable {
 		gameStatusView.updates();
 		repaint();
 	}
-	
+
 	@Override
 	public void run() {
 		double fps = 60.0;

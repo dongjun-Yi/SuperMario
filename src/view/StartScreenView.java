@@ -34,7 +34,7 @@ public class StartScreenView implements GameStatusView {
 	@Override
 	public void updates() {
 		if (controller.getSpacePressed() && row == CURSOR_GAMESTART_LOCATION) {
-			gamePanel.gameReady();
+			gamePanel.gameRoomMake();
 		}
 		if (controller.getSpacePressed() && row == CURSOR_QUIT_LOCATION) {
 			System.exit(0);

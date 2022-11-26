@@ -12,6 +12,17 @@ public class GameModelMsg implements Serializable {
 	private boolean upPressed, downPressed, leftPressed, rightPressed, spacePressed;
 	private int playerNum = 0;
 	private long randomSeedNumber = 0;
+	private String roomNumber = "";
+
+	public String getRoomNumber() {
+		return roomNumber;
+	}
+
+	private String roomList = ""; // 룸리스트는문자열로 보내야 오류가 안ㄴ남
+
+	public String getRoomList() {
+		return roomList;
+	}
 
 	public long getRandomSeedNumber() {
 		return randomSeedNumber;
@@ -41,27 +52,38 @@ public class GameModelMsg implements Serializable {
 		return spacePressed;
 	}
 
-	public GameModelMsg(String playerName, String code) {
-		this.playerName = playerName;
+	public GameModelMsg(String code) {
 		this.code = code;
 	}
 
-	public GameModelMsg(String playerName, String code, int playerNum, long randomSeedNumber) {
+	public GameModelMsg(String roomList, String code) {
+		this.code = code;
+		this.roomList = roomList;
+	}
+
+	public GameModelMsg(String roomNumber, String playerName, String code) {
+		this.playerName = playerName;
+		this.code = code;
+		this.roomNumber = roomNumber;
+	}
+
+	public GameModelMsg(String roomNumber, String playerName, String code, int playerNum, long randomSeedNumber) {
 		this.playerName = playerName;
 		this.code = code;
 		this.playerNum = playerNum;
 		this.randomSeedNumber = randomSeedNumber;
+		this.roomNumber = roomNumber;
 	}
 
-	public GameModelMsg(String playerName, String code, double x, double y, double xLeftVel, double xRightVel,
-			double yVel, boolean upPressed, boolean downPressed, boolean leftPressed, boolean rightPressed,
-			boolean spacePressed) {
+	public GameModelMsg(String roomNumber, String playerName, String code, double x, double y, double xLeftVel,
+			double xRightVel, double yVel, boolean upPressed, boolean downPressed, boolean leftPressed,
+			boolean rightPressed, boolean spacePressed) {
 		this.x = x;
 		this.y = y;
 		this.xLeftVel = xLeftVel;
 		this.xRightVel = xRightVel;
 		this.yVel = yVel;
-
+		this.roomNumber = roomNumber;
 		this.playerName = playerName;
 		this.code = code;
 		this.upPressed = upPressed;
