@@ -42,6 +42,7 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 		drawGameRoomView(roomList);
 		
 		this.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent e) {
 				dispose();
 				gamePanel.gameStartScreen();
@@ -103,7 +104,8 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 						if(!roomUsr.equals("2")) {
 							dispose();
 							gameClient.SendReadyMessage(roomNumber);
-							gamePanel.gameReady();
+							boolean isPlayer1 = (roomUsr.equals("0")) ? true : false;	// 인원 수 0명이면 1p:마리오가 됨, 이미 한명이 있으면 2p:루이지가 됨
+							gamePanel.gameReady(isPlayer1);
 						}
 						else
 							errorMsg();

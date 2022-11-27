@@ -86,7 +86,7 @@ public class GameClient {
 							gamePanel.updateGameRoomList(roomList);
 						}
 					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_READY)) {
-						gamePanel.gameReady();
+						//gamePanel.gameReady(true);
 					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_START)) {
 						roomNumber = objectGameMsg.getRoomNumber();
 						gamePanel.setPlayerNumber(objectGameMsg.getPlayerNum());

@@ -17,9 +17,8 @@ public class GameReadyView implements GameStatusView {
 	
 	private boolean isPlayer1 = false;
 	
-	public GameReadyView(GameClient gameClient) {
-		if(gameClient.getUserName().equals("mario"))
-			isPlayer1 = true;
+	public GameReadyView(GameClient gameClient , boolean isPlayer1) {
+		this.isPlayer1 = isPlayer1;
 	}
 	
 	@Override
