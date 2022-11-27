@@ -155,8 +155,7 @@ public class GameServer extends JFrame {
 				UserService user = (UserService) user_vc.elementAt(0);
 				user.UserName = "mario";
 			}
-			
-			
+
 		}
 
 		// 모든 User들에게 방송. 각각의 UserService Thread의 WriteONe() 을 호출한다.
@@ -187,11 +186,11 @@ public class GameServer extends JFrame {
 			}
 		}
 
-		public void WriteGameLoseObject(GameModelMsg objectGameMsg) {
+		public void WriteGameLoseObject(int roomVectorindex, String roomNumber) {
 			GameModelMsg objectGameLose = null;
-			for (int i = 0; i < user_vc.size(); i++) {
-				UserService user = (UserService) user_vc.elementAt(i);
-				objectGameLose = new GameModelMsg(user.UserName, NetworkStatus.GAME_LOSE);
+			for (int i = 0; i < roomVector.elementAt(roomVectorindex).userList.size(); i++) {
+				UserService user = (UserService) roomVector.elementAt(roomVectorindex).userList.elementAt(i);
+				objectGameLose = new GameModelMsg(roomNumber, UserName, NetworkStatus.GAME_LOSE);
 				if (user != this) // 나말고 다른 유저에게 보내
 					user.WriteOneObject(objectGameLose);
 			}
@@ -205,7 +204,7 @@ public class GameServer extends JFrame {
 			else {
 				for (int i = 0; i < roomVector.size(); i++) {
 					String roomNumber = roomVector.elementAt(i).getRoomNumber();
-					int userCount = roomVector.elementAt(i).getUserList().size();	// 방 유저 수
+					int userCount = roomVector.elementAt(i).getUserList().size(); // 방 유저 수
 					roomList.append(roomNumber + " " + userCount + "/");
 				}
 			}
@@ -221,8 +220,8 @@ public class GameServer extends JFrame {
 		public void WriteGameButtonMsg(int roomVectorindex, GameModelMsg objectGameMsg) {
 			for (int i = 0; i < roomVector.elementAt(roomVectorindex).userList.size(); i++) {
 				UserService sendUser = (UserService) roomVector.elementAt(roomVectorindex).userList.elementAt(i);
-				//System.out.println("sendUser " + sendUser);
-				//System.out.println("this " + this);
+				// System.out.println("sendUser " + sendUser);
+				// System.out.println("this " + this);
 				if (roomVector.elementAt(roomVectorindex).userList.elementAt(i) != this) {
 					sendUser.WriteOneObject(objectGameMsg);
 				}
@@ -367,7 +366,12 @@ public class GameServer extends JFrame {
 							}
 						}
 					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_WIN)) { // 700 수신
-						WriteGameLoseObject(objectGameMsg); // 다른 유저에게 졌다는 메세지 보내기 //800으로 보내기
+						for (int i = 0; i < roomVector.size(); i++) {
+							if (roomVector.elementAt(i).getRoomNumber().matches(objectGameMsg.getRoomNumber())) {
+								WriteGameLoseObject(i, objectGameMsg.getRoomNumber()); // 다른 유저에게 졌다는 메세지 보내기 //800으로
+																						// 보내기
+							}
+						}
 					}
 
 				} catch (IOException e) {

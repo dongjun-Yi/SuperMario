@@ -86,7 +86,7 @@ public class GameClient {
 							gamePanel.updateGameRoomList(roomList);
 						}
 					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_READY)) {
-						//gamePanel.gameReady(true);
+						// gamePanel.gameReady(true);
 					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_START)) {
 						roomNumber = objectGameMsg.getRoomNumber();
 						gamePanel.setPlayerNumber(objectGameMsg.getPlayerNum());
@@ -96,9 +96,9 @@ public class GameClient {
 						otherController.getPlayer().setX(objectGameMsg.getX());
 						otherController.getPlayer().setY(objectGameMsg.getY());
 						// 속도 동기화
-						//otherController.getPlayer().setxLeftVel(objectGameMsg.getxLeftVel());
-						//otherController.getPlayer().setxRightVel(objectGameMsg.getxRightVel());
-						//otherController.getPlayer().setyVel(objectGameMsg.getyVel());
+						// otherController.getPlayer().setxLeftVel(objectGameMsg.getxLeftVel());
+						// otherController.getPlayer().setxRightVel(objectGameMsg.getxRightVel());
+						// otherController.getPlayer().setyVel(objectGameMsg.getyVel());
 						// 키 동기화
 						otherController.setKeyPressed(objectGameMsg.isUpPressed(), objectGameMsg.isDownPressed(),
 								objectGameMsg.isLeftPressed(), objectGameMsg.isRightPressed(),
@@ -146,12 +146,12 @@ public class GameClient {
 	}
 
 	public void SendWinMessage() {
-		GameModelMsg obejctGameMsg = new GameModelMsg(userName, NetworkStatus.GAME_WIN);
+		GameModelMsg obejctGameMsg = new GameModelMsg(roomNumber, userName, NetworkStatus.GAME_WIN);
 		SendObject(obejctGameMsg);
 	}
 
 	public void SendReadyMessage(String roomNumber) {
-		this.roomNumber = roomNumber;	// 유저 방번호 저장
+		this.roomNumber = roomNumber; // 유저 방번호 저장
 		GameModelMsg gameReadMsg = new GameModelMsg(roomNumber, userName, NetworkStatus.GAME_READY);
 		SendObject(gameReadMsg);
 	}
@@ -170,7 +170,7 @@ public class GameClient {
 		GameModelMsg showListMsg = new GameModelMsg(NetworkStatus.SHOW_LIST);
 		SendObject(showListMsg);
 	}
-	
+
 	public void SendMakeRoomRequestMessage() {
 		long roomNumber = System.nanoTime();
 		GameModelMsg gameReadMsg = new GameModelMsg(String.valueOf(roomNumber), "player",
