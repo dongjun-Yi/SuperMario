@@ -1,8 +1,12 @@
 package view;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.ComponentOrientation;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.Scrollbar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,7 +37,7 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 	private JButton[] btnNewButton;
 	private JLabel[] userCntLabel;
 	JScrollPane scroll;
-	JPanel panel;
+	JPanel panel = new JPanel();
 	private int i;
 
 	private Font font = FontLoader.getInstance().loadMarioFont();
@@ -41,6 +45,7 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 	public GameRoomListView(GamePanel gamePanel, GameClient gameClient, String roomList[]) {
 		this.gamePanel = gamePanel;
 		this.gameClient = gameClient;
+		this.setLayout(new BorderLayout());
 
 		this.addWindowListener(new WindowAdapter() {
 			@Override
@@ -49,18 +54,17 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 				gamePanel.gameStartScreen();
 			}
 		});
-		panel = new JPanel();
 		panel.setBackground(new Color(0, 252, 255));
-		panel.setLayout(null);
+		panel.setLayout(new GridLayout(15, 2));
 
 		drawGameRoomView(roomList);
 		scroll = new JScrollPane(panel);
-		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
 		getContentPane().add(scroll);
 		this.setSize(500, 400);
 		this.setLocationRelativeTo(null); // 화면 중앙
 		this.setVisible(true);
+		this.setResizable(false);
 	}
 
 	public void drawGameRoomView(String roomList[]) {
@@ -73,14 +77,16 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 				gameClient.SendMakeRoomRequestMessage();
 			}
 		});
-		makeRoomBtn.setBounds(180, 300, 142, 38);
-		panel.add(makeRoomBtn);
+		// makeRoomBtn.setBounds(180, 300, 142, 38);
+		// makeRoomBtn.setPreferredSize(new Dimension(142, 38));
+		getContentPane().add(makeRoomBtn, BorderLayout.SOUTH);
 
 		if (roomList == null) {
 			// label = new JLabel("아직 방이 없습니다.");
 			label = new JLabel("NO GAME ROOM");
 			label.setFont(font.deriveFont(20f));
 			label.setBounds(155, 100, 542, 38);
+			// label.setPreferredSize(new Dimension(50, 40));
 			panel.add(label);
 		} else {
 			userList = roomList;
@@ -96,12 +102,14 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 				// btnNewButton[i] = new JButton("방" + (i + 1));
 				btnNewButton[i] = new JButton("ROOM" + (i + 1));
 				btnNewButton[i].setFont(font.deriveFont(15f));
-				btnNewButton[i].setBounds(100, 52 + (i * 60), 300, 60);
+				btnNewButton[i].setBounds(100, 52 + (i * 60), 200, 60);
+				//btnNewButton[i].setPreferredSize(new Dimension(50, 40));
 				panel.add(btnNewButton[i]);
 
 				// 방 유저 수
 				userCntLabel[i] = new JLabel(roomInfo[1] + "/2");
-				userCntLabel[i].setBounds(410, 52 + (i * 60), 300, 60);
+				userCntLabel[i].setBounds(410, 52 + (i * 60), 200, 60);
+				//userCntLabel[i].setPreferredSize(new Dimension(50, 20));
 				panel.add(userCntLabel[i]);
 
 				btnNewButton[i].addActionListener(new ActionListener() {
@@ -156,6 +164,7 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 		removeList();
 		drawGameRoomView(roomList);
 		repaint();
+
 	}
 
 	@Override
