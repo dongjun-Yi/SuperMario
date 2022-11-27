@@ -119,6 +119,7 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 
 	public void gameStartScreen() {
+		controller.initKey();
 		// gameStatus == 시작 화면
 		setGameStatusView(new StartScreenView(this, controller));
 	}

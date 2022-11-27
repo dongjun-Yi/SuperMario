@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,6 +19,8 @@ import main.GamePanel;
 public class GameRoomListView extends JFrame implements GameStatusView {
 	private static final long serialVersionUID = 3L;
 
+	private ImageLoader imageLoader = ImageLoader.getImageLoader();
+	
 	private GamePanel gamePanel;
 	private GameClient gameClient;
 	private String[] userList;
@@ -37,7 +41,15 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 			
 		drawGameRoomView(roomList);
 		
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				dispose();
+				gamePanel.gameStartScreen();
+			}
+		});
+		
 		this.setSize(500, 400);
+		this.setLocationRelativeTo(null);	// 화면 중앙
 		this.setVisible(true);
 	}
 
@@ -81,7 +93,6 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 				userCntLabel[i] = new JLabel(roomInfo[1] + "/2");
 				userCntLabel[i].setBounds(410, 52 + (i * 60), 300, 60);
 				getContentPane().add(userCntLabel[i]);
-				System.out.println(userCntLabel[i].getText());
 				
 				btnNewButton[i].addActionListener(new ActionListener() {
 					String roomNumber = roomInfo[0];
@@ -102,6 +113,7 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 		}
 	}
 
+	// 새로고침을 위해 컴포넌트 제거
 	public void removeList() {
 		if(makeRoomBtn != null) {
 			remove(makeRoomBtn);
@@ -136,13 +148,11 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 
 	@Override
 	public void updates() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void draw(Graphics2D g) {
-		// TODO Auto-generated method stub
-
+		g.drawImage(imageLoader.getStartScreenDisabledImage(), 0, 0, null);
 	}
 }

@@ -17,6 +17,7 @@ public class ImageLoader {
 	private BufferedImage[][] luigiImg;
 	private BufferedImage background;
 	private BufferedImage startScreen;
+	private BufferedImage startScreen_disabled;
 	private BufferedImage blocksImg;
 
 	private ImageLoader() {
@@ -31,6 +32,7 @@ public class ImageLoader {
 	private void readImages() {
 		try {
 			startScreen = ImageIO.read(getClass().getResourceAsStream("/images/startscreen.png"));
+			startScreen_disabled = ImageIO.read(getClass().getResourceAsStream("/images/startscreen_disabled.png"));
 			playerAllImg = ImageIO.read(getClass().getResourceAsStream("/images/mario.png"));
 			background = ImageIO.read(getClass().getResourceAsStream("/images/background_short_version.png"));
 			items = ImageIO.read(getClass().getResourceAsStream("/images/items.png"));
@@ -97,6 +99,10 @@ public class ImageLoader {
 		return startScreen;
 	}
 
+	public BufferedImage getStartScreenDisabledImage() {
+		return startScreen_disabled;
+	}
+	
 	public BufferedImage getGoombaCurrentImage(int frameCount) { // frameCount == 2이면 die image (x=60, y=0)
 		int y = (frameCount == 2) ? 0 : 4;
 		BufferedImage goomba = enemies.getSubimage(0 + 30 * frameCount, y, GameSettings.imageSize,
