@@ -96,9 +96,9 @@ public class GameClient {
 						otherController.getPlayer().setX(objectGameMsg.getX());
 						otherController.getPlayer().setY(objectGameMsg.getY());
 						// 속도 동기화
-						otherController.getPlayer().setxLeftVel(objectGameMsg.getxLeftVel());
-						otherController.getPlayer().setxRightVel(objectGameMsg.getxRightVel());
-						otherController.getPlayer().setyVel(objectGameMsg.getyVel());
+						//otherController.getPlayer().setxLeftVel(objectGameMsg.getxLeftVel());
+						//otherController.getPlayer().setxRightVel(objectGameMsg.getxRightVel());
+						//otherController.getPlayer().setyVel(objectGameMsg.getyVel());
 						// 키 동기화
 						otherController.setKeyPressed(objectGameMsg.isUpPressed(), objectGameMsg.isDownPressed(),
 								objectGameMsg.isLeftPressed(), objectGameMsg.isRightPressed(),
