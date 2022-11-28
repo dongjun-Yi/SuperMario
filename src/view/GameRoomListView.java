@@ -39,10 +39,11 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 	
 	private JScrollPane scrollPane;
 	private JPanel[] panels; // 방리스트 항목들
+	private JPanel TopPanel;
 	private JPanel bottomPanel; // 방 생성 버튼 패널
 	private JPanel container; // 방리스트 패널
 
-	private int scrollMaxHeight = 295; // ScrollPane의 최대 크기
+	private int scrollMaxHeight = 235; // ScrollPane의 최대 크기
 
 	private Font font = FontLoader.getInstance().loadMarioFont();
 
@@ -75,6 +76,18 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 		this.setVisible(true);
 		this.setResizable(false);
 
+		TopPanel = new JPanel();
+		TopPanel.setLayout(null);
+		TopPanel.setPreferredSize(new Dimension(500, 60));
+		TopPanel.setBackground(new Color(92, 148, 252));
+		
+		roomlistLabel = new JLabel("ROOM LIST");
+		roomlistLabel.setFont(font.deriveFont(20f));
+		roomlistLabel.setBounds(12, 27, 148, 23);
+		
+		TopPanel.add(roomlistLabel);
+		getContentPane().add(TopPanel, BorderLayout.NORTH);
+		
 		bottomPanel = new JPanel();
 		bottomPanel.add(makeRoomBtn);
 		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
@@ -101,11 +114,6 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 			label.setBounds(145, 99, 195, 38);
 			container.add(label);
 		} else {
-
-			roomlistLabel = new JLabel("ROOM LIST");
-			roomlistLabel.setFont(font.deriveFont(20f));
-			roomlistLabel.setBounds(12, 10, 150, 49);
-			container.add(roomlistLabel);
 			
 			int panelWidth = 488;
 			int panelHeight = 80;
@@ -125,13 +133,13 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 				
 				// 방 리스트 항목 패널
 				panels[i] = new JPanel();
-				panels[i].setBounds(0, 60 + i * 80, panelWidth, panelHeight);
+				panels[i].setBounds(0, i * 80, panelWidth, panelHeight);
 				panels[i].setLayout(null);
 				if (i % 2 == 0)
 					panels[i].setBackground(new Color(194, 194, 194));	// 짝수번 배경색 입힘
 			
 				// 방 참가 버튼
-				btnNewButton[i] = new JButton("JOIN");
+				btnNewButton[i] = new JButton("Join");
 				btnNewButton[i].setFont(font.deriveFont(15f));
 				btnNewButton[i].setBounds(373, 9, 90, 60);
 				panels[i].add(btnNewButton[i]);
@@ -180,8 +188,8 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 			// (ScrollPane 크기 < 내부 Panel 크기 -> 스크롤바 나타남)
 			// 추가된 패널 수의 높이가 scrollPane 높이보다 높아지면
 			// container의 높이를 증가시켜서 스크롤바가 나타나게 함
-			if (60 + panelHeight * userList.length > scrollMaxHeight)
-				container.setPreferredSize(new Dimension(500, 60 + panelHeight * userList.length));
+			if (panelHeight * userList.length > scrollMaxHeight)
+				container.setPreferredSize(new Dimension(500, panelHeight * userList.length));
 		}
 	}
 
@@ -190,10 +198,6 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 		if (label != null) {
 			container.remove(label);
 			label = null;
-		}
-		if (roomlistLabel != null) {
-			container.remove(roomlistLabel);
-			roomlistLabel = null;
 		}
 		
 		if (userList != null) {

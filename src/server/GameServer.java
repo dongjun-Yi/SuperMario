@@ -152,6 +152,7 @@ public class GameServer extends JFrame {
 				for (int j = 0; j < roomVector.elementAt(i).userList.size(); j++) {
 					if (this == roomVector.elementAt(i).userList.elementAt(j)) {
 						roomVector.elementAt(i).userList.remove(j);
+						WriteRoomListObject();	// 방리스트 갱신
 						break;
 					}
 				}
@@ -372,7 +373,7 @@ public class GameServer extends JFrame {
 																						// 보내기
 							}
 						}
-						WriteOneObject(objectGameMsg);	// 다시 승리 메세지 보내기
+						WriteOneObject(objectGameMsg);	// 다시 승리 메세지 보내기 스레드 종료를 위해
 					}
 
 				} catch (IOException e) {
