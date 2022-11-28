@@ -3,6 +3,7 @@ package audio;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Vector;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -15,6 +16,7 @@ public class Audio {
 	private static Audio audio = new Audio();
 	private File file;
 	private Clip background;
+	private Vector<Clip> clips = new Vector<Clip>();
 	
 	private Audio() {
 	}
@@ -41,6 +43,7 @@ public class Audio {
 			file = new File(getClass().getResource("/sound/" + name + ".wav").toURI());
 			AudioInputStream ais = AudioSystem.getAudioInputStream(file);
 			clip = AudioSystem.getClip();
+			clips.add(clip);
 			clip.open(ais);
 			clip.start();	
 		} catch (IOException e) {
@@ -54,5 +57,12 @@ public class Audio {
 			e.printStackTrace();
 		}
 		return clip;
+	}
+	
+	public void closeAll() {
+		for(Clip c : clips) {
+			c.close();
+		}
+		clips.clear();
 	}
 }

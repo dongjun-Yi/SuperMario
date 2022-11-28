@@ -142,7 +142,7 @@ public class GameServer extends JFrame {
 		}
 
 		public void Login() {
-			AppendText("새로운 참가자 " + UserName + "서버에 입장.");
+			AppendText("새로운 참가자 " + UserName + " 서버에 입장.");
 		}
 
 		public void Logout() {
@@ -159,13 +159,6 @@ public class GameServer extends JFrame {
 			}
 			WriteAll(msg); // 나를 제외한 다른 User들에게 전송
 			AppendText("사용자 " + "[" + UserName + "] 퇴장. 현재 참가자 수 " + UserVec.size());
-
-			// 1p(마리오)가 나가면, 2p가 마리오가 된다
-			/*
-			 * if (user_vc.size() != 0) { UserService user = (UserService)
-			 * user_vc.elementAt(0); user.UserName = "mario"; }
-			 */
-
 		}
 
 		// 모든 User들에게 방송. 각각의 UserService Thread의 WriteONe() 을 호출한다.
@@ -379,6 +372,7 @@ public class GameServer extends JFrame {
 																						// 보내기
 							}
 						}
+						WriteOneObject(objectGameMsg);	// 다시 승리 메세지 보내기
 					}
 
 				} catch (IOException e) {
