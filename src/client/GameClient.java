@@ -172,7 +172,7 @@ public class GameClient {
 
 	public void SendMakeRoomRequestMessage() {
 		long roomNumber = System.nanoTime();
-		GameModelMsg gameReadMsg = new GameModelMsg(String.valueOf(roomNumber), "player",
+		GameModelMsg gameReadMsg = new GameModelMsg(String.valueOf(roomNumber), userName,
 				NetworkStatus.MAKE_ROOM_REQUEST);
 		SendObject(gameReadMsg);
 	}
