@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
+import audio.Audio;
 import client.GameClient;
 import controller.Controller;
 import controller.OthersController;
@@ -110,6 +111,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 		// 게임이 시작하면 게임 스레드 초기화하여 동기화
 		gameThread.interrupt();
+		
 		gameThread = null;
 		gameThread = new Thread(this);
 		gameThread.start();
@@ -135,8 +137,8 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 
 	public void gameRestart() {
+		Audio.getInstance().closeAll();
 		// 스레드 종료
-		gameClient.threadInterrupt();
 		gameThread.interrupt();
 
 		// 초기화
@@ -176,7 +178,7 @@ public class GamePanel extends JPanel implements Runnable {
 				delta--;
 			}
 
-			if (Thread.interrupted())
+			if (Thread.currentThread().interrupted())
 				break;
 		}
 	}

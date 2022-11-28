@@ -375,6 +375,7 @@ public class GameServer extends JFrame {
 																						// 보내기
 							}
 						}
+						WriteOneObject(objectGameMsg);	// 다시 승리 메세지 보내기
 					}
 
 				} catch (IOException e) {

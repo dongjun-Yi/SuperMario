@@ -15,11 +15,13 @@ public class GameClient {
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
 	private Socket socket;
-	private ListenNetwork net;
+	//private ListenNetwork net;
 	private GamePanel gamePanel = GamePanel.getInstance();
 	private OthersController otherController = (OthersController) gamePanel.getOthersController();
 	private String roomNumber = "";
 
+	private Thread net;
+	
 	public String getRoomNumber() {
 		return roomNumber;
 	}
@@ -33,7 +35,7 @@ public class GameClient {
 
 			SendLoginMessage(username);
 
-			net = new ListenNetwork();
+			net = new Thread(new ListenNetwork());
 			net.start();
 
 		} catch (NumberFormatException | IOException e) {
@@ -41,15 +43,12 @@ public class GameClient {
 		}
 	}
 
-	public void threadInterrupt() {
-		net.interrupt();
-	}
-
 	public String getUserName() {
 		return userName;
 	}
 
-	class ListenNetwork extends Thread {
+	class ListenNetwork implements Runnable {
+		@Override
 		public void run() {
 			while (true) {
 				try {
@@ -107,10 +106,10 @@ public class GameClient {
 						gamePanel.gameLose();
 						SendLogoutMessage();
 						break; // 종료
+					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_WIN)) {
+						SendLogoutMessage();
+						break; // 종료
 					}
-
-					if (Thread.interrupted())
-						break;
 
 				} catch (IOException e) {
 					try {
