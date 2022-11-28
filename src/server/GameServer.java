@@ -196,6 +196,7 @@ public class GameServer extends JFrame {
 
 			}
 			roomVector.remove(roomVectorindex);
+			WriteRoomListObject();
 			AppendObject(objectGameLose);
 		}
 
