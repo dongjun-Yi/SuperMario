@@ -1,13 +1,9 @@
 package view;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.GridLayout;
-import java.awt.Scrollbar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -18,11 +14,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 
 import client.GameClient;
 import main.GamePanel;
+import java.awt.BorderLayout;
+import javax.swing.ScrollPaneConstants;
 
 public class GameRoomListView extends JFrame implements GameStatusView {
 	private static final long serialVersionUID = 3L;
@@ -36,16 +33,22 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 	private JLabel label;
 	private JButton[] btnNewButton;
 	private JLabel[] userCntLabel;
-	JScrollPane scroll;
-	JPanel panel = new JPanel();
-	private int i;
+	private JLabel[] roomNumLabel;
+	private JLabel[] roomStateLabel;
+	private JLabel roomlistLabel;
+	
+	private JScrollPane scrollPane;
+	private JPanel[] panels; // 방리스트 항목들
+	private JPanel bottomPanel; // 방 생성 버튼 패널
+	private JPanel container; // 방리스트 패널
+
+	private int scrollMaxHeight = 295; // ScrollPane의 최대 크기
 
 	private Font font = FontLoader.getInstance().loadMarioFont();
 
 	public GameRoomListView(GamePanel gamePanel, GameClient gameClient, String roomList[]) {
 		this.gamePanel = gamePanel;
 		this.gameClient = gameClient;
-		this.setLayout(new BorderLayout());
 
 		this.addWindowListener(new WindowAdapter() {
 			@Override
@@ -54,63 +57,104 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 				gamePanel.gameStartScreen();
 			}
 		});
-		panel.setBackground(new Color(0, 252, 255));
-		panel.setLayout(new GridLayout(15, 2));
 
-		drawGameRoomView(roomList);
-		scroll = new JScrollPane(panel);
-
-		getContentPane().add(scroll);
-		this.setSize(500, 400);
-		this.setLocationRelativeTo(null); // 화면 중앙
-		this.setVisible(true);
-		this.setResizable(false);
-	}
-
-	public void drawGameRoomView(String roomList[]) {
-
-		// makeRoomBtn = new JButton("방 생성하기");
 		makeRoomBtn = new JButton("CREATE ROOM");
+		makeRoomBtn.setPreferredSize(new Dimension(148, 41));
 		makeRoomBtn.setFont(font.deriveFont(10f));
 		makeRoomBtn.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				gameClient.SendMakeRoomRequestMessage();
 			}
 		});
-		// makeRoomBtn.setBounds(180, 300, 142, 38);
-		// makeRoomBtn.setPreferredSize(new Dimension(142, 38));
-		getContentPane().add(makeRoomBtn, BorderLayout.SOUTH);
+
+		this.setSize(500, 390);
+		this.setLocationRelativeTo(null); // 화면 중앙 위치
+		this.setVisible(true);
+		this.setResizable(false);
+
+		bottomPanel = new JPanel();
+		bottomPanel.add(makeRoomBtn);
+		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+
+		scrollPane = new JScrollPane();
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		getContentPane().add(scrollPane, BorderLayout.CENTER);
+
+		container = new JPanel();
+		container.setBackground(new Color(92, 148, 252));
+		container.setLayout(null);
+		container.setPreferredSize(new Dimension(500, scrollMaxHeight));
+		
+		drawGameRoomView(roomList);
+		scrollPane.setViewportView(container);
+		scrollPane.setPreferredSize(new Dimension(500, scrollMaxHeight));
+	}
+
+	public void drawGameRoomView(String roomList[]) {
 
 		if (roomList == null) {
-			// label = new JLabel("아직 방이 없습니다.");
 			label = new JLabel("NO GAME ROOM");
 			label.setFont(font.deriveFont(20f));
-			label.setBounds(155, 100, 542, 38);
-			// label.setPreferredSize(new Dimension(50, 40));
-			panel.add(label);
+			label.setBounds(145, 99, 195, 38);
+			container.add(label);
 		} else {
+
+			roomlistLabel = new JLabel("ROOM LIST");
+			roomlistLabel.setFont(font.deriveFont(20f));
+			roomlistLabel.setBounds(12, 10, 150, 49);
+			container.add(roomlistLabel);
+			
+			int panelWidth = 488;
+			int panelHeight = 80;
+
 			userList = roomList;
 
+			panels = new JPanel[userList.length];
 			btnNewButton = new JButton[userList.length];
 			userCntLabel = new JLabel[userList.length];
+			roomNumLabel = new JLabel[userList.length];
+			roomStateLabel =  new JLabel[userList.length];
 
-			for (i = 0; i < userList.length; i++) {
+			for (int i = 0; i < userList.length; i++) {
+
 				String roomInfo[];
 				roomInfo = userList[i].split(" ");
-
+				
+				// 방 리스트 항목 패널
+				panels[i] = new JPanel();
+				panels[i].setBounds(0, 60 + i * 80, panelWidth, panelHeight);
+				panels[i].setLayout(null);
+				if (i % 2 == 0)
+					panels[i].setBackground(new Color(194, 194, 194));	// 짝수번 배경색 입힘
+			
 				// 방 참가 버튼
-				// btnNewButton[i] = new JButton("방" + (i + 1));
-				btnNewButton[i] = new JButton("ROOM" + (i + 1));
+				btnNewButton[i] = new JButton("JOIN");
 				btnNewButton[i].setFont(font.deriveFont(15f));
-				btnNewButton[i].setBounds(100, 52 + (i * 60), 200, 60);
-				//btnNewButton[i].setPreferredSize(new Dimension(50, 40));
-				panel.add(btnNewButton[i]);
+				btnNewButton[i].setBounds(373, 9, 90, 60);
+				panels[i].add(btnNewButton[i]);
 
 				// 방 유저 수
 				userCntLabel[i] = new JLabel(roomInfo[1] + "/2");
-				userCntLabel[i].setBounds(410, 52 + (i * 60), 200, 60);
-				//userCntLabel[i].setPreferredSize(new Dimension(50, 20));
-				panel.add(userCntLabel[i]);
+				userCntLabel[i].setFont(new Font("Arial Black", Font.PLAIN, 12));
+				userCntLabel[i].setBounds(335, 15, 26, 49);
+				panels[i].add(userCntLabel[i]);
+
+				// 방 이름
+				roomNumLabel[i] = new JLabel("ROOM " + (i + 1));
+				roomNumLabel[i].setFont(font.deriveFont(15f));
+				roomNumLabel[i].setBounds(26, 9, 73, 60);
+				panels[i].add(roomNumLabel[i]);
+				
+				// 방 상태
+				roomStateLabel[i] = new JLabel("In GAME");
+				if (!roomInfo[1].equals("2")) roomStateLabel[i].setText("  LOBBY");
+				roomStateLabel[i].setFont(font.deriveFont(10f));
+				roomStateLabel[i].setBounds(270, 18, 54, 49);
+				panels[i].add(roomStateLabel[i]);
+				
+				// 패널에 방 항목 추가
+				container.add(panels[i]);
 
 				btnNewButton[i].addActionListener(new ActionListener() {
 					String roomNumber = roomInfo[0];
@@ -130,28 +174,40 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 					}
 				});
 			}
+
+			// (ScrollPane 크기 < 내부 Panel 크기 -> 스크롤바 나타남)
+			// 추가된 패널 수의 높이가 scrollPane 높이보다 높아지면
+			// container의 높이를 증가시켜서 스크롤바가 나타나게 함
+			if (60 + panelHeight * userList.length > scrollMaxHeight)
+				container.setPreferredSize(new Dimension(500, 60 + panelHeight * userList.length));
 		}
 	}
 
 	// 새로고침을 위해 컴포넌트 제거
 	public void removeList() {
-		if (makeRoomBtn != null) {
-			panel.remove(makeRoomBtn);
-			makeRoomBtn = null;
-		}
 		if (label != null) {
-			panel.remove(label);
+			container.remove(label);
 			label = null;
 		}
 		if (userList != null) {
-			for (i = 0; i < userList.length; i++) {
+			for (int i = 0; i < userList.length; i++) {
 				if (btnNewButton[i] != null)
-					panel.remove(btnNewButton[i]);
+					panels[i].remove(btnNewButton[i]);
 				if (userCntLabel[i] != null)
-					panel.remove(userCntLabel[i]);
+					panels[i].remove(userCntLabel[i]);
+				if (roomNumLabel[i] != null)
+					panels[i].remove(roomNumLabel[i]);
+				if (roomStateLabel[i] != null)
+					panels[i].remove(roomStateLabel[i]);
+				container.remove(panels[i]);
+				panels[i] = null;
 			}
+			panels = null;
 			btnNewButton = null;
 			userCntLabel = null;
+			roomNumLabel = null;
+			roomStateLabel = null;
+			roomlistLabel = null;
 			userList = null;
 		}
 	}
@@ -163,8 +219,8 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 	public void updateRoomListView(String roomList[]) {
 		removeList();
 		drawGameRoomView(roomList);
+		validate();
 		repaint();
-
 	}
 
 	@Override
