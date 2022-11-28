@@ -47,6 +47,8 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 	private Font font = FontLoader.getInstance().loadMarioFont();
 
 	public GameRoomListView(GamePanel gamePanel, GameClient gameClient, String roomList[]) {
+		setTitle("Room List");
+		
 		this.gamePanel = gamePanel;
 		this.gameClient = gameClient;
 
@@ -189,6 +191,11 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 			container.remove(label);
 			label = null;
 		}
+		if (roomlistLabel != null) {
+			container.remove(roomlistLabel);
+			roomlistLabel = null;
+		}
+		
 		if (userList != null) {
 			for (int i = 0; i < userList.length; i++) {
 				if (btnNewButton[i] != null)
@@ -207,7 +214,6 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 			userCntLabel = null;
 			roomNumLabel = null;
 			roomStateLabel = null;
-			roomlistLabel = null;
 			userList = null;
 		}
 	}
