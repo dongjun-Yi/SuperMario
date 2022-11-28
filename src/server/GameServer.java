@@ -193,7 +193,9 @@ public class GameServer extends JFrame {
 				objectGameLose = new GameModelMsg(roomNumber, UserName, NetworkStatus.GAME_LOSE);
 				if (user != this) // 나말고 다른 유저에게 보내
 					user.WriteOneObject(objectGameLose);
+
 			}
+			roomVector.remove(roomVectorindex);
 			AppendObject(objectGameLose);
 		}
 
@@ -398,7 +400,7 @@ public class GameServer extends JFrame {
 
 	public void AppendObject(GameModelMsg msg) {
 		// textArea.append("사용자로부터 들어온 object : " + str+"\n");
-		textArea.append("id = " + msg.getPlayerName() + " code = " + msg.getCode() + "\n");
+		textArea.append("id = " + msg.getPlayerName() + msg.getRoomNumber() + " code = " + msg.getCode() + "\n");
 		textArea.setCaretPosition(textArea.getText().length());
 	}
 }
