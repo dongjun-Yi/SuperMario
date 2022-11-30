@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.Vector;
 
@@ -12,6 +13,7 @@ import main.GamePanel;
 import main.GameSettings;
 import model.GameCamera;
 import model.GameMap;
+import model.GameMapFactory;
 import model.ObjectDynamic;
 import model.Player;
 
@@ -27,17 +29,19 @@ public class GameRunningView implements GameStatusView {
 	private GameCamera camera;
 
 	private Audio audio = Audio.getInstance();
+	private Font font = FontLoader.getInstance().loadMarioFont();
 	private GamePanel gamePanel;
 
 	private boolean win = false;
 	private double animation = 1.0;
 
-	public GameRunningView(GamePanel gamePanel, Controller controller, Controller othersController, int playerNumber) {
+	public GameRunningView(GamePanel gamePanel, Controller controller, Controller othersController, 
+			int playerNumber, long seedNumber) {
 
 		this.gamePanel = gamePanel;
 
 		// 게임 첫 시작 -> 맵 생성, 플레이어 설정
-		map = new GameMap();
+		map = GameMapFactory.getInstance().createMap(seedNumber);
 		players = map.getPlayers();
 		camera = map.getCamera();
 		objectDynamic = map.getObjectDynamic();
@@ -103,6 +107,18 @@ public class GameRunningView implements GameStatusView {
 		}
 	}
 
+	public void drawUI(Graphics2D g) {
+		// draw name
+		g.setColor(Color.white);	
+		g.setFont(font.deriveFont(24f));
+		
+		if (player1.isMario())
+			g.drawString("MARIO", 80, 60);
+		else
+			g.drawString("LUIGI", 80, 60);
+		
+	}
+	
 	@Override
 	public void updates() {
 		map.playersInputUpdate();
@@ -130,6 +146,8 @@ public class GameRunningView implements GameStatusView {
 		+ " yrightVel: " + player2.getxRightVel(), 0, 120);
 		g.drawString("koopa x : " + (int) map.koopa.getX(), 0, 140);
 
+		drawUI(g);
+		
 		if (win) {
 			winAnimation(g);
 		}

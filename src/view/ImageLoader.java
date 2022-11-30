@@ -19,6 +19,7 @@ public class ImageLoader {
 	private BufferedImage startScreen;
 	private BufferedImage startScreen_disabled;
 	private BufferedImage blocksImg;
+	private BufferedImage mapData;
 
 	private ImageLoader() {
 		readImages();
@@ -38,6 +39,7 @@ public class ImageLoader {
 			items = ImageIO.read(getClass().getResourceAsStream("/images/items.png"));
 			enemies = ImageIO.read(getClass().getResourceAsStream("/images/enemies.png"));
 			blocksImg = ImageIO.read(getClass().getResourceAsStream("/images/blocks.png"));
+			mapData = ImageIO.read(getClass().getResourceAsStream("/images/short_map_data.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -153,5 +155,9 @@ public class ImageLoader {
 	public BufferedImage getBlockedBlockImage() {
 		BufferedImage img = blocksImg.getSubimage(0, 48, GameSettings.scaledSize, GameSettings.scaledSize);
 		return img;
+	}
+	
+	public BufferedImage getMapData() {
+		return mapData;
 	}
 }

@@ -21,42 +21,25 @@ public class GameMap {
 	public EnemyKoopa koopa; // for debug
 
 	public GameMap() {
-		ImageLoader imageLoader = ImageLoader.getImageLoader();
-		background = imageLoader.getBackgroundImage();
-		for (int i = 0; i < GameSettings.maxPlayerCount; i++) {
-			players.add(new Player(0, 0, background.getWidth()));
-		}
-		players.get(0).setMario(true); // 첫번째 플레이어 = mario
-
-		camera = new GameCamera(background.getWidth());
-		objectDynamic.add(new EnemyGoomba(100, 500, background.getWidth()));
-
-		koopa = new EnemyKoopa(300, 500, background.getWidth());
-		objectDynamic.add(koopa);
-
-		objectDynamic.add(new ItemMushroom(500, 300, background.getWidth()));
-		objectDynamic.add(new ItemCoin(550, 300, background.getWidth()));
-
-		objectStatic.add(new BlockBrick(100, 500));
-		objectStatic.add(new BlockHard(200, 529));
-		objectStatic.add(new BlockItem(300, 300, 2));
-		objectStatic.add(new BlockPipe(400, 300));
-		objectStatic.add(new BlockBlocked(600, 300));
-
-		objectStatic.add(new BlockHard(400, 577));
-		objectStatic.add(new BlockHard(200, 577));
-
-		flagPole = new FlagPole(2603, 108);
+		background = ImageLoader.getImageLoader().getBackgroundImage();
 	}
-
+	
 	public FlagPole getFlagPole() {
 		return flagPole;
+	}
+
+	public void setFlagPole(FlagPole flagPole) {
+		this.flagPole = flagPole;
 	}
 
 	public GameCamera getCamera() {
 		return camera;
 	}
-
+	
+	public void setCamera(GameCamera camera) {
+		this.camera = camera;
+	}
+	
 	public Vector<Player> getPlayers() {
 		return players;
 	}
@@ -67,6 +50,18 @@ public class GameMap {
 
 	public Vector<ObjectStatic> getObjectStatic() {
 		return objectStatic;
+	}
+	
+	public void addObject(Player p) {
+		players.add(p);
+	}
+	
+	public void addObject(ObjectDynamic od) {
+		objectDynamic.add(od);
+	}
+	
+	public void addObject(ObjectStatic os) {
+		objectStatic.add(os);
 	}
 
 	public ObjectStatic createBlockedBlock(double x, double y) {

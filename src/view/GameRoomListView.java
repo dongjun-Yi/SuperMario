@@ -93,6 +93,7 @@ public class GameRoomListView extends JFrame implements GameStatusView {
 		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 
 		scrollPane = new JScrollPane();
+		scrollPane.getVerticalScrollBar().setUnitIncrement(16);	
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
 
