@@ -32,6 +32,10 @@ public class Player extends ObjectDynamic {
 		setDefaultValues();
 	}
 
+	public boolean isMario() {
+		return isMario;
+	}
+
 	public void setMario(boolean isMario) {
 		this.isMario = isMario;
 		if (isMario)

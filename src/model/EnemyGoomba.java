@@ -52,7 +52,6 @@ public class EnemyGoomba extends ObjectDynamic {
 
 	@Override
 	public void move() {
-		// 충돌 구현하면 수정될 부분
 		if (x + xLeftVel >= this.mapWidthBoundary - width || x + xLeftVel <= 0)
 			changeDir();
 	}

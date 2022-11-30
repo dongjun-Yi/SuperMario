@@ -105,19 +105,25 @@ public class GamePanel extends JPanel implements Runnable {
 		}
 	}
 
-	public void gameRunning() {
+	public void gameRunning(long seedNumber) {
 		controller.initKey();
 		othersController.initKey();
 
 		// 게임이 시작하면 게임 스레드 초기화하여 동기화
 		gameThread.interrupt();
+		try {
+			gameThread.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		gameThread = null;
 		gameThread = new Thread(this);
 		gameThread.start();
 
 		// gameStatus == 게임 중
-		setGameStatusView(new GameRunningView(this, controller, othersController, playerNumber));
+		setGameStatusView(new GameRunningView(this, controller, othersController, playerNumber, seedNumber));
 	}
 
 	public void gameStartScreen() {
@@ -178,7 +184,7 @@ public class GamePanel extends JPanel implements Runnable {
 				delta--;
 			}
 
-			if (Thread.currentThread().interrupted())
+			if (Thread.interrupted())
 				break;
 		}
 	}

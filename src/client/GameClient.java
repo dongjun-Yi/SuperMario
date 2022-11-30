@@ -89,7 +89,7 @@ public class GameClient {
 					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_START)) {
 						roomNumber = objectGameMsg.getRoomNumber();
 						gamePanel.setPlayerNumber(objectGameMsg.getPlayerNum());
-						gamePanel.gameRunning();
+						gamePanel.gameRunning(objectGameMsg.getRandomSeedNumber());
 					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_BUTTON)) {
 						// 좌표 동기화
 						otherController.getPlayer().setX(objectGameMsg.getX());
