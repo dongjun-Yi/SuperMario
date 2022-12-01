@@ -152,7 +152,7 @@ public class GameServer extends JFrame {
 				for (int j = 0; j < roomVector.elementAt(i).userList.size(); j++) {
 					if (this == roomVector.elementAt(i).userList.elementAt(j)) {
 						roomVector.elementAt(i).userList.remove(j);
-						WriteRoomListObject();	// 방리스트 갱신
+						WriteRoomListObject(); // 방리스트 갱신
 						break;
 					}
 				}
@@ -226,11 +226,7 @@ public class GameServer extends JFrame {
 		public void WriteGameButtonMsg(int roomVectorindex, GameModelMsg objectGameMsg) {
 			for (int i = 0; i < roomVector.elementAt(roomVectorindex).userList.size(); i++) {
 				UserService sendUser = (UserService) roomVector.elementAt(roomVectorindex).userList.elementAt(i);
-				// System.out.println("sendUser " + sendUser);
-				// System.out.println("this " + this);
-				if (roomVector.elementAt(roomVectorindex).userList.elementAt(i) != this) {
-					sendUser.WriteOneObject(objectGameMsg);
-				}
+				sendUser.WriteOneObject(objectGameMsg);
 			}
 		}
 
@@ -373,7 +369,7 @@ public class GameServer extends JFrame {
 																						// 보내기
 							}
 						}
-						WriteOneObject(objectGameMsg);	// 다시 승리 메세지 보내기 스레드 종료를 위해
+						WriteOneObject(objectGameMsg); // 다시 승리 메세지 보내기 스레드 종료를 위해
 					}
 
 				} catch (IOException e) {
