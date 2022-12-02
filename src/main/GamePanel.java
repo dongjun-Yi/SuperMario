@@ -119,14 +119,13 @@ public class GamePanel extends JPanel implements Runnable {
 		try {
 			gameThread.join();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		gameThread = null;
 		gameThread = new Thread(this);
 		gameThread.start();
-
+		
 		// gameStatus == 게임 중
 		setGameStatusView(new GameRunningView(this, controller, othersController, playerNumber, seedNumber));
 	}

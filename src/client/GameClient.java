@@ -16,7 +16,6 @@ public class GameClient {
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
 	private Socket socket;
-	// private ListenNetwork net;
 	private GamePanel gamePanel = GamePanel.getInstance();
 	private OthersController otherController = (OthersController) gamePanel.getOthersController();
 	private PlayerController playerController = (PlayerController) gamePanel.getController();
@@ -100,26 +99,26 @@ public class GameClient {
 							// 좌표 동기화
 							otherController.getPlayer().setX(objectGameMsg.getX());
 							otherController.getPlayer().setY(objectGameMsg.getY());
+							// 속도 동기화
+							otherController.getPlayer().setxLeftVel(objectGameMsg.getxLeftVel());
+							otherController.getPlayer().setxRightVel(objectGameMsg.getxRightVel());
+							otherController.getPlayer().setyVel(objectGameMsg.getyVel());
+							// 키 동기화
 							otherController.getPlayer().leftPressed = objectGameMsg.isLeftPressed();
 							otherController.getPlayer().rightPressed = objectGameMsg.isRightPressed();
 							otherController.getPlayer().upPressed = objectGameMsg.isUpPressed();
 						} else if (playerNum == objectGameMsg.getPlayerNum()) {
 							playerController.getPlayer().setX(objectGameMsg.getX());
 							playerController.getPlayer().setY(objectGameMsg.getY());
+							
+							playerController.getPlayer().setxLeftVel(objectGameMsg.getxLeftVel());
+							playerController.getPlayer().setxRightVel(objectGameMsg.getxRightVel());
+							playerController.getPlayer().setyVel(objectGameMsg.getyVel());
+							
 							playerController.getPlayer().leftPressed = objectGameMsg.isLeftPressed();
 							playerController.getPlayer().rightPressed = objectGameMsg.isRightPressed();
 							playerController.getPlayer().upPressed = objectGameMsg.isUpPressed();
 						}
-
-						// 속도 동기화
-						// otherController.setKeyPressed(objectGameMsg.isUpPressed(),
-						// objectGameMsg.isDownPressed(),
-						// objectGameMsg.isLeftPressed(), objectGameMsg.isRightPressed(),
-						// objectGameMsg.isSpacePressed());
-						// otherController.getPlayer().setxLeftVel(objectGameMsg.getxLeftVel());
-						// otherController.getPlayer().setxRightVel(objectGameMsg.getxRightVel());
-						// otherController.getPlayer().setyVel(objectGameMsg.getyVel());
-						// 키 동기화
 					} else if (objectGameMsg.getCode().matches(NetworkStatus.GAME_LOSE)) {
 						gamePanel.gameLose();
 						SendLogoutMessage();

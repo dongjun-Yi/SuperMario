@@ -148,7 +148,7 @@ public class GameMap {
 
 				// 플레이어가 밟았을 때
 				if (p.getBottomHitbox().intersects(od.getHitbox()) && !od.isItem()) {
-					p.setyVel(0);
+					p.initVelocity();
 					if (od.getObjectNum() == 10) // 쿠파(거북이)일 때
 						p.kick(11);
 					else
@@ -167,6 +167,7 @@ public class GameMap {
 					case 10: // 쿠파
 						if (!od.isMoving()) {
 							audio.play("smb_kick");
+							p.initVelocity();
 							od.attacked((int) p.getX() + p.getWidth() / 2);
 						} else
 							p.die();
@@ -186,7 +187,7 @@ public class GameMap {
 
 				// 다른 플레이어를 밟았을 때
 				if (p.getBottomHitbox().intersects(pJ.getTopHitbox())) {
-					p.setyVel(0);
+					p.initVelocity();
 					p.stomp(13);
 					pJ.attacked(0);
 				}
@@ -210,7 +211,7 @@ public class GameMap {
 
 				if (!od.isItInHitboxSpace(os.x, os.y)) // 주변에 있을 때만 충돌 검사함
 					continue;
-
+				
 				if (od.getHitbox().intersects(os.getHitbox())) {
 					od.changeDir();
 				}
@@ -223,6 +224,17 @@ public class GameMap {
 
 			if (!od.isCollided()) {
 				od.setyGround(625.0);
+			}
+			
+			for(ObjectDynamic od2 : objectDynamic) {
+				if (!od2.hasCollision() || od == od2 || od2.objectNum != 10 || Math.abs(od2.getxLeftVel()) < 7)
+					continue;
+				if (od.getHitbox().intersects(od2.getHitbox())) {
+					if(od2.getxLeftVel() < 0)
+						od.attacked(-1);
+					else 
+						od.attacked(1);
+				}
 			}
 		}
 	}

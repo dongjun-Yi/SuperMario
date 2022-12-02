@@ -137,6 +137,12 @@ public abstract class ObjectDynamic extends GameObject {
 		this.isJump = isJump;
 	}
 
+	public void jump(int power) {
+		jumpDir = direction;
+		isJump = true;
+		yVel = -power;
+	}
+	
 	public Rectangle getBottomHitbox() {
 		return new Rectangle((int) x + 8, (int) y + height - 7, width - 16, 5 + (int) yVel);
 	}
