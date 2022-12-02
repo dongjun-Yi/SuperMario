@@ -38,9 +38,9 @@ public class EnemyKoopa extends ObjectDynamic {
 
 			this.direction = (playerX <= x + width / 2) ? 0 : 1; // 플레이어가 등껍질 왼쪽에서 친다면 오른쪽으로 진행
 			if (direction == 0)
-				xLeftVel = 7;
+				xLeftVel = 8;
 			else
-				xLeftVel = -7;
+				xLeftVel = -8;
 		} else {
 			hide();
 		}

@@ -25,8 +25,10 @@ public class Player extends ObjectDynamic {
 
 	private double dx = 0, dy = 0; // attacked animation용 변수
 	private long timer = 0; // 아이템용 타이머
+	
 	public boolean upPressed, downPressed, leftPressed, rightPressed;
-
+	public double tmpX, tmpY;
+	
 	public Player(double x, double y, int mapWidthBoundary) {
 		super(x, y, mapWidthBoundary);
 		width = height = GameSettings.scaledSize;
@@ -68,12 +70,6 @@ public class Player extends ObjectDynamic {
 		hasCollision = true;
 		controlBlocked = false;
 		isAttacked = false;
-	}
-
-	public void jump(int power) {
-		jumpDir = direction;
-		isJump = true;
-		yVel = -power;
 	}
 
 	public void stomp(int power) {
@@ -152,6 +148,8 @@ public class Player extends ObjectDynamic {
 
 	@Override
 	public void move() {
+		tmpX = x;
+		tmpY = y;
 		if (isSpeedup) {
 			speedUp();
 		}
@@ -160,24 +158,24 @@ public class Player extends ObjectDynamic {
 			if (rightPressed) {
 				direction = 0;
 
-				xRightVel += 0.2;
+				xRightVel += 0.3;
 				if (xRightVel >= maxSpeed)
 					xRightVel = maxSpeed;
 			} else {
 				xRightVel -= 0.3;
-				if (xRightVel <= 0.3)
+				if (xRightVel <= 1.0)
 					xRightVel = 0;
 			}
 
 			if (leftPressed) {
 				direction = 1;
 
-				xLeftVel -= 0.2;
+				xLeftVel -= 0.3;
 				if (xLeftVel <= -maxSpeed)
 					xLeftVel = -maxSpeed;
 			} else {
 				xLeftVel += 0.3;
-				if (xLeftVel >= -0.3)
+				if (xLeftVel >= -1.0)
 					xLeftVel = 0;
 			}
 
@@ -185,13 +183,7 @@ public class Player extends ObjectDynamic {
 				audio.play("smb_jump-small");
 				jump(16);
 			}
-
-			if (controller.getSpacePressed()) {
-				// attacked(0);
-			}
 		}
-		// System.out.println("xRightVel: " + xRightVel);
-		// System.out.println("xLeftVel: " + xLeftVel);
 	}
 
 	private BufferedImage getWalkAnimation(BufferedImage[][] marioImg, int direction, int speed) {
@@ -253,6 +245,11 @@ public class Player extends ObjectDynamic {
 		int drawY = (int) (y + dy);
 		int drawWidth = width + (int) (-2 * dx);
 		int drawHeight = height - (int) dy;
+		
+		if (isSpeedup) {
+			g2.drawImage(getCurrentImage(), (int)tmpX, (int) tmpY, width, height, null);
+		}
+		
 		g2.drawImage(getCurrentImage(), drawX, drawY, drawWidth, drawHeight, null);
 
 		// HitBox 표시
