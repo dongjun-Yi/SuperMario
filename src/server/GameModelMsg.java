@@ -110,10 +110,6 @@ public class GameModelMsg implements Serializable {
 		return "x=" + x + ", y=" + y;
 	}
 
-	public String velToString() {
-		return "xLeftVel=" + xLeftVel + ", xRightVel=" + xRightVel + "\nyVel=" + yVel;
-	}
-
 	public String inputToString() {
 		return "upPressed=" + upPressed + ", spacePressed=" + spacePressed + "\nleftPressed=" + leftPressed
 				+ ", rightPressed=" + rightPressed;
@@ -130,25 +126,13 @@ public class GameModelMsg implements Serializable {
 	public String getCode() {
 		return code;
 	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
+	
 	public double getX() {
 		return x;
 	}
 
-	public void setX(double x) {
-		this.x = x;
-	}
-
 	public double getY() {
 		return y;
-	}
-
-	public void setY(double y) {
-		this.y = y;
 	}
 
 }

@@ -311,7 +311,7 @@ public class GameServer extends JFrame {
 
 								WriteGameButtonMsg(i, objectGameMsg);
 								AppendText(objectGameMsg.posToString());
-								AppendText(objectGameMsg.velToString());
+								//AppendText(objectGameMsg.velToString());
 								AppendText(objectGameMsg.inputToString());
 							}
 						}

@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -10,9 +11,7 @@ import main.GameSettings;
 import view.ImageLoader;
 
 public class Player extends ObjectDynamic {
-
-	private Controller controller = null;
-
+	
 	private boolean isMario = false; // true : mario, false : luigi
 	private boolean isDie = false;
 	private boolean isAttacked = false;
@@ -43,10 +42,6 @@ public class Player extends ObjectDynamic {
 		this.isMario = isMario;
 		if (isMario)
 			x = 100.0; // players have different x coordinate
-	}
-
-	public void setController(Controller controller) {
-		this.controller = controller;
 	}
 
 	public boolean isControlBlocked() {
@@ -247,7 +242,9 @@ public class Player extends ObjectDynamic {
 		int drawHeight = height - (int) dy;
 		
 		if (isSpeedup) {
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
 			g2.drawImage(getCurrentImage(), (int)tmpX, (int) tmpY, width, height, null);
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		}
 		
 		g2.drawImage(getCurrentImage(), drawX, drawY, drawWidth, drawHeight, null);
