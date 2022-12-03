@@ -50,11 +50,9 @@ public class GameRunningView implements GameStatusView {
 		for (int i = 0; i < GameSettings.maxPlayerCount; i++) {
 			Player p = players.get(i);
 			if (i == playerNumber) {
-				p.setController(controller);
 				player1 = p; // 카메라 이동을 위해
 				((PlayerController) controller).setPlayer(p);
 			} else {
-				p.setController(othersController);
 				player2 = p;
 				((OthersController) othersController).setPlayer(p);
 			}
@@ -140,11 +138,11 @@ public class GameRunningView implements GameStatusView {
 		g.translate(camera.getX(), 0); // 원점 원상복구
 
 		// for debug
-		g.drawString("player1 x : " + (int) player1.getX() + " xleftvel: " + player1.getxLeftVel()
-		+ " yrightVel: " + player1.getxRightVel(), 0, 100);
-		g.drawString("player2 x : " + (int) player2.getX() + " xleftvel: " + player2.getxLeftVel()
-		+ " yrightVel: " + player2.getxRightVel(), 0, 120);
-		g.drawString("koopa x : " + (int) map.koopa.getX(), 0, 140);
+		//g.drawString("player1 x : " + (int) player1.getX() + " xleftvel: " + player1.getxLeftVel()
+		//+ " yrightVel: " + player1.getxRightVel(), 0, 100);
+		//g.drawString("player2 x : " + (int) player2.getX() + " xleftvel: " + player2.getxLeftVel()
+		//+ " yrightVel: " + player2.getxRightVel(), 0, 120);
+		//g.drawString("koopa x : " + (int) map.koopa.getX(), 0, 140);
 
 		drawUI(g);
 		
